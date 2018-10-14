@@ -1,4 +1,4 @@
-package pl.onewebpro.hocon.utils.parser.entity.`type`
+package pl.onewebpro.hocon.utils.parser.`type`
 
 object ResultType extends Enumeration {
   type ResultType = Value
