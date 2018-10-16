@@ -1,5 +1,6 @@
 package pl.onewebpro.hocon.utils.parser.`type`
 
+import cats.data.OptionT
 import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
 import pl.onewebpro.hocon.utils.parser.HoconParser.{Path, RenderedValue}
@@ -46,15 +47,19 @@ object ValueTypeParser {
     } yield (leftResult, rightResult)
   }
 
-
-  private[parser] def parseAsValue(path: Path, value: String): IO[ConfigValue] = for {
-    parsed <- IO {
-      ConfigFactory.parseString(
-        s"""
-           | $path : $value
+  private[parser] def parseAsValue(path: Path, value: String): IO[ConfigValue] =
+    (for {
+      parsed <- OptionT.liftF(IO {
+        ConfigFactory.parseString(
+          s"""
+             | $path : $value
        """.stripMargin)
+      })
+      value <- OptionT(IO(parsed.entrySet().asScala.find(_.getKey == path).map(_.getValue)))
+    } yield value).value.flatMap {
+      case Some(result) => IO.pure(result)
+      case None => IO.raiseError(ParsingError(s"There was problem with parsing array value $path:$value"))
     }
-  } yield parsed.entrySet().asScala.find(_.getKey == path).map(_.getValue).get // TODO WTF is that
 
   private[parser] def parseMergeableArrays(path: Path, value: ValueType, renderedValue: RenderedValue, configValue: ConfigValue)
                                           (implicit cfg: Config): IO[HoconResultValue] = for {
