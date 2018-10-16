@@ -7,7 +7,9 @@ import pl.onewebpro.hocon.utils.parser.entity.simple.NotResolvedRef.{HoconRefNam
 import shapeless.tag
 import shapeless.tag.@@
 
-case class NotResolvedRef(env: HoconRefValue, name: HoconRefName, isOptional: Boolean) extends ReferenceTypeValue
+case class NotResolvedRef(env: HoconRefValue, name: HoconRefName, isOptional: Boolean) extends ReferenceTypeValue {
+  lazy val nameChunks: Iterable[String] = name.split('.')
+}
 
 object NotResolvedRef {
 

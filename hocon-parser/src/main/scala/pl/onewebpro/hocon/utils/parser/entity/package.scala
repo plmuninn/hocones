@@ -11,7 +11,7 @@ package object entity {
   }
 
   trait HoconResultType extends HoconResultValue {
-    def values: Iterable[Result]
+    def values: Seq[HoconResultValue]
   }
 
   trait HoconValueType extends HoconResultValue

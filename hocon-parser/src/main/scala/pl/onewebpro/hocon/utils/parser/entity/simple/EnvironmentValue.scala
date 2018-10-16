@@ -23,6 +23,7 @@ object EnvironmentValue {
     trait EnvTag
 
     trait EnvNameTag
+
   }
 
   import EnvironmentValueInternal._
@@ -61,4 +62,11 @@ object EnvironmentValue {
         }
       case None => IO.raiseError(ParsingError(s"Value $value is not environment"))
     }
+
+  // TODO test me
+  def apply(notResolvedRef: NotResolvedRef): EnvironmentValue = {
+    val value = notResolvedRef.env.replace(notResolvedRef.nameChunks.dropRight(1).mkString(".") + ".", "")
+    val name = notResolvedRef.nameChunks.last
+    EnvironmentValue(tagEnv(value), tagEnvName(name), notResolvedRef.isOptional)
+  }
 }
