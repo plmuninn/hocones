@@ -8,8 +8,6 @@ import com.typesafe.config._
 import com.typesafe.scalalogging.LazyLogging
 import pl.onewebpro.hocon.utils.parser.`type`._
 import pl.onewebpro.hocon.utils.parser.entity._
-import pl.onewebpro.hocon.utils.parser.result.HoconResult
-import pl.onewebpro.hocon.utils.parser.ParserUtils._
 import shapeless.tag
 import shapeless.tag.@@
 
@@ -28,6 +26,7 @@ object HoconParser extends LazyLogging {
   }
 
   import InternalHoconParser._
+  import HoconOps._
 
   type Path = String @@ PathTag
 

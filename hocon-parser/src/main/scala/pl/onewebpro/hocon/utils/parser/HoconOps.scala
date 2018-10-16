@@ -1,10 +1,15 @@
 package pl.onewebpro.hocon.utils.parser
 
-import pl.onewebpro.hocon.utils.parser.HoconParser.Path
+import com.typesafe.config.ConfigValue
+import pl.onewebpro.hocon.utils.parser.HoconParser.{CanonicalClassName, Path, tagCanonicalName}
 import pl.onewebpro.hocon.utils.parser.entity._
 import pl.onewebpro.hocon.utils.parser.entity.simple.{ComposedConfigValue, EnvironmentValue}
 
 object HoconOps {
+
+  implicit class ConviValueImplicits(value: ConfigValue) {
+    val canonicalName: CanonicalClassName = tagCanonicalName(value.getClass.getCanonicalName)
+  }
 
   type FlatResultList = Seq[(Path, HoconResultValue)]
 

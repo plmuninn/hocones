@@ -4,7 +4,6 @@ import cats.effect.IO
 import cats.implicits._
 import com.typesafe.config.{Config, ConfigList, ConfigObject, ConfigValue}
 import pl.onewebpro.hocon.utils.parser.HoconParser._
-import pl.onewebpro.hocon.utils.parser.ParserUtils._
 import pl.onewebpro.hocon.utils.parser.ParsingError
 import pl.onewebpro.hocon.utils.parser.`type`.ResultType.ResultType
 import pl.onewebpro.hocon.utils.parser.entity.{HoconArray, HoconObject, HoconResultValue}
@@ -12,8 +11,10 @@ import pl.onewebpro.hocon.utils.parser.entity.{HoconArray, HoconObject, HoconRes
 import scala.collection.JavaConverters._
 
 object ResultTypeParser {
-  //TODO test me
 
+  import pl.onewebpro.hocon.utils.parser.HoconOps._
+
+  //TODO test me
   def parse(path: Path, value: ResultType, configValue: ConfigValue)
                                      (implicit cfg: Config): IO[HoconResultValue] = value match {
     case ResultType.LIST => configValue match {

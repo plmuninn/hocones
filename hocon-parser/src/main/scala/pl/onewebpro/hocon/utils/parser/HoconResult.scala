@@ -1,4 +1,4 @@
-package pl.onewebpro.hocon.utils.parser.result
+package pl.onewebpro.hocon.utils.parser
 
 import com.typesafe.config.Config
 import pl.onewebpro.hocon.utils.parser.entity.HoconResultValue

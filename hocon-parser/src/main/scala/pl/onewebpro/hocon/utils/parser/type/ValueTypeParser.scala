@@ -5,7 +5,6 @@ import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
 import pl.onewebpro.hocon.utils.parser.HoconParser.{Path, RenderedValue}
 import pl.onewebpro.hocon.utils.parser.{HoconParser, ParsingError}
-import pl.onewebpro.hocon.utils.parser.ParserUtils._
 import pl.onewebpro.hocon.utils.parser.`type`.ValueType.ValueType
 import pl.onewebpro.hocon.utils.parser.entity._
 import pl.onewebpro.hocon.utils.parser.entity.simple.{ComposedConfigValue, EnvironmentValue, NotResolvedRef, SimpleHoconValue}
@@ -14,6 +13,8 @@ import scala.collection.JavaConverters._
 
 
 object ValueTypeParser {
+
+  import pl.onewebpro.hocon.utils.parser.HoconOps._
 
   private def divideRenderedValue(renderedValue: String): List[String] =
     renderedValue.lines.toList.map(_.replace("\",", "\""))

@@ -1,8 +1,7 @@
 package pl.onewebpro.hoco.utils.parser
 
 import com.typesafe.config.Config
-import pl.onewebpro.hocon.utils.parser.HoconParser
-import pl.onewebpro.hocon.utils.parser.result.HoconResult
+import pl.onewebpro.hocon.utils.parser.{HoconParser, HoconResult}
 
 class HoconParserTest extends TestSpec {
 
