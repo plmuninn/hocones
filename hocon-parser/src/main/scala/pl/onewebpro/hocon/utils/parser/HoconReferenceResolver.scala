@@ -6,7 +6,7 @@ import pl.onewebpro.hocon.utils.parser.entity.simple._
 
 private[parser] object HoconReferenceResolver {
 
-  import HoconOps._
+  import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
 
   private[parser] def resolveReferenceValueAsHoconEnvironmentValue(hrv: HoconReferenceValue): Option[HoconEnvironmentValue] =
     notResolvedReferenceToEnvironmentValue(hrv.result)
@@ -14,7 +14,7 @@ private[parser] object HoconReferenceResolver {
 
   private[parser] def resolveReferenceValue(resultList: FlatResultList, hrv: HoconReferenceValue): HoconResultValue =
     resultList
-      .findByPath(HoconParser.tagPath(hrv.result.name))
+      .findByPath(hrv.result.name)
       .map(value => HoconResolvedReference(value, hrv))
       .orElse(resolveReferenceValueAsHoconEnvironmentValue(hrv))
       .getOrElse(hrv)
@@ -41,7 +41,7 @@ private[parser] object HoconReferenceResolver {
     value match {
       case notResolvedRef: NotResolvedRef =>
         resultList
-          .findByPath(HoconParser.tagPath(notResolvedRef.name))
+          .findByPath(notResolvedRef.name)
           .map(value => ResolvedRef(value, notResolvedRef))
           .orElse(notResolvedReferenceToEnvironmentValue(notResolvedRef))
           .getOrElse(notResolvedRef)

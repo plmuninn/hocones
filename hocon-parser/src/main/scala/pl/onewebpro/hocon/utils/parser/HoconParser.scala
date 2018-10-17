@@ -26,7 +26,7 @@ object HoconParser extends LazyLogging {
   }
 
   import InternalHoconParser._
-  import HoconOps._
+  import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
 
   type Path = String @@ PathTag
 

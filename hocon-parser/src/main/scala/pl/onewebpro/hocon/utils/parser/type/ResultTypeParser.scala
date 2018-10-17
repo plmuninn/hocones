@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
 
 object ResultTypeParser {
 
-  import pl.onewebpro.hocon.utils.parser.HoconOps._
+  import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
 
   //TODO test me
   def parse(path: Path, value: ResultType, configValue: ConfigValue)

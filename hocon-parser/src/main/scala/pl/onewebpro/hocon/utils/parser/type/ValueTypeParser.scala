@@ -14,7 +14,7 @@ import scala.collection.JavaConverters._
 
 object ValueTypeParser {
 
-  import pl.onewebpro.hocon.utils.parser.HoconOps._
+  import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
 
   private def divideRenderedValue(renderedValue: String): List[String] =
     renderedValue.lines.toList.map(_.replace("\",", "\""))
