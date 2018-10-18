@@ -1,31 +1,28 @@
 package pl.onewebpro.hocon.utils.env.io
 
-import cats.data.Validated
 import cats.implicits._
 
 object OutputFileValidator {
 
   private lazy val unit: Unit = ()
 
-  private[io] def validateParent(directory: ParentDirectory): Validation = for {
-    _ <- if (directory.exists()) unit.valid else ParentFileNotExists(directory).invalid
-    _ <- if (directory.isDirectory) unit.valid else ParentFileIsNotDirectory(directory).invalid
-    _ <- if (directory.canWrite) unit.valid else ParentFileIsNotWritable(directory).invalid
+  private[io] def validateParent(directory: ParentDirectory): Either[EnvironmentFileException, Unit] = for {
+    _ <- Either.cond(directory.exists(), unit, ParentFileNotExists(directory))
+    _ <- Either.cond(directory.isDirectory, unit, ParentFileIsNotDirectory(directory))
+    _ <- Either.cond(directory.canWrite, unit, ParentFileIsNotWritable(directory))
   } yield ()
 
-  private[io] def validateFile(file: OutputFile): Validation =
-    if (!file.exists()) unit.valid else for {
-      _ <- if (file.isDirectory) unit.valid else FileIsDirectory(file).invalid
-      _ <- if (file.canWrite) unit.valid else FileIsNotWritable(file).invalid
+  private[io] def validateFile(file: OutputFile): Either[EnvironmentFileException, Unit] =
+    if (!file.exists()) Right(unit) else for {
+      _ <- Either.cond(file.isDirectory, unit, FileIsDirectory(file))
+      _ <- Either.cond(file.canWrite, unit, FileIsNotWritable(file))
     } yield ()
 
-  def validate(file: OutputFile, directory: ParentDirectory): Validation = for {
-    _ <- validateParent(directory)
-    _ <- validateFile(file)
-  } yield ()
-
-
-  private type Validation = Validated[EnvironmentFileException, Unit]
+  def validate(file: OutputFile, directory: ParentDirectory): Either[EnvironmentFileException, Unit] =
+    for {
+      _ <- validateParent(directory)
+      _ <- validateFile(file)
+    } yield ()
 
   sealed trait EnvironmentFileException {
     def message: String

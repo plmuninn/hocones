@@ -23,7 +23,7 @@ package object io {
 
   type ParentDirectory = File @@ ParentDirectoryTag
 
-  private[io] def tagOutputFile(file: File): OutputFile = tag[OutputFileTag][File](file)
+  def tagOutputFile(file: File): OutputFile = tag[OutputFileTag][File](file)
 
-  private[io] def tagParentDirectory(file: File): ParentDirectory = tag[ParentDirectoryTag][File](file)
+  def tagParentDirectory(file: File): ParentDirectory = tag[ParentDirectoryTag][File](file)
 }
