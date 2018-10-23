@@ -14,7 +14,7 @@ private[parser] object HoconReferenceResolver {
 
   private[parser] def resolveReferenceValue(resultList: FlatResultList, hrv: HoconReferenceValue): HoconResultValue =
     resultList
-      .findByPath(hrv.result.name)
+      .get(hrv.result.name)
       .map(value => HoconResolvedReference(value, hrv))
       .orElse(resolveReferenceValueAsHoconEnvironmentValue(hrv))
       .getOrElse(hrv)
@@ -41,7 +41,7 @@ private[parser] object HoconReferenceResolver {
     value match {
       case notResolvedRef: NotResolvedRef =>
         resultList
-          .findByPath(notResolvedRef.name)
+          .get(notResolvedRef.name)
           .map(value => ResolvedRef(value, notResolvedRef))
           .orElse(notResolvedReferenceToEnvironmentValue(notResolvedRef))
           .getOrElse(notResolvedRef)

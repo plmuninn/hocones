@@ -5,7 +5,8 @@ import pl.onewebpro.hocon.utils.env.config.Configuration.EnvironmentConfiguratio
 import pl.onewebpro.hocon.utils.parser.HoconParser.Path
 import pl.onewebpro.hocon.utils.parser.HoconResult
 import pl.onewebpro.hocon.utils.parser.entity._
-import pl.onewebpro.hocon.utils.parser.entity.simple.{ComposedConfigValue, ResolvedRef, SimpleValue, EnvironmentValue => SimpleEnvironmentValue}
+import pl.onewebpro.hocon.utils.parser.entity.simple.{ResolvedRef, SimpleValue, EnvironmentValue => SimpleEnvironmentValue}
+import pl.onewebpro.hocon.utils.parser.ops.ExtractedValue
 
 object ModelParser {
 
@@ -30,52 +31,32 @@ object ModelParser {
     EnvironmentValue(name = value.name, defaultValue = default, comments = comments)
   }
 
-  private[model] def createDefaultValue: Result => Option[String] = {
-    case ResolvedRef(value: SimpleValue, _) => Some(value.value)
+  private[model] def extractDefaultValue: Result => Option[String] = {
+    case ResolvedRef(value: SimpleValue, _) => extractDefaultValue(value)
     case SimpleValue(value, _) => Some(value)
-    case HoconValue(_, _, _, value) => Some(value.value)
-    case HoconResolvedReference(value: HoconValue, _) => Some(value.value.value)
-    case HoconResolvedReference(value: SimpleValue, _) => Some(value.value)
+    case HoconValue(_, _, _, value) => extractDefaultValue(value)
+    case HoconResolvedReference(value: HoconValue, _) => extractDefaultValue(value)
+    case HoconResolvedReference(value: SimpleValue, _) => extractDefaultValue(value)
     case _ => None
   }
 
-  private[model] def asLocalModel(acc: Iterable[EnvironmentValue], value: HoconResultValue)
-                                 (implicit config: EnvironmentConfiguration): Iterable[EnvironmentValue] =
-    value match {
-      case array: HoconArray => acc ++ array.values.flatMap(asLocalModel(acc, _))
-      case concatenation: HoconConcatenation => acc ++
-        concatenation.value.values.flatMap {
-          case env: SimpleEnvironmentValue =>
-            Iterable(createEnvironmentValue(concatenation.path, concatenation.cfg, env, None))
-          case _ => Nil
-        }
-      case environment: HoconEnvironmentValue =>
-        acc ++ Iterable(createEnvironmentValue(environment.path, environment.cfg, environment.value, None))
-      case merged: HoconMergedValues =>
-        val defaultValue = if (config.withDefaults) createDefaultValue(merged.defaultValue) else None
-        acc ++ Iterable(merged.replacedValue, merged.defaultValue).flatMap {
-          case value: HoconResultValue =>
-            asLocalModel(acc, value).map(model => model.copy(defaultValue = model.defaultValue.orElse(defaultValue)))
-          case value: SimpleEnvironmentValue => Iterable(createEnvironmentValue(merged.path, merged.cfg, value, defaultValue))
-          case value: ComposedConfigValue =>
-            value.values.filter {
-              case _: SimpleEnvironmentValue => true
-              case _ => false
-            }.map {
-              case value: SimpleEnvironmentValue => createEnvironmentValue(merged.path, merged.cfg, value, defaultValue)
-            }
-          case _ => Nil
-        }
-      case `object`: HoconObject => acc ++ `object`.values.flatMap(asLocalModel(acc, _))
-      case _ => acc
-    }
+  def createDefaultValue: HoconResultValue => Option[String] = {
+    case merged: HoconMergedValues => extractDefaultValue(merged.defaultValue)
+    case _ => None
+  }
+
+  def asLocalModel: (Path, ExtractedValue[SimpleEnvironmentValue]) => EnvironmentConfiguration => Iterable[EnvironmentValue] = {
+    case (path, ExtractedValue(cfg, parent, values)) =>
+      implicit config: EnvironmentConfiguration =>
+        val defaultValue = createDefaultValue(parent)
+        values.map(value => createEnvironmentValue(path, cfg, value, defaultValue))
+  }
 
   def apply(config: EnvironmentConfiguration, result: HoconResult): Iterable[EnvironmentValue] = {
     implicit val cfg: EnvironmentConfiguration = config
 
     result.results.containsEnvironmentValues.map {
-      case (_, value) => value
-    }.foldLeft(Iterable.empty[EnvironmentValue])(asLocalModel)
-      .groupBy(_.name).map(_._2.head)
+      case (path, value) => path -> asLocalModel(path, value)(cfg)
+    }.values.flatten
   }
 }

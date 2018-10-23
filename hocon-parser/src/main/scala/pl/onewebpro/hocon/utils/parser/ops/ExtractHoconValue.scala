@@ -7,8 +7,7 @@ private[ops] class ExtractHoconValue[T <: SimpleHoconValue](isType: Result => Bo
 
   private[ops] def isValue: Result => Boolean = {
     case ComposedConfigValue(_, composedValues) => composedValues.exists(isValue)
-    case value if isType(value) => true
-    case _ => false
+    case value => isType(value)
   }
 
   private[ops] def resultContainsValue: Result => Boolean = {
@@ -38,6 +37,11 @@ private[ops] class ExtractHoconValue[T <: SimpleHoconValue](isType: Result => Bo
     case HoconEnvironmentValue(_, _, value) if isType(value) => Iterable(value.asInstanceOf[T])
     case HoconValue(_, _, _, value) if isType(value) => Iterable(value.asInstanceOf[T])
     case HoconReferenceValue(_, _, value) if isType(value) => Iterable(value.asInstanceOf[T])
+  }
+
+
+  private[ops] def toExtractedValues: HoconResultValue => Option[ExtractedValue[T]] = { value =>
+    if (!resultContainsValue(value)) None else Some(ExtractedValue[T](value.cfg, value, extractValues(value)))
   }
 
 }

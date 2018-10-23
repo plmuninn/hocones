@@ -1,5 +1,6 @@
 package pl.onewebpro.hocon.utils.parser
 
+import com.typesafe.config.ConfigValue
 import pl.onewebpro.hocon.utils.parser.HoconParser.Path
 
 package object entity {
@@ -8,6 +9,8 @@ package object entity {
 
   trait HoconResultValue extends Result {
     def path: Path
+
+    def cfg: ConfigValue
   }
 
   trait HoconResultType extends HoconResultValue {

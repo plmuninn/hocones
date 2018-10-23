@@ -101,10 +101,10 @@ class HoconParserTest extends TestSpec {
 
     val resultList = result.results.flattenResultValues(true)
 
-    resultList.findByPath("pl.onewebpro.test.array.value_1").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.array.value_2.3").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.array.value_3.1.1").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.array.value_3.5").isDefined shouldBe false
+    resultList.get("pl.onewebpro.test.array.value_1").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.array.value_2.3").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.array.value_3.1.1").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.array.value_3.5").isDefined shouldBe false
   }
 
   it should "find correctly values from object.conf file" in {
@@ -116,13 +116,13 @@ class HoconParserTest extends TestSpec {
     val resultList = result.results.flattenResultValues(true)
 
 
-    resultList.findByPath("pl.onewebpro.test.object.reference").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.object.value_1").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.object.value_1.0.value_1_1_1").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.object.value_1.4.value_1_5_1").isDefined shouldBe true
-    resultList.findByPath("pl.onewebpro.test.object.value_1.4.value_1_5_1.0").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.object.reference").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.object.value_1").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.object.value_1.0.value_1_1_1").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.object.value_1.4.value_1_5_1").isDefined shouldBe true
+    resultList.get("pl.onewebpro.test.object.value_1.4.value_1_5_1.0").isDefined shouldBe true
 
-    resultList.findByPath("pl.onewebpro.test.object.value_1.4.value_1_5_1.10").isDefined shouldBe false
+    resultList.get("pl.onewebpro.test.object.value_1.4.value_1_5_1.10").isDefined shouldBe false
   }
 
   it should "extract proper env hocon values from simple.conf" in {
