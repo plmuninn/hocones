@@ -40,23 +40,44 @@ object ModelParser {
     case _ => None
   }
 
-  def createDefaultValue: HoconResultValue => Option[String] = {
+  private[model] def createDefaultValue: HoconResultValue => Option[String] = {
     case merged: HoconMergedValues => extractDefaultValue(merged.defaultValue)
     case _ => None
   }
 
-  def asLocalModel: (Path, ExtractedValue[SimpleEnvironmentValue]) => EnvironmentConfiguration => Iterable[EnvironmentValue] = {
+  private[model] def asLocalModel: (Path, ExtractedValue[SimpleEnvironmentValue]) => EnvironmentConfiguration => Iterable[EnvironmentValue] = {
     case (path, ExtractedValue(cfg, parent, values)) =>
       implicit config: EnvironmentConfiguration =>
         val defaultValue = createDefaultValue(parent)
         values.map(value => createEnvironmentValue(path, cfg, value, defaultValue))
   }
 
+  def removeDuplicates(values: Iterable[EnvironmentValue]): Iterable[EnvironmentValue] = {
+
+    values.foldLeft(Vector.empty[EnvironmentValue]) {
+      case (acc, value) =>
+        def compareName: EnvironmentValue => Boolean = _.name == value.name
+
+        acc.find(compareName) match {
+          case Some(foundValue) =>
+            if (foundValue.defaultValue.isEmpty && value.defaultValue.nonEmpty)
+              acc.updated(acc.indexWhere(compareName), value)
+            else
+              acc
+          case None => acc :+ value
+        }
+
+    }
+  }
+
   def apply(config: EnvironmentConfiguration, result: HoconResult): Iterable[EnvironmentValue] = {
     implicit val cfg: EnvironmentConfiguration = config
 
-    result.results.containsEnvironmentValues.map {
-      case (path, value) => path -> asLocalModel(path, value)(cfg)
-    }.values.flatten
+    val values =
+      result.results.containsEnvironmentValues.map {
+        case (path, value) => path -> asLocalModel(path, value)(cfg)
+      }.values.flatten
+
+    if (cfg.removeDuplicates) removeDuplicates(values) else values
   }
 }

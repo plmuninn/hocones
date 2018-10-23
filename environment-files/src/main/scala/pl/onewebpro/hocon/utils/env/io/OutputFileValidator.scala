@@ -14,7 +14,7 @@ object OutputFileValidator {
 
   private[io] def validateFile(file: OutputFile): Either[EnvironmentFileException, Unit] =
     if (!file.exists()) Right(unit) else for {
-      _ <- Either.cond(file.isDirectory, unit, FileIsDirectory(file))
+      _ <- Either.cond(file.isFile, unit, FileIsDirectory(file))
       _ <- Either.cond(file.canWrite, unit, FileIsNotWritable(file))
     } yield ()
 
