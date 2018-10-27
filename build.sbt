@@ -67,7 +67,7 @@ val tests = Seq(
   "org.scalamock" %% "scalamock" % scalaMockVersion % "test"
 )
 
-val hoconParser =
+val `hocones-parser` =
   (project in file("hocones-parser"))
     .settings(defaultSettings)
     .settings(
@@ -76,30 +76,30 @@ val hoconParser =
       libraryDependencies += "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
     )
 
-val environmentFiles =
+val `hocones-environment-files` =
   (project in file("hocones-environment-files"))
     .settings(defaultSettings)
     .settings(
       name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
-    ).dependsOn(hoconParser)
+    ).dependsOn(`hocones-parser`)
 
-val hoconesStatistics =
+val `hocones-statistics` =
   (project in file("hocones-statistics"))
   .settings(defaultSettings)
   .settings(
     name := "hocones-statistics",
     libraryDependencies ++= (logs ++ fp ++ tests)
-  ).dependsOn(hoconParser)
+  ).dependsOn(`hocones-parser`)
 
-val cliFrontend =
+val `hocones-cli` =
   (project in file("hocones-cli"))
     .settings(defaultSettings)
     .settings(
       name := "hocones-cli",
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests)
     )
-    .dependsOn(environmentFiles, hoconesStatistics)
+    .dependsOn(`hocones-environment-files`, `hocones-statistics`)
 
 lazy val root = (project in file("."))
-  .aggregate(hoconParser, environmentFiles, cliFrontend, hoconesStatistics)
+  .aggregate(`hocones-parser`, `hocones-environment-files`, `hocones-cli`, `hocones-statistics`)
