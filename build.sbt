@@ -1,6 +1,6 @@
 import sbt.Keys.scalaVersion
 
-name := "hocon-utils"
+name := "hocones"
 
 version := "0.1"
 
@@ -68,19 +68,19 @@ val tests = Seq(
 )
 
 val hoconParser =
-  (project in file("hocon-parser"))
+  (project in file("hocones-parser"))
     .settings(defaultSettings)
     .settings(
-      name := "hocon-parser",
+      name := "hocones-parser",
       libraryDependencies ++= (hocon ++ logs ++ fp ++ monocle ++ tests),
       libraryDependencies += "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
     )
 
 val environmentFiles =
-  (project in file("environment-files"))
+  (project in file("hocones-environment-files"))
     .settings(defaultSettings)
     .settings(
-      name := "environment-files",
+      name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
     ).dependsOn(hoconParser)
 
@@ -93,10 +93,10 @@ val hoconesStatistics =
   ).dependsOn(hoconParser)
 
 val cliFrontend =
-  (project in file("cli-frontend"))
+  (project in file("hocones-cli"))
     .settings(defaultSettings)
     .settings(
-      name := "cli-frontend",
+      name := "hocones-cli",
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests)
     )
     .dependsOn(environmentFiles, hoconesStatistics)
