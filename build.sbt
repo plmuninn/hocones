@@ -18,6 +18,15 @@ val defaultSettings = Seq(
   scalacOptions += "-Ypartial-unification"
 )
 
+val circeVersion = "0.9.0"
+
+val circe = Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser",
+  "io.circe" %% "circe-yaml"
+).map(_ % circeVersion)
+
 val scalaOptVersion = "3.7.0"
 val console4CatsVersion = "0.3"
 
@@ -51,11 +60,8 @@ val fp = Seq(
   "com.chuusai" %% "shapeless" % shaplessVersion
 )
 
-val monocleVersion = "1.5.0"
-
-val monocle = Seq(
-  "com.github.julien-truffaut" %% "monocle-core" % monocleVersion,
-  "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion
+val markdown = Seq(
+  "net.steppschuh.markdowngenerator" % "markdowngenerator" % "1.3.1.1"
 )
 
 val scalaTestVersion = "3.0.5"
@@ -72,8 +78,7 @@ val `hocones-parser` =
     .settings(defaultSettings)
     .settings(
       name := "hocones-parser",
-      libraryDependencies ++= (hocon ++ logs ++ fp ++ monocle ++ tests),
-      libraryDependencies += "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+      libraryDependencies ++= (hocon ++ logs ++ fp ++ tests)
     )
 
 val `hocones-environment-files` =
@@ -84,13 +89,30 @@ val `hocones-environment-files` =
       libraryDependencies ++= (logs ++ fp ++ tests)
     ).dependsOn(`hocones-parser`)
 
+val `hocones-meta` =
+  (project in file("hocones-meta"))
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-meta",
+      libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
+      libraryDependencies += "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+    ).dependsOn(`hocones-parser`)
+
+val `hocones-md-docs` =
+  (project in file("hocones-md-docs"))
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-md-docs",
+      libraryDependencies ++= (logs ++ fp ++ markdown ++ tests)
+    ).dependsOn(`hocones-parser`, `hocones-meta`)
+
 val `hocones-statistics` =
   (project in file("hocones-statistics"))
-  .settings(defaultSettings)
-  .settings(
-    name := "hocones-statistics",
-    libraryDependencies ++= (logs ++ fp ++ tests)
-  ).dependsOn(`hocones-parser`)
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-statistics",
+      libraryDependencies ++= (logs ++ fp ++ tests)
+    ).dependsOn(`hocones-parser`)
 
 val `hocones-cli` =
   (project in file("hocones-cli"))
@@ -99,7 +121,14 @@ val `hocones-cli` =
       name := "hocones-cli",
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests)
     )
-    .dependsOn(`hocones-environment-files`, `hocones-statistics`)
+    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
 
 lazy val root = (project in file("."))
-  .aggregate(`hocones-parser`, `hocones-environment-files`, `hocones-cli`, `hocones-statistics`)
+  .aggregate(
+    `hocones-parser`,
+    `hocones-environment-files`,
+    `hocones-cli`,
+    `hocones-statistics`,
+    `hocones-meta`,
+    `hocones-md-docs`
+  )
