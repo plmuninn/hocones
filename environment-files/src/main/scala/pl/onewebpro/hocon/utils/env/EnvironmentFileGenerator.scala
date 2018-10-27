@@ -1,6 +1,6 @@
 package pl.onewebpro.hocon.utils.env
 
-import cats.effect.IO
+import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocon.utils.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocon.utils.env.model.ModelParser
@@ -10,14 +10,14 @@ object EnvironmentFileGenerator {
 
   import pl.onewebpro.hocon.utils.env.io._
 
-  def apply(config: EnvironmentConfiguration, result: HoconResult): IO[Unit] = for {
-    outputFile <- IO(tagOutputFile(config.outputPath.toFile))
-    parentDirectory <- IO(tagParentDirectory(config.outputPath.getParent.toFile))
+  def apply(config: EnvironmentConfiguration, result: HoconResult): SyncIO[Unit] = for {
+    outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
+    parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
-    _ <- IO.fromEither(OutputFileValidator.validate(outputFile, parentDirectory).leftMap(error => EnvironmentFileError(error.message)))
+    _ <- SyncIO.fromEither(OutputFileValidator.validate(outputFile, parentDirectory).leftMap(error => EnvironmentFileError(error.message)))
 
-    writer <- IO(new EnvironmentFileWriter(outputFile))
-    values <- IO(ModelParser(config, result))
+    writer <- SyncIO(new EnvironmentFileWriter(outputFile))
+    values <- SyncIO(ModelParser.parse(config, result))
 
     _ <- writer.write(values)
   } yield ()

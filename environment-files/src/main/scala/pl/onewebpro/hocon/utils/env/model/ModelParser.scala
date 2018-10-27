@@ -70,7 +70,7 @@ object ModelParser {
     }
   }
 
-  def apply(config: EnvironmentConfiguration, result: HoconResult): Iterable[EnvironmentValue] = {
+  def parse(config: EnvironmentConfiguration, result: HoconResult): Iterable[EnvironmentValue] = {
     implicit val cfg: EnvironmentConfiguration = config
 
     val values =

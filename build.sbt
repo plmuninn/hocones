@@ -84,6 +84,14 @@ val environmentFiles =
       libraryDependencies ++= (logs ++ fp ++ tests)
     ).dependsOn(hoconParser)
 
+val hoconesStatistics =
+  (project in file("hocones-statistics"))
+  .settings(defaultSettings)
+  .settings(
+    name := "hocones-statistics",
+    libraryDependencies ++= (logs ++ fp ++ tests)
+  ).dependsOn(hoconParser)
+
 val cliFrontend =
   (project in file("cli-frontend"))
     .settings(defaultSettings)
@@ -91,7 +99,7 @@ val cliFrontend =
       name := "cli-frontend",
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests)
     )
-    .dependsOn(environmentFiles)
+    .dependsOn(environmentFiles, hoconesStatistics)
 
 lazy val root = (project in file("."))
-  .aggregate(environmentFiles, cliFrontend)
+  .aggregate(hoconParser, environmentFiles, cliFrontend, hoconesStatistics)
