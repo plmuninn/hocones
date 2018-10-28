@@ -2,8 +2,8 @@ package pl.onewebpro.hocones.statistics
 
 import cats.effect.SyncIO
 import cats.implicits._
-import pl.onewebpro.hocon.utils.parser.HoconResult
-import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+import pl.onewebpro.hocones.parser.HoconResult
+import pl.onewebpro.hocones.parser.ops.HoconOps._
 
 case class StatisticsMeta(numOfPaths: Int,
                           numOfEnvironmentValues: Int,

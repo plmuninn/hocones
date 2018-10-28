@@ -2,11 +2,11 @@ package pl.onewebpro.hocones.cli
 
 import cats.effect.{ExitCode, IO, IOApp}
 import com.typesafe.config.ConfigFactory
-import pl.onewebpro.hocon.utils.parser.{HoconParser, HoconResult}
+import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
 import pl.onewebpro.hocones.cli.Properties.ProgramMode
 import pl.onewebpro.hocones.statistics.StatisticsMeta
 import cats.effect.Console.io._
-import pl.onewebpro.hocon.utils.env.EnvironmentFileGenerator
+import pl.onewebpro.hocones.env.EnvironmentFileGenerator
 
 object Main extends IOApp {
 

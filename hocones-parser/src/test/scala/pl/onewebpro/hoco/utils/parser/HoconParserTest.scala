@@ -1,7 +1,7 @@
 package pl.onewebpro.hoco.utils.parser
 
 import com.typesafe.config.Config
-import pl.onewebpro.hocon.utils.parser.{HoconParser, HoconResult}
+import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
 
 class HoconParserTest extends TestSpec {
 
@@ -57,7 +57,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "return 7 results for simple.conf file flattened" in {
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("simple.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -66,7 +66,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "return 4 results for merge.conf file flattened" in {
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("merge.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -75,7 +75,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "return 18 results for array.conf file flattened" in {
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -84,7 +84,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "return 16 results for object.conf file flattened" in {
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -94,7 +94,7 @@ class HoconParserTest extends TestSpec {
 
   it should "find correctly values from array.conf file" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -108,7 +108,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "find correctly values from object.conf file" in {
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -125,9 +125,9 @@ class HoconParserTest extends TestSpec {
     resultList.get("pl.onewebpro.test.object.value_1.4.value_1_5_1.10").isDefined shouldBe false
   }
 
-  it should "extract proper env hocon values from simple.conf" in {
+  it should "extract proper env hocones values from simple.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("simple.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -136,9 +136,9 @@ class HoconParserTest extends TestSpec {
     extractonResult.size shouldBe 0
   }
 
-  it should "extract proper env hocon values from reference.conf" in {
+  it should "extract proper env hocones values from reference.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("reference.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -147,9 +147,9 @@ class HoconParserTest extends TestSpec {
     extractonResult.size shouldBe 2
   }
 
-  it should "extract proper env hocon values from concatenation.conf" in {
+  it should "extract proper env hocones values from concatenation.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("concatenation.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -158,9 +158,9 @@ class HoconParserTest extends TestSpec {
     extractonResult.size shouldBe 9
   }
 
-  it should "extract proper env hocon values from merge.conf" in {
+  it should "extract proper env hocones values from merge.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("merge.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -169,9 +169,9 @@ class HoconParserTest extends TestSpec {
     extractonResult.size shouldBe 3
   }
 
-  it should "extract proper env hocon values from array.conf" in {
+  it should "extract proper env hocones values from array.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -180,9 +180,9 @@ class HoconParserTest extends TestSpec {
     extractonResult.size shouldBe 4
   }
 
-  it should "extract proper env hocon values from object.conf" in {
+  it should "extract proper env hocones values from object.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -194,7 +194,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from simple.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("simple.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -205,7 +205,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from reference.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("reference.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -216,7 +216,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from concatenation.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("concatenation.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -227,7 +227,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from merge.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("merge.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -238,7 +238,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from array.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
@@ -249,7 +249,7 @@ class HoconParserTest extends TestSpec {
 
   it should "extract proper env values from object.conf" in {
 
-    import pl.onewebpro.hocon.utils.parser.ops.HoconOps._
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
