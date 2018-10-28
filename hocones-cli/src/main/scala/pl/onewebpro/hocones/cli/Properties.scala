@@ -4,7 +4,7 @@ import java.io.File
 
 import cats.effect.SyncIO
 import com.typesafe.config.ConfigFactory
-import pl.onewebpro.hocon.utils.env.config.Configuration.EnvironmentConfiguration
+import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.cli.Properties.ProgramMode.ProgramMode
 
 import scala.util.Try
