@@ -6,6 +6,9 @@ import _root_.io.circe.Decoder._
 object JsonCodecs {
 
   private val hoconVersion = "hocones-version"
+  private val children = "children"
+  private val name = "name"
+  private val description = "description"
 
   private val encodeMetaChildMap: Encoder[Map[String, List[MetaChild]]] =
     new Encoder[Map[String, List[MetaChild]]] {
@@ -18,7 +21,7 @@ object JsonCodecs {
       override def apply(meta: MetaInformation): Json =
         Json.obj(
           hoconVersion -> Json.fromString(meta.hoconesVersion),
-          "children" -> encodeMetaChildMap(meta.children)
+          children -> encodeMetaChildMap(meta.children)
         )
     }
 
@@ -26,9 +29,9 @@ object JsonCodecs {
     new Encoder[MetaChild] {
       override def apply(a: MetaChild): Json =
         Json.obj(
-          "name" -> Json.fromString(a.name),
-          "description" -> Json.fromString(a.description),
-          "children" -> encodeMetaChildMap(a.children)
+          name -> Json.fromString(a.name),
+          description -> Json.fromString(a.description),
+          children -> encodeMetaChildMap(a.children)
         )
     }
 
@@ -42,16 +45,16 @@ object JsonCodecs {
     new Decoder[MetaInformation] {
       override def apply(c: HCursor): Result[MetaInformation] = for {
         hoconVersion <- c.downField(hoconVersion).as[String]
-        children <- c.downField("children").as[Map[String, List[MetaChild]]]
+        children <- c.getOrElse[Map[String, List[MetaChild]]](children)(Map.empty)(decodeMetaChildMap)
       } yield MetaInformation(hoconVersion, children)
     }
 
   implicit val metaChildDecoder: Decoder[MetaChild] =
     new Decoder[MetaChild] {
       override def apply(c: HCursor): Result[MetaChild] = for {
-        name <- c.downField("name").as[String]
-        description <- c.downField("description").as[String]
-        children <- c.getOrElse[Map[String, List[MetaChild]]]("children")(Map.empty)(decodeMetaChildMap)
+        name <- c.downField(name).as[String]
+        description <- c.downField(description).as[String]
+        children <- c.getOrElse[Map[String, List[MetaChild]]](children)(Map.empty)(decodeMetaChildMap)
       } yield MetaChild(name, description, children)
     }
 
