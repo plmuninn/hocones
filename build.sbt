@@ -6,6 +6,20 @@ version := "0.1"
 
 scalaVersion := "2.12.6"
 
+val compilerOptions = Seq(
+  "-deprecation",
+  "-encoding", "UTF-8",
+  "-feature",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-unchecked",
+  "-Ywarn-dead-code",
+  "-Ywarn-numeric-widen",
+  "-Xfuture",
+  "-Ywarn-unused-import",
+  "-Ypartial-unification"
+)
+
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots")
@@ -15,7 +29,7 @@ val defaultSettings = Seq(
   version := "0.1",
   scalaVersion := "2.12.6",
   organization := "pl.onewebpro",
-  scalacOptions += "-Ypartial-unification"
+  scalacOptions := compilerOptions
 )
 
 val circeVersion = "0.9.0"
@@ -92,10 +106,17 @@ val `hocones-environment-files` =
 val `hocones-meta` =
   (project in file("hocones-meta"))
     .settings(defaultSettings)
+    .enablePlugins(BuildInfoPlugin)
+    .settings(
+      buildInfoKeys := Seq[BuildInfoKey](name, version),
+      buildInfoPackage := "pl.onewebpro.hocones.meta"
+    )
     .settings(
       name := "hocones-meta",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
-      libraryDependencies += "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+      addCompilerPlugin(
+        "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+      )
     ).dependsOn(`hocones-parser`)
 
 val `hocones-md-docs` =

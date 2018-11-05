@@ -6,6 +6,7 @@ import cats.effect.{Resource, SyncIO}
 import cats.implicits._
 import io.circe.Json
 import io.circe.yaml.syntax._
+import io.circe.yaml.Printer
 import shapeless.tag
 import shapeless.tag.@@
 
@@ -23,6 +24,9 @@ object MetaFileWriter {
 
   def tagMetaFile(path: File): MetaFile = tag[MetaFileTag][File](path)
 
+  def printer: SyncIO[Printer] =
+    SyncIO(Printer(dropNullKeys = true, mappingStyle = Printer.FlowStyle.Block))
+
   def metaFilePointer(input: File): SyncIO[MetaFile] = for {
     name <- SyncIO(fileName(input))
     metaFile <- SyncIO(tagMetaFile(new File(name)))
@@ -32,7 +36,7 @@ object MetaFileWriter {
     if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit else SyncIO.unit
 
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
-    SyncIO(json.asYaml.spaces2).flatMap { text =>
+    printer.map(_.pretty(json)).flatMap { text =>
       Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
         .use(printer => SyncIO(printer.print(text)))
     }

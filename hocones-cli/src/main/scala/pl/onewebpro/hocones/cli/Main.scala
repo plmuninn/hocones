@@ -7,6 +7,8 @@ import pl.onewebpro.hocones.cli.Properties.ProgramMode
 import pl.onewebpro.hocones.statistics.StatisticsMeta
 import cats.effect.Console.io._
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
+import pl.onewebpro.hocones.meta.MetaGenerator
+import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
 
 object Main extends IOApp {
 
@@ -18,7 +20,11 @@ object Main extends IOApp {
         _ <- putStrLn(s"File generated ${properties.envConfiguration.outputPath}")
       } yield ()
       case ProgramMode.Load => for {
-        _ <- putStrLn("Generating statistics")
+        _ <- putStrLn("Generating file with meta information")
+        result <- MetaGenerator(MetaConfiguration(input = properties.input), parsedFile).toIO
+        (metaFile, _) = result
+        _ <- putStrLn(s"Generated meta file ${metaFile.getAbsoluteFile}")
+        _ <- putStrLn("Loading statistics about configuration")
         statistics <- StatisticsMeta.fromParsedHocon(parsedFile).toIO
         _ <- putStrLn(
           s"""
