@@ -1,61 +1,83 @@
 package pl.onewebpro.hocones.meta.model
 
+import cats.implicits._
 import _root_.io.circe._
 import _root_.io.circe.Decoder._
+import _root_.io.circe.generic.semiauto._
 
 object JsonCodecs {
 
-  private val hoconVersion = "hocones-version"
-  private val children = "children"
-  private val name = "name"
-  private val description = "description"
+  private val hoconVersionK = "hocones-version"
+  private val rootsK = "roots"
+  private val orphansK = "orphans"
 
-  private val encodeMetaChildMap: Encoder[Map[String, List[MetaChild]]] =
-    new Encoder[Map[String, List[MetaChild]]] {
-      override def apply(a: Map[String, List[MetaChild]]): Json =
-        if (a.isEmpty) Json.Null else Encoder.encodeMap[String, List[MetaChild]].apply(a)
+  implicit val metaStringEncoder: Encoder[MetaString] = deriveEncoder[MetaString]
+  implicit val metaNumberEncoder: Encoder[MetaNumber] = deriveEncoder[MetaNumber]
+  implicit val metaBooleanEncoder: Encoder[MetaBoolean] = deriveEncoder[MetaBoolean]
+  implicit val metaListEncoder: Encoder[MetaList] = deriveEncoder[MetaList]
+  implicit val metaObjectEncoder: Encoder[MetaObject] = deriveEncoder[MetaObject]
+
+  implicit private val encodeMetaValue: Encoder[MetaValue] =
+    new Encoder[MetaValue] {
+      override def apply(a: MetaValue): Json = a match {
+        case model: MetaString => metaStringEncoder.apply(model)
+        case model: MetaNumber => metaNumberEncoder.apply(model)
+        case model: MetaBoolean => metaBooleanEncoder.apply(model)
+        case model: MetaList => metaListEncoder.apply(model)
+        case model: MetaObject => metaObjectEncoder.apply(model)
+      }
+    }
+
+  private val encodeMetaRootsMap: Encoder[Map[String, Map[String, Seq[MetaValue]]]] =
+    new Encoder[Map[String, Map[String, Seq[MetaValue]]]] {
+      override def apply(a: Map[String, Map[String, Seq[MetaValue]]]): Json =
+        if (a.isEmpty) Json.Null else Encoder.encodeMap[String, Map[String, Seq[MetaValue]]].apply(a)
+    }
+
+  private val encodeOrphans: Encoder[Seq[MetaValue]] =
+    new Encoder[Seq[MetaValue]] {
+      override def apply(a: Seq[MetaValue]): Json =
+        if (a.isEmpty) Json.Null else Encoder.encodeSeq[MetaValue].apply(a)
     }
 
   implicit val metaInformationEncoder: Encoder[MetaInformation] =
     new Encoder[MetaInformation] {
       override def apply(meta: MetaInformation): Json =
         Json.obj(
-          hoconVersion -> Json.fromString(meta.hoconesVersion),
-          children -> encodeMetaChildMap(meta.children)
+          hoconVersionK -> Json.fromString(meta.hoconesVersion),
+          rootsK -> encodeMetaRootsMap(meta.roots),
+          orphansK -> encodeOrphans(meta.orphans)
         )
     }
 
-  implicit val metaChildEncoder: Encoder[MetaChild] =
-    new Encoder[MetaChild] {
-      override def apply(a: MetaChild): Json =
-        Json.obj(
-          name -> Json.fromString(a.name),
-          description -> Json.fromString(a.description),
-          children -> encodeMetaChildMap(a.children)
-        )
+  implicit val decodeStringEncoder: Decoder[MetaString] = deriveDecoder[MetaString]
+  implicit val decodeNumberEncoder: Decoder[MetaNumber] = deriveDecoder[MetaNumber]
+  implicit val decodeBooleanEncoder: Decoder[MetaBoolean] = deriveDecoder[MetaBoolean]
+  implicit val decodeListEncoder: Decoder[MetaList] = deriveDecoder[MetaList]
+  implicit val decodeObjectEncoder: Decoder[MetaObject] = deriveDecoder[MetaObject]
+
+  private implicit val metaValueDecoder: Decoder[MetaValue] =
+    new Decoder[MetaValue] {
+      override def apply(c: HCursor): Result[MetaValue] =
+        decodeStringEncoder.apply(c)
+          .orElse(decodeStringEncoder.apply(c))
+          .orElse(decodeListEncoder.apply(c))
+          .orElse(decodeObjectEncoder.apply(c))
+          .orElse(decodeBooleanEncoder.apply(c))
     }
 
-  private implicit val decodeMetaChildMap: Decoder[Map[String, List[MetaChild]]] =
-    new Decoder[Map[String, List[MetaChild]]] {
-      override def apply(c: HCursor): Result[Map[String, List[MetaChild]]] =
-        if (c.value.isNull) Right(Map.empty) else Decoder.decodeMap[String, List[MetaChild]].apply(c)
+  private implicit val decodeMetaChildMap: Decoder[Map[String, Map[String, Seq[MetaValue]]]] =
+    new Decoder[Map[String, Map[String, Seq[MetaValue]]]] {
+      override def apply(c: HCursor): Result[Map[String, Map[String, Seq[MetaValue]]]] =
+        if (c.value.isNull) Right(Map.empty) else Decoder.decodeMap[String, Map[String, Seq[MetaValue]]].apply(c)
     }
 
   implicit val metaInformationDecoder: Decoder[MetaInformation] =
     new Decoder[MetaInformation] {
       override def apply(c: HCursor): Result[MetaInformation] = for {
-        hoconVersion <- c.downField(hoconVersion).as[String]
-        children <- c.getOrElse[Map[String, List[MetaChild]]](children)(Map.empty)(decodeMetaChildMap)
-      } yield MetaInformation(hoconVersion, children)
+        hoconVersion <- c.downField(hoconVersionK).as[String]
+        roots <- c.getOrElse[Map[String, Map[String, Seq[MetaValue]]]](rootsK)(Map.empty)(decodeMetaChildMap)
+        orphans <- c.getOrElse[Seq[MetaValue]](orphansK)(Seq.empty)
+      } yield MetaInformation(hoconVersion, roots, orphans)
     }
-
-  implicit val metaChildDecoder: Decoder[MetaChild] =
-    new Decoder[MetaChild] {
-      override def apply(c: HCursor): Result[MetaChild] = for {
-        name <- c.downField(name).as[String]
-        description <- c.downField(description).as[String]
-        children <- c.getOrElse[Map[String, List[MetaChild]]](children)(Map.empty)(decodeMetaChildMap)
-      } yield MetaChild(name, description, children)
-    }
-
 }

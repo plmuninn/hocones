@@ -13,7 +13,7 @@ import pl.onewebpro.hocones.meta.BuildInfo.version
 object MetaGenerator {
 
   def defaultMetaInformation =
-    MetaInformation(version, Map.empty)
+    MetaInformation(version, Map.empty, Nil)
 
   def readMetaFile(metaFile: MetaFile): SyncIO[MetaInformation] =
     MetaFileReader
