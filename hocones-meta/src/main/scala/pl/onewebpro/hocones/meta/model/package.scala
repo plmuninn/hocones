@@ -1,9 +1,5 @@
 package pl.onewebpro.hocones.meta
 
-import pl.onewebpro.hocones.parser.HoconParser.Path
-import scala.util.control.Breaks._
-import cats.implicits._
-
 package object model {
 
   case class MetaInformation(hoconesVersion: String,
@@ -13,8 +9,17 @@ package object model {
     def findByName(name: String): Option[MetaValue] =
       orphans.find(_.name == name).orElse(roots.values.flatMap(_.values.flatten).find(_.name == name))
 
-    def findByPath(path: String): Seq[MetaValue] =
-      MetaInformation.findByPathFromRoots(roots, path)
+    def findByPath(path: String): Seq[MetaValue] = {
+      val result = for {
+        (sourcePath, source) <- roots
+        (innerPath, values) <- source
+      } yield {
+        val valuesPaths = s"$sourcePath.$innerPath"
+        if (valuesPaths == path) Some(values) else None
+      }
+
+      result.flatten.flatten.toSeq
+    }
 
     def findByPathAndName(path: String, name: String): Option[MetaValue] =
       findByPath(path).find(_.name == name)
@@ -30,11 +35,6 @@ package object model {
       }
     }
 
-  }
-
-  object MetaInformation {
-    private[meta] def findByPathFromRoots(roots: Map[String, Map[String, Seq[MetaValue]]],
-                                          path: String): Seq[MetaValue] = ???
   }
 
   trait MetaValue {
