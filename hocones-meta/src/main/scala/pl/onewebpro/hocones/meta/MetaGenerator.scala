@@ -24,7 +24,7 @@ object MetaGenerator {
     metaFile <- MetaFileWriter.create(config.input)
     generatedMetaInformation <- MetaParser.generate(hocones)
     result <- readMetaFile(metaFile)
-    mergedMetaInformation <- MetaParser.resolve(result, generatedMetaInformation)
+    mergedMetaInformation <- MetaInformationMerger.merge(result, generatedMetaInformation)
     _ <- MetaFileWriter.printToFile(metaFile, mergedMetaInformation.asJson)
   } yield (metaFile, mergedMetaInformation)
 
