@@ -16,6 +16,9 @@ object JsonCodecs {
   implicit val metaBooleanEncoder: Encoder[MetaBoolean] = deriveEncoder[MetaBoolean]
   implicit val metaListEncoder: Encoder[MetaList] = deriveEncoder[MetaList]
   implicit val metaObjectEncoder: Encoder[MetaObject] = deriveEncoder[MetaObject]
+  implicit val metaUntypeEncoder: Encoder[MetaUntypeInformation] = deriveEncoder[MetaUntypeInformation]
+  implicit val metaConcatenationEncoder: Encoder[MetaConcatenation] = deriveEncoder[MetaConcatenation]
+  implicit val metaEnvironmentEncoder: Encoder[MetaEnvironment] = deriveEncoder[MetaEnvironment]
 
   implicit private val encodeMetaValue: Encoder[MetaValue] =
     new Encoder[MetaValue] {
@@ -55,6 +58,9 @@ object JsonCodecs {
   implicit val decodeBooleanEncoder: Decoder[MetaBoolean] = deriveDecoder[MetaBoolean]
   implicit val decodeListEncoder: Decoder[MetaList] = deriveDecoder[MetaList]
   implicit val decodeObjectEncoder: Decoder[MetaObject] = deriveDecoder[MetaObject]
+  implicit val metaUntypeDecoder: Decoder[MetaUntypeInformation] = deriveDecoder[MetaUntypeInformation]
+  implicit val metaConcatenationDecoder: Decoder[MetaConcatenation] = deriveDecoder[MetaConcatenation]
+  implicit val metaEnvironmentDecoder: Decoder[MetaEnvironment] = deriveDecoder[MetaEnvironment]
 
   private implicit val metaValueDecoder: Decoder[MetaValue] =
     new Decoder[MetaValue] {

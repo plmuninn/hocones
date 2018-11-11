@@ -40,30 +40,39 @@ package object model {
   trait MetaValue {
     def name: String
 
-    def description: String
+    def description: Option[String]
   }
 
+  case class MetaUntypeInformation(name: String,
+                                   description: Option[String]) extends MetaValue
+
+  case class MetaConcatenation(name: String,
+                               description: Option[String]) extends MetaValue
+
+  case class MetaEnvironment(name: String,
+                             description: Option[String]) extends MetaValue
+
   case class MetaString(name: String,
-                        description: String,
-                        pattern: String,
-                        `min-length`: Int,
-                        `max-length`: Int) extends MetaValue
+                        description: Option[String],
+                        pattern: Option[String],
+                        `min-length`: Option[Int],
+                        `max-length`: Option[Int]) extends MetaValue
 
   case class MetaNumber(name: String,
-                        description: String,
-                        `max-value`: Int,
-                        `min-value`: Int) extends MetaValue
+                        description: Option[String],
+                        `max-value`: Option[Int],
+                        `min-value`: Option[Int]) extends MetaValue
 
   case class MetaBoolean(name: String,
-                         description: String) extends MetaValue
+                         description: Option[String]) extends MetaValue
 
   case class MetaList(name: String,
-                      description: String,
-                      `can-be-empty`: Boolean,
-                      `element-type`: String) extends MetaValue
+                      description: Option[String],
+                      `can-be-empty`: Option[Boolean],
+                      `element-type`: Option[String]) extends MetaValue
 
   case class MetaObject(name: String,
-                        description: String,
-                        `element-type`: String) extends MetaValue
+                        description: Option[String],
+                        `element-type`: Option[String]) extends MetaValue
 
 }

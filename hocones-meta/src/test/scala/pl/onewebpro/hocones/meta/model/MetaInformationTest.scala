@@ -9,36 +9,36 @@ class MetaInformationTest extends FlatSpec with Matchers {
     roots = Map(
       "pl.onewebpro.hocones.meta" -> Map(
         "model" -> Seq(
-          MetaString("meta-string", "description", "pattern", 0, 0),
-          MetaNumber("meta-number", "description", 0, 0),
-          MetaBoolean("meta-boolean", "description"),
-          MetaList("meta-list", "description", false, "element-type"),
-          MetaObject("meta-object", "description", "element-type"),
+          MetaString("meta-string", None, None, None, None),
+          MetaNumber("meta-number", None, None, None),
+          MetaBoolean("meta-boolean", None),
+          MetaList("meta-list", None, None, None),
+          MetaObject("meta-object", None, None),
         ),
         "test" -> Seq(
-          MetaString("meta-string", "description", "pattern", 0, 0),
-          MetaNumber("meta-number", "description", 0, 0),
-          MetaBoolean("meta-boolean", "description"),
-          MetaList("meta-list", "description", false, "element-type"),
-          MetaObject("meta-object", "description", "element-type"),
+          MetaString("meta-string", None, None, None, None),
+          MetaNumber("meta-number", None, None, None),
+          MetaBoolean("meta-boolean", None),
+          MetaList("meta-list", None, None, None),
+          MetaObject("meta-object", None, None),
         )
       ),
       "pl.onewebpro.test" -> Map(
         "model" -> Seq(
-          MetaString("meta-string", "description", "pattern", 0, 0),
-          MetaNumber("meta-number", "description", 0, 0),
-          MetaBoolean("meta-boolean", "description"),
-          MetaList("meta-list", "description", false, "element-type"),
-          MetaObject("meta-object", "description", "element-type"),
+          MetaString("meta-string", None, None, None, None),
+          MetaNumber("meta-number", None, None, None),
+          MetaBoolean("meta-boolean", None),
+          MetaList("meta-list", None, None, None),
+          MetaObject("meta-object", None, None),
         )
       )
     ),
     orphans = Seq(
-      MetaString("orphans-meta-string", "description", "pattern", 0, 0),
-      MetaNumber("orphans-meta-number", "description", 0, 0),
-      MetaBoolean("orphans-meta-boolean", "description"),
-      MetaList("orphans-meta-list", "description", false, "element-type"),
-      MetaObject("orphans-meta-object", "description", "element-type"),
+      MetaString("orphans-meta-string", None, None, None, None),
+      MetaNumber("orphans-meta-number", None, None, None),
+      MetaBoolean("orphans-meta-boolean", None),
+      MetaList("orphans-meta-list", None, None, None),
+      MetaObject("orphans-meta-object", None, None),
     )
   )
 

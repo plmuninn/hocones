@@ -25,7 +25,7 @@ object MetaFileWriter {
   def tagMetaFile(path: File): MetaFile = tag[MetaFileTag][File](path)
 
   def printer: SyncIO[Printer] =
-    SyncIO(Printer(dropNullKeys = true, mappingStyle = Printer.FlowStyle.Block))
+    SyncIO(Printer(dropNullKeys = false, preserveOrder = true, mappingStyle = Printer.FlowStyle.Block))
 
   def metaFilePointer(input: File): SyncIO[MetaFile] = for {
     name <- SyncIO(fileName(input))
@@ -36,9 +36,12 @@ object MetaFileWriter {
     if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit else SyncIO.unit
 
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
-    printer.map(_.pretty(json)).flatMap { text =>
+    printer
+      .map(_.pretty(json))
+      .map(_.replace(": null", ": "))
+      .flatMap { text =>
       Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
-        .use(printer => SyncIO(printer.print(text)))
+        .use(printer => SyncIO(printer.print(text.r)))
     }
 
   def create(input: File): SyncIO[MetaFile] = for {
