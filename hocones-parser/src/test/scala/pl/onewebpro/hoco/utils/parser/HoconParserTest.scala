@@ -166,7 +166,7 @@ class HoconParserTest extends TestSpec {
     val result: HoconResult = HoconParser(config).unsafeRunSync()
     val extractonResult = result.results.containsEnvironmentValues
 
-    extractonResult.size shouldBe 3
+    extractonResult.size shouldBe 6
   }
 
   it should "extract proper env hocones values from array.conf" in {
