@@ -56,6 +56,7 @@ object JsonCodecs {
   implicit val decodeObjectEncoder: Decoder[MetaObject] = deriveDecoder[MetaObject]
   implicit val metaGenericDecoder: Decoder[MetaGenericInformation] = deriveDecoder[MetaGenericInformation]
 
+  // TODO change decoding or use shaplesss for it
   private implicit val metaValueDecoder: Decoder[MetaValue] =
     new Decoder[MetaValue] {
       override def apply(c: HCursor): Result[MetaValue] =
