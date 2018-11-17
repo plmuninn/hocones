@@ -59,11 +59,16 @@ object JsonCodecs {
   private implicit val metaValueDecoder: Decoder[MetaValue] =
     new Decoder[MetaValue] {
       override def apply(c: HCursor): Result[MetaValue] =
-        decodeStringEncoder.apply(c)
-          .orElse(decodeStringEncoder.apply(c))
-          .orElse(decodeListEncoder.apply(c))
-          .orElse(decodeObjectEncoder.apply(c))
-          .orElse(metaGenericDecoder.apply(c))
+        c.keys match {
+          case Some(keys) =>
+            val keysS = keys.toSeq
+            if (keysS.contains("patter")) decodeStringEncoder.apply(c)
+            else if (keysS.contains("max-value")) decodeNumberEncoder.apply(c)
+            else if (keysS.contains("can-be-empty")) decodeListEncoder.apply(c)
+            else if (keysS.contains("element-type")) decodeObjectEncoder.apply(c)
+            else metaGenericDecoder.apply(c)
+          case None => Left(DecodingFailure("Keys empty", Nil))
+        }
     }
 
   private implicit val decodeMetaChildMap: Decoder[Map[String, Map[String, Seq[MetaValue]]]] =
