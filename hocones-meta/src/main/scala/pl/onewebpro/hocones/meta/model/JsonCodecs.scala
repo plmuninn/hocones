@@ -28,6 +28,9 @@ object JsonCodecs {
         case model: MetaBoolean => metaBooleanEncoder.apply(model)
         case model: MetaList => metaListEncoder.apply(model)
         case model: MetaObject => metaObjectEncoder.apply(model)
+        case model: MetaUntypeInformation => metaUntypeEncoder.apply(model)
+        case model: MetaConcatenation => metaConcatenationEncoder.apply(model)
+        case model: MetaEnvironment => metaEnvironmentEncoder.apply(model)
       }
     }
 
@@ -69,6 +72,9 @@ object JsonCodecs {
           .orElse(decodeStringEncoder.apply(c))
           .orElse(decodeListEncoder.apply(c))
           .orElse(decodeObjectEncoder.apply(c))
+          .orElse(metaConcatenationDecoder.apply(c))
+          .orElse(metaEnvironmentDecoder.apply(c))
+          .orElse(metaUntypeDecoder.apply(c))
           .orElse(decodeBooleanEncoder.apply(c))
     }
 

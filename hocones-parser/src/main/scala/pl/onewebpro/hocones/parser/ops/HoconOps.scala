@@ -18,6 +18,8 @@ object HoconOps {
   type FlatResultList = Map[Path, HoconResultValue]
 
   implicit class ResultValuesOps(values: Seq[HoconResultValue]) {
+    def asMap: Map[Path, HoconResultValue] = values.map(value => value.path -> value).toMap
+
     def flattenResultValues(withContainers: Boolean): FlatResultList =
       values.flatMap {
         case resultType: HoconResultType =>

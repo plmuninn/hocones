@@ -5,7 +5,6 @@ import java.io.{File, PrintWriter}
 import cats.effect.{Resource, SyncIO}
 import cats.implicits._
 import io.circe.Json
-import io.circe.yaml.syntax._
 import io.circe.yaml.Printer
 import shapeless.tag
 import shapeless.tag.@@
