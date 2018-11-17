@@ -13,24 +13,18 @@ object JsonCodecs {
 
   implicit val metaStringEncoder: Encoder[MetaString] = deriveEncoder[MetaString]
   implicit val metaNumberEncoder: Encoder[MetaNumber] = deriveEncoder[MetaNumber]
-  implicit val metaBooleanEncoder: Encoder[MetaBoolean] = deriveEncoder[MetaBoolean]
   implicit val metaListEncoder: Encoder[MetaList] = deriveEncoder[MetaList]
   implicit val metaObjectEncoder: Encoder[MetaObject] = deriveEncoder[MetaObject]
-  implicit val metaUntypeEncoder: Encoder[MetaUntypeInformation] = deriveEncoder[MetaUntypeInformation]
-  implicit val metaConcatenationEncoder: Encoder[MetaConcatenation] = deriveEncoder[MetaConcatenation]
-  implicit val metaEnvironmentEncoder: Encoder[MetaEnvironment] = deriveEncoder[MetaEnvironment]
+  implicit val metaGenericEncoder: Encoder[MetaGenericInformation] = deriveEncoder[MetaGenericInformation]
 
   implicit private val encodeMetaValue: Encoder[MetaValue] =
     new Encoder[MetaValue] {
       override def apply(a: MetaValue): Json = a match {
         case model: MetaString => metaStringEncoder.apply(model)
         case model: MetaNumber => metaNumberEncoder.apply(model)
-        case model: MetaBoolean => metaBooleanEncoder.apply(model)
         case model: MetaList => metaListEncoder.apply(model)
         case model: MetaObject => metaObjectEncoder.apply(model)
-        case model: MetaUntypeInformation => metaUntypeEncoder.apply(model)
-        case model: MetaConcatenation => metaConcatenationEncoder.apply(model)
-        case model: MetaEnvironment => metaEnvironmentEncoder.apply(model)
+        case model: MetaGenericInformation => metaGenericEncoder.apply(model)
       }
     }
 
@@ -58,12 +52,9 @@ object JsonCodecs {
 
   implicit val decodeStringEncoder: Decoder[MetaString] = deriveDecoder[MetaString]
   implicit val decodeNumberEncoder: Decoder[MetaNumber] = deriveDecoder[MetaNumber]
-  implicit val decodeBooleanEncoder: Decoder[MetaBoolean] = deriveDecoder[MetaBoolean]
   implicit val decodeListEncoder: Decoder[MetaList] = deriveDecoder[MetaList]
   implicit val decodeObjectEncoder: Decoder[MetaObject] = deriveDecoder[MetaObject]
-  implicit val metaUntypeDecoder: Decoder[MetaUntypeInformation] = deriveDecoder[MetaUntypeInformation]
-  implicit val metaConcatenationDecoder: Decoder[MetaConcatenation] = deriveDecoder[MetaConcatenation]
-  implicit val metaEnvironmentDecoder: Decoder[MetaEnvironment] = deriveDecoder[MetaEnvironment]
+  implicit val metaGenericDecoder: Decoder[MetaGenericInformation] = deriveDecoder[MetaGenericInformation]
 
   private implicit val metaValueDecoder: Decoder[MetaValue] =
     new Decoder[MetaValue] {
@@ -72,10 +63,7 @@ object JsonCodecs {
           .orElse(decodeStringEncoder.apply(c))
           .orElse(decodeListEncoder.apply(c))
           .orElse(decodeObjectEncoder.apply(c))
-          .orElse(metaConcatenationDecoder.apply(c))
-          .orElse(metaEnvironmentDecoder.apply(c))
-          .orElse(metaUntypeDecoder.apply(c))
-          .orElse(decodeBooleanEncoder.apply(c))
+          .orElse(metaGenericDecoder.apply(c))
     }
 
   private implicit val decodeMetaChildMap: Decoder[Map[String, Map[String, Seq[MetaValue]]]] =

@@ -11,14 +11,14 @@ class MetaInformationTest extends FlatSpec with Matchers {
         "model" -> Seq(
           MetaString("meta-string", None, None, None, None),
           MetaNumber("meta-number", None, None, None),
-          MetaBoolean("meta-boolean", None),
+          MetaGenericInformation("meta-boolean", None),
           MetaList("meta-list", None, None, None),
           MetaObject("meta-object", None, None),
         ),
         "test" -> Seq(
           MetaString("meta-string", None, None, None, None),
           MetaNumber("meta-number", None, None, None),
-          MetaBoolean("meta-boolean", None),
+          MetaGenericInformation("meta-boolean", None),
           MetaList("meta-list", None, None, None),
           MetaObject("meta-object", None, None),
         )
@@ -27,7 +27,7 @@ class MetaInformationTest extends FlatSpec with Matchers {
         "model" -> Seq(
           MetaString("meta-string", None, None, None, None),
           MetaNumber("meta-number", None, None, None),
-          MetaBoolean("meta-boolean", None),
+          MetaGenericInformation("meta-boolean", None),
           MetaList("meta-list", None, None, None),
           MetaObject("meta-object", None, None),
         )
@@ -36,7 +36,7 @@ class MetaInformationTest extends FlatSpec with Matchers {
     orphans = Seq(
       MetaString("orphans-meta-string", None, None, None, None),
       MetaNumber("orphans-meta-number", None, None, None),
-      MetaBoolean("orphans-meta-boolean", None),
+      MetaGenericInformation("orphans-meta-boolean", None),
       MetaList("orphans-meta-list", None, None, None),
       MetaObject("orphans-meta-object", None, None),
     )

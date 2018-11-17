@@ -67,10 +67,10 @@ object ValueTypeParser {
     asList <- IO(divideRenderedValue(renderedValue))
     leftAndRight <- divideToLeftAndRight(asList)
     (leftSide, rightSide) = leftAndRight
-    leftValue <- parseAsValue(path, leftSide)
-    rigthValue <- parseAsValue(path, rightSide)
-    leftValue <- HoconParser.parseValue(path, leftValue, leftValue.canonicalName)
-    rigthValue <- HoconParser.parseValue(path, rigthValue, rigthValue.canonicalName)
+    leftHoconValue <- parseAsValue(path, leftSide)
+    rightHoconValue <- parseAsValue(path, rightSide)
+    leftValue <- HoconParser.parseValue(path, leftHoconValue, leftHoconValue.canonicalName)
+    rigthValue <- HoconParser.parseValue(path, rightHoconValue, rightHoconValue.canonicalName)
   } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
 
   //TODO test me
@@ -94,9 +94,11 @@ object ValueTypeParser {
             divideRenderedValue(renderedValue) match {
               case left :: right :: Nil =>
                 for {
-                  leftHoconValue <- SimpleHoconValue(left)
-                  rightHoconValue <- SimpleHoconValue(right)
-                } yield HoconMergedValues(path, configValue, leftHoconValue, rightHoconValue)
+                  leftHoconValue <- parseAsValue(path, left)
+                  rightHoconValue <- parseAsValue(path, right)
+                  leftValue <- HoconParser.parseValue(path, leftHoconValue, leftHoconValue.canonicalName)
+                  rigthValue <- HoconParser.parseValue(path, rightHoconValue, rightHoconValue.canonicalName)
+                } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
               case _ => IO.raiseError(ParsingError(s"Value $renderedValue is not handled merge value"))
             }
         }

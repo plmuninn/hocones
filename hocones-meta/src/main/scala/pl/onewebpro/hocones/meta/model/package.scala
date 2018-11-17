@@ -43,14 +43,7 @@ package object model {
     def description: Option[String]
   }
 
-  case class MetaUntypeInformation(name: String,
-                                   description: Option[String]) extends MetaValue
-
-  case class MetaConcatenation(name: String,
-                               description: Option[String]) extends MetaValue
-
-  case class MetaEnvironment(name: String,
-                             description: Option[String]) extends MetaValue
+  case class MetaGenericInformation(name: String, description: Option[String]) extends MetaValue
 
   case class MetaString(name: String,
                         description: Option[String],
@@ -62,9 +55,6 @@ package object model {
                         description: Option[String],
                         `max-value`: Option[Int],
                         `min-value`: Option[Int]) extends MetaValue
-
-  case class MetaBoolean(name: String,
-                         description: Option[String]) extends MetaValue
 
   case class MetaList(name: String,
                       description: Option[String],
