@@ -4,7 +4,6 @@ import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.meta.BuildInfo.version
 import pl.onewebpro.hocones.meta.model._
-import pl.onewebpro.hocones.parser.HoconParser.Path
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity._
@@ -13,19 +12,9 @@ import pl.onewebpro.hocones.parser.ops.HoconOps._
 
 object MetaParser {
 
+  import pl.onewebpro.hocones.common.implicits._
+
   private[MetaParser] object InternalMetaParser {
-
-    implicit class PathFunctions(path: Path) {
-      lazy val splitPath: Array[String] = path.split("\\.")
-
-      lazy val name: String = splitPath.last
-
-      lazy val packageName: Path = dropRight(1)
-
-      lazy val isOrphan: Boolean = splitPath.length == 1
-
-      def dropRight(elements: Int): Path = splitPath.dropRight(elements).mkString(".")
-    }
 
     implicit class PathResultFunctions(pair: (Path, HoconResultValue)) {
       lazy val (path, value) = pair

@@ -4,7 +4,7 @@ import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.md.table.model.EnvironmentTableElement
 import pl.onewebpro.hocones.meta.model._
-import pl.onewebpro.hocones.parser.HoconParser.Path
+import pl.onewebpro.hocones.common.implicits.Path
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, ResolvedRef, SimpleValue}
@@ -33,6 +33,7 @@ object EnvironmentTableGenerator {
   // Flatten for Options
   private implicit def flat[K, V](kv: (K, Option[V])) = kv._2.map(kv._1 -> _).toList
 
+  // TODO use shapless
   def getDetails: Option[MetaValue] => Map[String, String] = {
     case Some(model: MetaString) => Map("pattern" -> model.pattern, "min-length" -> model.`min-length`.map(_.toString), "max-length" -> model.`max-length`.map(_.toString)).flatten.toMap
     case Some(model: MetaNumber) => Map("max-value" -> model.`max-value`.map(_.toString), "min-value" -> model.`min-value`.map(_.toString)).flatten.toMap

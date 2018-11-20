@@ -6,6 +6,7 @@ import cats.effect.IO
 import cats.implicits._
 import com.typesafe.config._
 import com.typesafe.scalalogging.LazyLogging
+import pl.onewebpro.hocones.common.implicits._
 import pl.onewebpro.hocones.parser.`type`._
 import pl.onewebpro.hocones.parser.entity._
 import shapeless.tag
@@ -17,8 +18,6 @@ object HoconParser extends LazyLogging {
 
   private[HoconParser] object InternalHoconParser {
 
-    trait PathTag
-
     trait CanonicalClassNameTag
 
     trait RenderedValueTag
@@ -27,10 +26,6 @@ object HoconParser extends LazyLogging {
 
   import InternalHoconParser._
   import pl.onewebpro.hocones.parser.ops.HoconOps._
-
-  type Path = String @@ PathTag
-
-  def tagPath(path: String): Path = tag[PathTag][String](path)
 
   type CanonicalClassName = String @@ CanonicalClassNameTag
 

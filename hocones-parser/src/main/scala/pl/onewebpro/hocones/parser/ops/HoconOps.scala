@@ -1,19 +1,16 @@
 package pl.onewebpro.hocones.parser.ops
 
 import com.typesafe.config.ConfigValue
-import pl.onewebpro.hocones.parser.HoconParser.{CanonicalClassName, Path, tagCanonicalName, tagPath}
+import pl.onewebpro.hocones.common.implicits._
+import pl.onewebpro.hocones.parser.HoconParser.{CanonicalClassName, tagCanonicalName}
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef, SimpleHoconValue}
-
-import scala.language.implicitConversions
 
 object HoconOps {
 
   implicit class ConfigValueImplicits(value: ConfigValue) {
     val canonicalName: CanonicalClassName = tagCanonicalName(value.getClass.getCanonicalName)
   }
-
-  implicit def stringToPath(value: String): Path = tagPath(value)
 
   type FlatResultList = Map[Path, HoconResultValue]
 

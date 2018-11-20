@@ -3,11 +3,12 @@ package pl.onewebpro.hocones.parser.`type`
 import cats.data.OptionT
 import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
-import pl.onewebpro.hocones.parser.HoconParser.{Path, RenderedValue}
-import pl.onewebpro.hocones.parser.{HoconParser, ParsingError}
+import pl.onewebpro.hocones.common.implicits.Path
+import pl.onewebpro.hocones.parser.HoconParser.RenderedValue
 import pl.onewebpro.hocones.parser.`type`.ValueType.ValueType
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.{ComposedConfigValue, EnvironmentValue, NotResolvedRef, SimpleHoconValue}
+import pl.onewebpro.hocones.parser.{HoconParser, ParsingError}
 
 import scala.collection.JavaConverters._
 

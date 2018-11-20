@@ -1,7 +1,7 @@
 package pl.onewebpro.hocones.parser
 
 import com.typesafe.config.ConfigValue
-import pl.onewebpro.hocones.parser.HoconParser.Path
+import pl.onewebpro.hocones.common.implicits.Path
 
 package object entity {
 

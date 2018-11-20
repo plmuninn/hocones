@@ -40,7 +40,7 @@ object Main extends IOApp {
       case ProgramMode.Docs => for {
         _ <- putStrLn("Generating documentation about configuration")
         _ <- MdGenerator.generateDocument(parsedFile, meta, properties.docsConfiguration).toIO
-        _ <- putStrLn(s"File generated: ${properties.tableConfiguration.outputPath.toFile.getPath}")
+        _ <- putStrLn(s"File generated: ${properties.docsConfiguration.outputPath.toFile.getPath}")
       } yield ()
     }
 

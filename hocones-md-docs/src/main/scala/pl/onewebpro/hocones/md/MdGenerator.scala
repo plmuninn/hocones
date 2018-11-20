@@ -4,6 +4,7 @@ import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.common.io._
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableConfiguration}
+import pl.onewebpro.hocones.md.document.DocumentationGenerator
 import pl.onewebpro.hocones.md.io.DocumentationWriter
 import pl.onewebpro.hocones.md.table.{EnvironmentTable, EnvironmentTableGenerator}
 import pl.onewebpro.hocones.meta.model.MetaInformation
@@ -30,6 +31,11 @@ object MdGenerator {
     parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
     _ <- SyncIO.fromEither(OutputFileValidator.validate(outputFile, parentDirectory).leftMap(error => MdFileError(error.message)))
+
+    writer = new DocumentationWriter(outputFile)
+    documentation <- DocumentationGenerator(result, meta)
+    text <- documentation.toMd
+    _ <- writer.write(text)
   } yield ()
 
   def generate(result: HoconResult, meta: MetaInformation, configuration: Either[TableConfiguration, DocumentConfiguration]) =

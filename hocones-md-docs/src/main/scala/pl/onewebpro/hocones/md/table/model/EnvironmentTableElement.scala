@@ -1,6 +1,6 @@
 package pl.onewebpro.hocones.md.table.model
 
-import pl.onewebpro.hocones.parser.HoconParser.Path
+import pl.onewebpro.hocones.common.implicits.Path
 
 case class EnvironmentTableElement(environmentVariable: String,
                                    description: Option[String],

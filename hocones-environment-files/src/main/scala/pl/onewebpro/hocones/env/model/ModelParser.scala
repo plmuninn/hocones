@@ -2,7 +2,7 @@ package pl.onewebpro.hocones.env.model
 
 import com.typesafe.config.ConfigValue
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
-import pl.onewebpro.hocones.parser.HoconParser.Path
+import pl.onewebpro.hocones.common.implicits.Path
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.{ResolvedRef, SimpleValue, EnvironmentValue => SimpleEnvironmentValue}

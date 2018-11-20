@@ -3,6 +3,7 @@ package pl.onewebpro.hocones.parser.`type`
 import cats.effect.IO
 import cats.implicits._
 import com.typesafe.config.{Config, ConfigList, ConfigObject, ConfigValue}
+import pl.onewebpro.hocones.common.implicits._
 import pl.onewebpro.hocones.parser.HoconParser._
 import pl.onewebpro.hocones.parser.ParsingError
 import pl.onewebpro.hocones.parser.`type`.ResultType.ResultType
