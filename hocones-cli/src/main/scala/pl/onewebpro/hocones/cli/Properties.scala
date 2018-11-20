@@ -6,6 +6,7 @@ import cats.effect.SyncIO
 import com.typesafe.config.ConfigFactory
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.cli.Properties.ProgramMode.ProgramMode
+import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableAlignment, TableConfiguration}
 
 import scala.util.Try
 
@@ -14,7 +15,7 @@ object Properties {
   object ProgramMode extends Enumeration {
     type ProgramMode = Value
 
-    val Load, EnvFile = Value
+    val Load, EnvFile, EnvDocs, Docs = Value
   }
 
   case class CliProperties(input: File = null,
@@ -24,7 +25,16 @@ object Properties {
                              outputPath = null,
                              withComments = true,
                              withDefaults = true,
-                             removeDuplicates = true)
+                             removeDuplicates = true),
+                           tableConfiguration: TableConfiguration =
+                           TableConfiguration(
+                             outputPath = null,
+                             aligned = null
+                           ),
+                           docsConfiguration: DocumentConfiguration =
+                           DocumentConfiguration(
+                             outputPath = null
+                           )
                           )
 
   val unit: Unit = ()
@@ -39,6 +49,9 @@ object Properties {
       _ <- Either.cond(Try(ConfigFactory.parseFile(file)).isSuccess, unit, s"File ${file.getAbsolutePath} is not proper hocon file")
     } yield ()
   }
+
+  private implicit val tableAlignmentRead: scopt.Read[TableAlignment.Value] =
+    scopt.Read.reads(TableAlignment.withName)
 
   lazy val parser =
     new scopt.OptionParser[CliProperties]("hocones") {
@@ -82,6 +95,33 @@ object Properties {
             .withFallback(() => true)
             .action((duplicates, cfg) => cfg.copy(envConfiguration = cfg.envConfiguration.copy(removeDuplicates = duplicates)))
             .text("remove-duplicates is boolean property - should duplicates be removed from output file - default true")
+        )
+
+      cmd("env-docs")
+        .action((_, cfg) => cfg.copy(mode = ProgramMode.EnvDocs))
+        .text("generate md table with environments")
+        .children(
+          opt[File]('o', "output")
+            .required()
+            .valueName("<file>")
+            .action((output, cfg) => cfg.copy(tableConfiguration = cfg.tableConfiguration.copy(outputPath = output.toPath)))
+            .text("output is a required file property - file for saving documentation"),
+
+          opt[TableAlignment.Value]('a', "alignment")
+            .withFallback(() => TableAlignment.Left)
+            .action((alignment, cfg) => cfg.copy(tableConfiguration = cfg.tableConfiguration.copy(aligned = alignment)))
+            .text("alignment of values in table (left, right, center) - default left"),
+        )
+
+      cmd("docs")
+        .action((_, cfg) => cfg.copy(mode = ProgramMode.Docs))
+        .text("generate md table with environments")
+        .children(
+          opt[File]('o', "output")
+            .required()
+            .valueName("<file>")
+            .action((output, cfg) => cfg.copy(docsConfiguration = cfg.docsConfiguration.copy(outputPath = output.toPath)))
+            .text("output is a required file property - file for saving documentation"),
         )
     }
 

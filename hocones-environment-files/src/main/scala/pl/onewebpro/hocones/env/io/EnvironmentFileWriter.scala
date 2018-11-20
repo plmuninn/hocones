@@ -4,6 +4,7 @@ import java.io.PrintWriter
 
 import cats.effect.{Resource, SyncIO}
 import cats.implicits._
+import pl.onewebpro.hocones.common.io._
 import pl.onewebpro.hocones.env.model.EnvironmentValue
 
 class EnvironmentFileWriter(file: OutputFile) {
@@ -16,7 +17,7 @@ class EnvironmentFileWriter(file: OutputFile) {
 
   private[io] def writeValuesToFile(values: Iterable[String]): SyncIO[OutputFile] =
     Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
-      .use(printer => SyncIO(values.foreach(printer.println))) *> SyncIO.pure(file)
+    .use(printer => SyncIO(values.foreach(printer.println))) *> SyncIO.pure(file)
 
   def write(values: Iterable[EnvironmentValue]): SyncIO[OutputFile] =
     for {

@@ -1,9 +1,9 @@
-package pl.onewebpro.hocones.env
+package pl.onewebpro.hocones.common
 
 import java.io.File
 
-import shapeless.tag
 import shapeless.tag.@@
+import shapeless.tag
 
 package object io {
 
@@ -14,8 +14,6 @@ package object io {
     trait ParentDirectoryTag
 
   }
-
-  case class EnvironmentFileError(message: String, cause: Throwable = None.orNull) extends Error
 
   import InternalEnvironmentFileWriter._
 

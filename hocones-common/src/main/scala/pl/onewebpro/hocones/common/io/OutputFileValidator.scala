@@ -1,6 +1,4 @@
-package pl.onewebpro.hocones.env.io
-
-import cats.implicits._
+package pl.onewebpro.hocones.common.io
 
 object OutputFileValidator {
 

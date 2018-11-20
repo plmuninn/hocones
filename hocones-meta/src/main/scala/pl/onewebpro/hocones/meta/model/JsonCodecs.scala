@@ -1,6 +1,5 @@
 package pl.onewebpro.hocones.meta.model
 
-import cats.implicits._
 import _root_.io.circe._
 import _root_.io.circe.Decoder._
 import _root_.io.circe.generic.semiauto._
@@ -63,7 +62,7 @@ object JsonCodecs {
         c.keys match {
           case Some(keys) =>
             val keysS = keys.toSeq
-            if (keysS.contains("patter")) decodeStringEncoder.apply(c)
+            if (keysS.contains("pattern")) decodeStringEncoder.apply(c)
             else if (keysS.contains("max-value")) decodeNumberEncoder.apply(c)
             else if (keysS.contains("can-be-empty")) decodeListEncoder.apply(c)
             else if (keysS.contains("element-type")) decodeObjectEncoder.apply(c)

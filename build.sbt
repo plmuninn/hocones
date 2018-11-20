@@ -87,13 +87,21 @@ val tests = Seq(
   "org.scalamock" %% "scalamock" % scalaMockVersion % "test"
 )
 
+val `hocones-common` =
+  (project in file("hocones-common"))
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-common",
+      libraryDependencies ++= (hocon ++ logs ++ fp ++ tests)
+    )
+
 val `hocones-parser` =
   (project in file("hocones-parser"))
     .settings(defaultSettings)
     .settings(
       name := "hocones-parser",
       libraryDependencies ++= (hocon ++ logs ++ fp ++ tests)
-    )
+    ).dependsOn(`hocones-common`)
 
 val `hocones-environment-files` =
   (project in file("hocones-environment-files"))
@@ -101,7 +109,7 @@ val `hocones-environment-files` =
     .settings(
       name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
-    ).dependsOn(`hocones-parser`)
+    ).dependsOn(`hocones-parser`, `hocones-common`)
 
 val `hocones-meta` =
   (project in file("hocones-meta"))
@@ -117,7 +125,7 @@ val `hocones-meta` =
       addCompilerPlugin(
         "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
       )
-    ).dependsOn(`hocones-parser`)
+    ).dependsOn(`hocones-parser`, `hocones-common`)
 
 val `hocones-md-docs` =
   (project in file("hocones-md-docs"))
@@ -125,7 +133,7 @@ val `hocones-md-docs` =
     .settings(
       name := "hocones-md-docs",
       libraryDependencies ++= (logs ++ fp ++ markdown ++ tests)
-    ).dependsOn(`hocones-parser`, `hocones-meta`)
+    ).dependsOn(`hocones-parser`, `hocones-meta`, `hocones-common`)
 
 val `hocones-statistics` =
   (project in file("hocones-statistics"))
@@ -146,6 +154,7 @@ val `hocones-cli` =
 
 lazy val root = (project in file("."))
   .aggregate(
+    `hocones-common`,
     `hocones-parser`,
     `hocones-environment-files`,
     `hocones-cli`,
