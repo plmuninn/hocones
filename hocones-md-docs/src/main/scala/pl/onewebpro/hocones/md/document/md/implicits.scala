@@ -1,6 +1,7 @@
 package pl.onewebpro.hocones.md.document.md
 
 import net.steppschuh.markdowngenerator.MarkdownSerializable
+import pl.onewebpro.hocones.md.document.md.documents._
 import pl.onewebpro.hocones.md.document.model._
 
 object implicits {

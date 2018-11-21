@@ -27,10 +27,10 @@ class DocumentationGenerator(documentation: Documentation) {
     builder <- SyncIO(new TextBuilder().asInstanceOf[MarkdownBuilder[TextBuilder, Text]])
     builder <- SyncIO(documentation.roots.foldLeft(builder) {
       case (bb, (root, models)) =>
-        models.foldLeft(bb.heading(root, 2).asInstanceOf[MarkdownBuilder[TextBuilder, Text]])((acc, element) => acc.append(documentToMd(element)).newParagraph())
+        models.foldLeft(bb.heading(root, 2).asInstanceOf[MarkdownBuilder[TextBuilder, Text]])((acc, element) => acc.append(documentToMd(element)).rule())
     })
     orphans <- SyncIO(documentation.orphans.map(documentToMd))
-    builder <- SyncIO(orphans.foldLeft(builder)((acc, element) => acc.append(element).newParagraph()))
+    builder <- SyncIO(orphans.foldLeft(builder)((acc, element) => acc.append(element).rule()))
   } yield builder.toString
 }
 
