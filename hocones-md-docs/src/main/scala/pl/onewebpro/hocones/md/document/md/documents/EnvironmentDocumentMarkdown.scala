@@ -12,5 +12,6 @@ class EnvironmentDocumentMarkdown extends DocumentToMdGenerator[EnvironmentDocum
       .isOptional(document.value)
       .description(document)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 }

@@ -9,6 +9,7 @@ trait HoconResultTypeOps {
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   implicit class ResultTypeBuilderOps(builder: TextBuilder) {
+
     def size(result: HoconResultType): TextBuilder =
       builder.label("Size:").text(result.values.size).newParagraph()
 

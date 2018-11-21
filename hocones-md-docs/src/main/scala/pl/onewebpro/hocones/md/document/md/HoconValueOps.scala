@@ -3,6 +3,7 @@ package pl.onewebpro.hocones.md.document.md
 import net.steppschuh.markdowngenerator.text.TextBuilder
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity.HoconValue
+import pl.onewebpro.hocones.parser.entity.simple.SimpleValue
 
 trait HoconValueOps {
   self: DocumentToMdGenerator[_] =>
@@ -21,8 +22,10 @@ trait HoconValueOps {
       }).newParagraph()
     }
 
-    def valueOfDocument(value: HoconValue): TextBuilder =
-      builder.label("Value:").text(value.value.value).newParagraph()
+    def valueOfDocument(value: SimpleValue): TextBuilder =
+      builder.label("Value:").text(value.value).newParagraph()
+
+    def valueOfDocument(value: HoconValue): TextBuilder = valueOfDocument(value.value)
   }
 
 }

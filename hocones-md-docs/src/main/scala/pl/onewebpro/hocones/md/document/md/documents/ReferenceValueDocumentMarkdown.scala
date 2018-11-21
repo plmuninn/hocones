@@ -14,5 +14,6 @@ class ReferenceValueDocumentMarkdown
       .referenceTo(document.value)
       .description(document)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 }

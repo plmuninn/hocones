@@ -17,5 +17,6 @@ class ConcatenationDocumentMarkdown
       .references(document.value)
       .unresolvedReferences(document.value)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 }

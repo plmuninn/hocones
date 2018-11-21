@@ -2,7 +2,7 @@ package pl.onewebpro.hocones.md.document.md
 
 import net.steppschuh.markdowngenerator.text.TextBuilder
 import pl.onewebpro.hocones.parser.entity.HoconConcatenation
-import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef, SimpleHoconValue}
+import pl.onewebpro.hocones.parser.entity.simple._
 
 trait HoconConcatenationOps {
   self: DocumentToMdGenerator[_] =>
@@ -13,11 +13,11 @@ trait HoconConcatenationOps {
                                                                (isValue: SimpleHoconValue => Boolean): Seq[T] =
       values.filter(isValue).map(_.asInstanceOf[T])
 
-    def pattern(reference: HoconConcatenation): TextBuilder =
-      builder.label("Concatenation pattern:").text(reference.value.pattern).newParagraph()
+    def pattern(value: ComposedConfigValue): TextBuilder =
+      builder.label("Concatenation pattern:").text(value.pattern).newParagraph()
 
-    def environments(result: HoconConcatenation): TextBuilder = {
-      val environments: Seq[EnvironmentValue] = filterAndMapSimpleValues(result.value.values) {
+    def environments(value: ComposedConfigValue): TextBuilder = {
+      val environments: Seq[EnvironmentValue] = filterAndMapSimpleValues(value.values) {
         case _: EnvironmentValue => true
         case _ => false
       }
@@ -31,8 +31,8 @@ trait HoconConcatenationOps {
       }
     }
 
-    def references(result: HoconConcatenation): TextBuilder = {
-      val references: Seq[ResolvedRef] = filterAndMapSimpleValues(result.value.values) {
+    def references(value: ComposedConfigValue): TextBuilder = {
+      val references: Seq[ResolvedRef] = filterAndMapSimpleValues(value.values) {
         case _: ResolvedRef => true
         case _ => false
       }
@@ -46,8 +46,8 @@ trait HoconConcatenationOps {
       }
     }
 
-    def unresolvedReferences(result: HoconConcatenation): TextBuilder = {
-      val references: Seq[NotResolvedRef] = filterAndMapSimpleValues(result.value.values) {
+    def unresolvedReferences(value: ComposedConfigValue): TextBuilder = {
+      val references: Seq[NotResolvedRef] = filterAndMapSimpleValues(value.values) {
         case _: NotResolvedRef => true
         case _ => false
       }
@@ -60,6 +60,14 @@ trait HoconConcatenationOps {
           .newParagraph()
       }
     }
+
+    def pattern(reference: HoconConcatenation): TextBuilder = pattern(reference.value)
+
+    def environments(result: HoconConcatenation): TextBuilder = environments(result.value)
+
+    def references(result: HoconConcatenation): TextBuilder = references(result.value)
+
+    def unresolvedReferences(result: HoconConcatenation): TextBuilder = unresolvedReferences(result.value)
   }
 
 }

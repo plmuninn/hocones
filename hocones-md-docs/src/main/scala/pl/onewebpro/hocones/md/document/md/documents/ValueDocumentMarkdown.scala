@@ -13,6 +13,7 @@ class ValueDocumentMarkdown extends DocumentToMdGenerator[ValueDocument] with Ho
       .valueOfDocument(document.value)
       .description(document)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 
 }

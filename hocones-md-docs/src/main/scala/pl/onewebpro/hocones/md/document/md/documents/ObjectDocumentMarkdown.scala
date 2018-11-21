@@ -14,5 +14,6 @@ class ObjectDocumentMarkdown extends DocumentToMdGenerator[ObjectDocument] with 
       .references(document.value)
       .unresolvedReferences(document.value)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 }

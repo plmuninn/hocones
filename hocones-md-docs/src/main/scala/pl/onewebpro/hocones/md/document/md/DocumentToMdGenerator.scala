@@ -5,6 +5,7 @@ import net.steppschuh.markdowngenerator.text.TextBuilder
 import net.steppschuh.markdowngenerator.text.emphasis.{BoldText, ItalicText}
 import pl.onewebpro.hocones.md.document.model._
 import pl.onewebpro.hocones.meta.model.MetaValue
+import pl.onewebpro.hocones.parser.entity.HoconResultValue
 
 trait DocumentToMdGenerator[T <: Document[_]] extends MetaValueDocumentation {
   def toMd(document: T): MarkdownElement
@@ -45,6 +46,9 @@ trait DocumentToMdGenerator[T <: Document[_]] extends MetaValueDocumentation {
         }.end().asInstanceOf[TextBuilder]
       }
     }
+
+    def from(value: HoconResultValue): TextBuilder =
+      builder.label("From file:").text(value.cfg.origin().filename()).newParagraph()
 
     def label(title: String): TextBuilder = builder.text(new BoldText(title)).newLine()
   }

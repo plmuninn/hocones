@@ -14,5 +14,6 @@ class ArrayDocumentMarkdown extends DocumentToMdGenerator[ArrayDocument] with Ho
       .references(document.value)
       .unresolvedReferences(document.value)
       .metaInformation(document.metaInformation)
+      .from(document.value)
       .toMarkdownElement
 }
