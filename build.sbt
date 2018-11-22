@@ -148,9 +148,29 @@ val `hocones-cli` =
     .settings(defaultSettings)
     .settings(
       name := "hocones-cli",
-      libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests)
-    )
-    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
+      mainClass in assembly := Some("pl.onewebpro.hocones.cli.Main"),
+      libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
+      assemblyMergeStrategy in assembly := {
+        case PathList("META-INF", _ @ _*) => MergeStrategy.discard
+        case _ => MergeStrategy.first
+      }
+    ).dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
+
+lazy val `hocones-sbt-plugin` =
+  (project in file("hocones-sbt-plugin"))
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-sbt-plugin",
+      libraryDependencies ++= (hocon ++ logs ++ fp),
+      sbtPlugin := true,
+      sbtVersion := "1.2.3"
+    ).dependsOn(
+    `hocones-common`,
+    `hocones-parser`,
+    `hocones-environment-files`,
+    `hocones-meta`,
+    `hocones-md-docs`
+  )
 
 lazy val root = (project in file("."))
   .aggregate(

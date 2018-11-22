@@ -15,11 +15,11 @@ object Properties {
   object ProgramMode extends Enumeration {
     type ProgramMode = Value
 
-    val Load, EnvFile, EnvDocs, Docs = Value
+    val Default, Statistics, EnvFile, EnvDocs, Docs = Value
   }
 
   case class CliProperties(input: File = null,
-                           mode: ProgramMode = ProgramMode.Load,
+                           mode: ProgramMode = ProgramMode.Default,
                            envConfiguration: EnvironmentConfiguration =
                            EnvironmentConfiguration(
                              outputPath = null,
@@ -29,7 +29,7 @@ object Properties {
                            tableConfiguration: TableConfiguration =
                            TableConfiguration(
                              outputPath = null,
-                             aligned = null
+                             aligned = TableAlignment.Left
                            ),
                            docsConfiguration: DocumentConfiguration =
                            DocumentConfiguration(
@@ -66,7 +66,10 @@ object Properties {
         .action((input, cfg) => cfg.copy(input = input))
         .text("input is a required file property - it needs to be file containing hocon type of configuration")
 
-      note("\nfor default, application will load hocon file and write some statistics about it \n")
+      note("\nfor default, application will load hocon file, generate meta information, generate env file and documentation \n")
+
+      cmd("statistics")
+          .text("display statistics about configuration")
 
       cmd("env-file")
         .action((_, cfg) => cfg.copy(mode = ProgramMode.EnvFile))
@@ -110,7 +113,7 @@ object Properties {
           opt[TableAlignment.Value]('a', "alignment")
             .withFallback(() => TableAlignment.Left)
             .action((alignment, cfg) => cfg.copy(tableConfiguration = cfg.tableConfiguration.copy(aligned = alignment)))
-            .text("alignment of values in table (left, right, center) - default left"),
+            .text("alignment of values in table (Left, Right, Center) - default Left"),
         )
 
       cmd("docs")
