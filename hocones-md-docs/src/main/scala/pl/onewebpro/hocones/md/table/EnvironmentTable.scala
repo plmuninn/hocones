@@ -34,7 +34,7 @@ class EnvironmentTable(configuration: TableConfiguration) {
     builder <- SyncIO(new Table.Builder())
     builder <- SyncIO(builder.withAlignment(alignment))
     builder <- SyncIO(builder.addRow(columns: _*))
-    columns <- SyncIO(elements.map(mapElementToRow))
+    columns <- SyncIO(elements.sortBy(_.environmentVariable).map(mapElementToRow))
     builder <- SyncIO(columns.foldLeft(builder) { (table, row) => table.addRow(row) })
     table <- SyncIO(builder.build())
   } yield table.toString

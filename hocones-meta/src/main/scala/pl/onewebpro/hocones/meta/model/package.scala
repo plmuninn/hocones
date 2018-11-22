@@ -1,5 +1,7 @@
 package pl.onewebpro.hocones.meta
 
+import scala.collection.immutable.ListMap
+
 package object model {
 
   case class MetaInformation(hoconesVersion: String,
@@ -25,9 +27,10 @@ package object model {
       findByPath(path).find(_.name == name)
 
     def findByPathAndName(pathWithName: String): Option[MetaValue] = {
+      //com.nordea.arc.craft.access-service.itss.user-id
       val splitted = pathWithName.split("\\.")
 
-      if (splitted.size == 1) findByName(splitted.head) else {
+      if (splitted.length <= 2) findByName(splitted.head) else {
         val name = splitted.last
         val path = splitted.dropRight(1).mkString(".")
 
@@ -35,6 +38,20 @@ package object model {
       }
     }
 
+  }
+
+  object MetaInformation {
+    def sortMetaInformation(information: MetaInformation): MetaInformation = {
+      val sortedRoots = ListMap(information.roots.toSeq.map {
+        case (key, values) => key -> ListMap(values.toSeq.map({
+          case (subKey, elements) => subKey -> elements.sortBy(_.name)
+        }).sortBy(_._1): _*)
+      }.sortBy(_._1): _*)
+
+      val sortedOrphans = information.orphans.sortBy(_.name)
+
+      information.copy(roots = sortedRoots, orphans = sortedOrphans)
+    }
   }
 
   trait MetaValue {

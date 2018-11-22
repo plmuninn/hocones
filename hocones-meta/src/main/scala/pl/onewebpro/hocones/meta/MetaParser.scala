@@ -74,16 +74,32 @@ object MetaParser {
     if (resultKeys.isEmpty) SyncIO.pure(Nil) else SyncIO {
       resultKeys.foldLeft(Seq.empty[String]) {
         case (acc, path) =>
-          val packageName = path.packageName.dropRight(1)
+          val packageName: Path = path.packageName.dropRight(1)
+          val packageNameChunks = packageName.splitPath
 
-          acc.zipWithIndex.find { case (rootPath, _) => packageName.contains(rootPath) } match {
-            case Some((rootPath, index)) =>
-              val root: Path = rootPath
-              val fromPath = path.splitPath
-              val result: String = root.splitPath.filter(part => fromPath.contains(part)).mkString(".")
-              acc.updated(index, result)
+          def pathExists(path: String): Boolean = {
+            val root: Path = path
+            val rootHead = root.splitPath.head
 
-            case _ => acc :+ packageName
+            packageNameChunks.head == rootHead
+          }
+
+          if (acc.isEmpty || !acc.exists(pathExists)) acc :+ packageName else {
+            val similar = acc.zipWithIndex.filter { case (rootPath, _) => pathExists(rootPath) }
+
+            val clean = similar.map {
+              case (rootPath, index) =>
+                val root: Path = rootPath
+                index -> root.splitPath.filter(part => packageNameChunks.contains(part)).mkString(".")
+            }
+
+            val updated = clean.foldLeft(acc) {
+              case (accm, (index, rootPath)) => accm.updated(index, rootPath)
+            }
+
+            val withoutDuplicates = updated.filter(_.nonEmpty).distinct
+
+            withoutDuplicates
           }
       }
     }
@@ -123,11 +139,12 @@ object MetaParser {
     for {
       rootsKeys <- generateRoots(hocones)
       generatedMetaValues <- generateMetaValues(rootsKeys, hocones)
-    } yield generatedMetaValues
+      filteredMetaValues <- SyncIO(generatedMetaValues.filterNot { case (_, value) => value.isEmpty })
+    } yield filteredMetaValues
 
   def generate(hocones: HoconResult): SyncIO[MetaInformation] =
     for {
       rootsResult <- roots(hocones)
       orphansResult <- orphans(hocones)
-    } yield MetaInformation(version, rootsResult, orphansResult)
+    } yield MetaInformation.apply(version, rootsResult, orphansResult)
 }

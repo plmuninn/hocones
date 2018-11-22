@@ -18,7 +18,7 @@ object EnvironmentFileGenerator {
     _ <- SyncIO.fromEither(OutputFileValidator.validate(outputFile, parentDirectory).leftMap(error => EnvironmentFileError(error.message)))
 
     writer <- SyncIO(new EnvironmentFileWriter(outputFile))
-    values <- SyncIO(ModelParser.parse(config, result))
+    values <- SyncIO(ModelParser.parse(config, result)).map(_.toList.sortBy(_.name))
 
     _ <- writer.write(values)
   } yield ()

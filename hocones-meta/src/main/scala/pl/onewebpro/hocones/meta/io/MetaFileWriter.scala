@@ -40,7 +40,7 @@ object MetaFileWriter {
       .map(_.replace(": null", ": "))
       .flatMap { text =>
       Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
-        .use(printer => SyncIO(printer.print(text.r)))
+        .use(printer => SyncIO(printer.print(text)))
     }
 
   def create(input: File): SyncIO[MetaFile] = for {

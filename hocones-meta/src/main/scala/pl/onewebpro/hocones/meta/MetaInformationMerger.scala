@@ -27,5 +27,7 @@ object MetaInformationMerger {
   def merge(loaded: MetaInformation, generated: MetaInformation): SyncIO[MetaInformation] = for {
     orphans <- updateOrphans(loaded, generated)
     roots <- updateRoots(loaded, generated)
-  } yield generated.copy(orphans = orphans, roots = roots)
+    merged <- SyncIO(generated.copy(orphans = orphans, roots = roots))
+    sorted <- SyncIO(MetaInformation.sortMetaInformation(merged))
+  } yield sorted
 }
