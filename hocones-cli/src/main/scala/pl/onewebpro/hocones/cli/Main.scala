@@ -24,11 +24,12 @@ object Main extends IOApp {
       case Right(properties) => for {
         _ <- putStrLn("Loading configurations")
         parsedFile <- HoconParser(ConfigFactory.parseFile(properties.input))
+        _ <- putStrLn("")
         _ <- putStrLn("Configuration parsed without errors")
         _ <- putStrLn("Generating file with meta information")
         result <- MetaGenerator(MetaConfiguration(input = properties.input), parsedFile).toIO
         (metaFile, metaInformation) = result
-        _ <- putStrLn(s"Generated meta file ${metaFile.getAbsoluteFile}")
+        _ <- putStrLn(s"Generated meta file ${metaFile.getPath}")
         application = new Application(properties, parsedFile, metaInformation)
         _ <- runApp(properties, application)
         _ <- putStrLn("Done. Bye bye!")
