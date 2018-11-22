@@ -111,9 +111,9 @@ object MetaParser {
     val result = roots.map(path => path -> Map.empty[String, Seq[MetaValue]]).toMap
 
     hocones.results.asMap.filterNot(_.isOrphan).foldLeft(result) {
-      case (acc, (path, value)) =>
-        acc.find {
-          case (key, _) => path.contains(key)
+      case (rootsList, (path, value)) =>
+        rootsList.find {
+          case (key, _) => path.startsWith(key)
         } match {
           case Some((key, cont)) =>
             val res: Map[String, Seq[MetaValue]] = cont.find {
@@ -128,7 +128,7 @@ object MetaParser {
                 cont + (packageName -> Seq(mapResultValue(value).unsafeRunSync()))
             }
 
-            acc + (key -> res)
+            rootsList + (key -> res)
           case _ => throw new Exception("Something went wrong, not root found")
         }
     }

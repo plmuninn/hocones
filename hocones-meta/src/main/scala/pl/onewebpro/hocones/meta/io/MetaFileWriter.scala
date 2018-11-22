@@ -37,11 +37,11 @@ object MetaFileWriter {
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
     printer
       .map(_.pretty(json))
-      .map(_.replace(": null", ": "))
+      .map(_.lines.map(_.replaceAll(": null$", ": ")).mkString("\n"))
       .flatMap { text =>
-      Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
-        .use(printer => SyncIO(printer.print(text)))
-    }
+        Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
+          .use(printer => SyncIO(printer.print(text)))
+      }
 
   def create(input: File): SyncIO[MetaFile] = for {
     metaFile <- metaFilePointer(input)

@@ -30,7 +30,7 @@ package object model {
       //com.nordea.arc.craft.access-service.itss.user-id
       val splitted = pathWithName.split("\\.")
 
-      if (splitted.length <= 2) findByName(splitted.head) else {
+      if (splitted.length <= 2) findByName(pathWithName) else {
         val name = splitted.last
         val path = splitted.dropRight(1).mkString(".")
 

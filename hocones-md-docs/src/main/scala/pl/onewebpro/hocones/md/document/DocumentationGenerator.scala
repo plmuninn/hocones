@@ -20,6 +20,7 @@ class DocumentationGenerator(documentation: Documentation) {
     case model: EnvironmentDocument => model.toMd
     case model: MergedValuesDocument => model.toMd
     case model: ReferenceValueDocument => model.toMd
+    case model: ResolvedReferenceDocument => model.toMd
     case model: ValueDocument => model.toMd
   }
 
