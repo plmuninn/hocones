@@ -12,13 +12,12 @@ import pl.onewebpro.hocones.parser.{HoconParser, ParsingError}
 
 import scala.collection.JavaConverters._
 
-
 object ValueTypeParser {
 
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   private def divideRenderedValue(renderedValue: String): List[String] =
-    renderedValue.lines.toList.map(_.replace("\",", "\""))
+    renderedValue.lines.iterator().asScala.toList.map(_.replace("\",", "\""))
 
   private[parser] def divideToLeftAndRight(values: List[String]): IO[(String, String)] = {
     def createListString: List[String] => String = "[" + _.drop(1).dropRight(1).mkString(",") + "]"

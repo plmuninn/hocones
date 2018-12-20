@@ -9,6 +9,8 @@ import io.circe.yaml.Printer
 import shapeless.tag
 import shapeless.tag.@@
 
+import scala.collection.JavaConverters._
+
 object MetaFileWriter {
 
   def fileName(file: File): String = file.getAbsolutePath + ".hmeta"
@@ -37,7 +39,7 @@ object MetaFileWriter {
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
     printer
       .map(_.pretty(json))
-      .map(_.lines.map(_.replaceAll(": null$", ": ")).mkString("\n"))
+      .map(_.lines.iterator().asScala.toList.map(_.replaceAll(": null$", ": ")).mkString("\n"))
       .flatMap { text =>
         Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
           .use(printer => SyncIO(printer.print(text)))
