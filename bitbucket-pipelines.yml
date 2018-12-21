@@ -14,6 +14,7 @@ pipelines:
           - ivy2
         script: # Modify the commands below to build your repository.
           - sbt compile
+          - sbt scalafmtCheck
           - sbt hocones-parser/test
           - sbt hocones-environment-files/test
           - sbt hocones-meta/test
