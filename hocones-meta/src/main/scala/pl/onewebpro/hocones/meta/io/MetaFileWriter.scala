@@ -39,7 +39,7 @@ object MetaFileWriter {
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
     printer
       .map(_.pretty(json))
-      .map(_.lines.iterator().asScala.toList.map(_.replaceAll(": null$", ": ")).mkString("\n"))
+      .map(_.lines.toList.map(_.replaceAll(": null$", ": ")).mkString("\n"))
       .flatMap { text =>
         Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
           .use(printer => SyncIO(printer.print(text)))

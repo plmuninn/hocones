@@ -17,7 +17,7 @@ object ValueTypeParser {
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   private def divideRenderedValue(renderedValue: String): List[String] =
-    renderedValue.lines.iterator().asScala.toList.map(_.replace("\",", "\""))
+    renderedValue.lines.toList.map(_.replace("\",", "\""))
 
   private[parser] def divideToLeftAndRight(values: List[String]): IO[(String, String)] = {
     def createListString: List[String] => String = "[" + _.drop(1).dropRight(1).mkString(",") + "]"
