@@ -8,15 +8,16 @@ image: bitbucketpipelines/scala-sbt:scala-2.12
 pipelines:
   default:
     - step:
+        name: Compile and test
         caches:
           - sbt 
           - ivy2
         script: # Modify the commands below to build your repository.
           - sbt compile
-          - sbt hocones-common/test
           - sbt hocones-parser/test
           - sbt hocones-environment-files/test
-          - sbt hocones-cli/test
-          - sbt hocones-statistics/test
           - sbt hocones-meta/test
-          - sbt hocones-md-docs/test
+#          - sbt hocones-common/test
+#          - sbt hocones-cli/test
+#          - sbt hocones-statistics/test
+#          - sbt hocones-md-docs/test
