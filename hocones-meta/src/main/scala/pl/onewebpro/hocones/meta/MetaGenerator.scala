@@ -18,14 +18,21 @@ object MetaGenerator {
   def readMetaFile(metaFile: MetaFile): SyncIO[MetaInformation] =
     MetaFileReader
       .read(metaFile)
-      .flatMap(json => if (json.isNull) SyncIO.pure(defaultMetaInformation) else SyncIO.fromEither(json.as[MetaInformation]))
+      .flatMap(
+        json =>
+          if (json.isNull) SyncIO.pure(defaultMetaInformation)
+          else SyncIO.fromEither(json.as[MetaInformation]))
 
-  def apply(config: MetaConfiguration, hocones: HoconResult): SyncIO[(MetaFile, MetaInformation)] = for {
-    metaFile <- MetaFileWriter.create(config.input)
-    generatedMetaInformation <- MetaParser.generate(hocones)
-    result <- readMetaFile(metaFile)
-    mergedMetaInformation <- MetaInformationMerger.merge(result, generatedMetaInformation)
-    _ <- MetaFileWriter.printToFile(metaFile, mergedMetaInformation.asJson)
-  } yield (metaFile, mergedMetaInformation)
+  def apply(config: MetaConfiguration,
+            hocones: HoconResult): SyncIO[(MetaFile, MetaInformation)] =
+    for {
+      metaFile <- MetaFileWriter.create(config.input)
+      generatedMetaInformation <- MetaParser.generate(hocones)
+      result <- readMetaFile(metaFile)
+      mergedMetaInformation <- MetaInformationMerger.merge(
+        result,
+        generatedMetaInformation)
+      _ <- MetaFileWriter.printToFile(metaFile, mergedMetaInformation.asJson)
+    } yield (metaFile, mergedMetaInformation)
 
 }

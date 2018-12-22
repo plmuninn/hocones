@@ -26,28 +26,36 @@ object MetaFileWriter {
   def tagMetaFile(path: File): MetaFile = tag[MetaFileTag][File](path)
 
   def printer: SyncIO[Printer] =
-    SyncIO(Printer(dropNullKeys = false, preserveOrder = true, mappingStyle = Printer.FlowStyle.Block, indent = 2))
+    SyncIO(
+      Printer(dropNullKeys = false,
+              preserveOrder = true,
+              mappingStyle = Printer.FlowStyle.Block,
+              indent = 2))
 
-  def metaFilePointer(input: File): SyncIO[MetaFile] = for {
-    name <- SyncIO(fileName(input))
-    metaFile <- SyncIO(tagMetaFile(new File(name)))
-  } yield metaFile
+  def metaFilePointer(input: File): SyncIO[MetaFile] =
+    for {
+      name <- SyncIO(fileName(input))
+      metaFile <- SyncIO(tagMetaFile(new File(name)))
+    } yield metaFile
 
   private[io] def createIfNotExists(file: MetaFile): SyncIO[Unit] =
-    if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit else SyncIO.unit
+    if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit
+    else SyncIO.unit
 
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =
     printer
       .map(_.pretty(json))
       .map(_.lines.toList.map(_.replaceAll(": null$", ": ")).mkString("\n"))
       .flatMap { text =>
-        Resource.fromAutoCloseable(SyncIO(new PrintWriter(file)))
+        Resource
+          .fromAutoCloseable(SyncIO(new PrintWriter(file)))
           .use(printer => SyncIO(printer.print(text)))
       }
 
-  def create(input: File): SyncIO[MetaFile] = for {
-    metaFile <- metaFilePointer(input)
-    _ <- createIfNotExists(metaFile)
-  } yield metaFile
+  def create(input: File): SyncIO[MetaFile] =
+    for {
+      metaFile <- metaFilePointer(input)
+      _ <- createIfNotExists(metaFile)
+    } yield metaFile
 
 }

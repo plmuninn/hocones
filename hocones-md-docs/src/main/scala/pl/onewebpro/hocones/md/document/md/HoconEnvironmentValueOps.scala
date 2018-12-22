@@ -11,8 +11,8 @@ trait HoconEnvironmentValueOps {
 
     def isOptional(environmentValue: EnvironmentValue): TextBuilder =
       builder
-        .label("Environment name:").
-        text(environmentValue.name)
+        .label("Environment name:")
+        .text(environmentValue.name)
         .newParagraph()
 
     def name(environmentValue: EnvironmentValue): TextBuilder =
@@ -21,9 +21,11 @@ trait HoconEnvironmentValueOps {
         .text(if (environmentValue.isOptional) "True" else "False")
         .newParagraph()
 
-    def isOptional(environment: HoconEnvironmentValue): TextBuilder = isOptional(environment.value)
+    def isOptional(environment: HoconEnvironmentValue): TextBuilder =
+      isOptional(environment.value)
 
-    def name(environment: HoconEnvironmentValue): TextBuilder = name(environment.value)
+    def name(environment: HoconEnvironmentValue): TextBuilder =
+      name(environment.value)
   }
 
 }

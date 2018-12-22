@@ -11,15 +11,22 @@ object EnvironmentFileGenerator {
 
   import pl.onewebpro.hocones.env.io._
 
-  def apply(config: EnvironmentConfiguration, result: HoconResult): SyncIO[Unit] = for {
-    outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
-    parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
+  def apply(config: EnvironmentConfiguration,
+            result: HoconResult): SyncIO[Unit] =
+    for {
+      outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
+      parentDirectory <- SyncIO(
+        tagParentDirectory(config.outputPath.getParent.toFile))
 
-    _ <- SyncIO.fromEither(OutputFileValidator.validate(outputFile, parentDirectory).leftMap(error => EnvironmentFileError(error.message)))
+      _ <- SyncIO.fromEither(
+        OutputFileValidator
+          .validate(outputFile, parentDirectory)
+          .leftMap(error => EnvironmentFileError(error.message)))
 
-    writer <- SyncIO(new EnvironmentFileWriter(outputFile))
-    values <- SyncIO(ModelParser.parse(config, result)).map(_.toList.sortBy(_.name))
+      writer <- SyncIO(new EnvironmentFileWriter(outputFile))
+      values <- SyncIO(ModelParser.parse(config, result))
+        .map(_.toList.sortBy(_.name))
 
-    _ <- writer.write(values)
-  } yield ()
+      _ <- writer.write(values)
+    } yield ()
 }

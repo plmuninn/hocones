@@ -12,7 +12,8 @@ trait HoconReferenceOps {
     def referenceTo(result: NotResolvedRef): TextBuilder =
       builder.label("Reference to:").text(result.name).newParagraph()
 
-    def referenceTo(reference: HoconReferenceValue): TextBuilder = referenceTo(reference.result)
+    def referenceTo(reference: HoconReferenceValue): TextBuilder =
+      referenceTo(reference.result)
   }
 
 }

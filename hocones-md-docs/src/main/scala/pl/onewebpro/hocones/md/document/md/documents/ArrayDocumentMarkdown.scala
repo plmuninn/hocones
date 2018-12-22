@@ -1,10 +1,15 @@
 package pl.onewebpro.hocones.md.document.md.documents
 
 import net.steppschuh.markdowngenerator.MarkdownElement
-import pl.onewebpro.hocones.md.document.md.{DocumentToMdGenerator, HoconResultTypeOps}
+import pl.onewebpro.hocones.md.document.md.{
+  DocumentToMdGenerator,
+  HoconResultTypeOps
+}
 import pl.onewebpro.hocones.md.document.model.ArrayDocument
 
-class ArrayDocumentMarkdown extends DocumentToMdGenerator[ArrayDocument] with HoconResultTypeOps {
+class ArrayDocumentMarkdown
+    extends DocumentToMdGenerator[ArrayDocument]
+    with HoconResultTypeOps {
   override def toMd(document: ArrayDocument): MarkdownElement =
     heading(document)
       .typeOfDocument(document)

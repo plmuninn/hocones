@@ -4,7 +4,8 @@ import pl.onewebpro.hocones.parser.entity.simple.SimpleValue.Value
 import shapeless.tag
 import shapeless.tag.@@
 
-case class SimpleValue(value: Value, wasQuoted: Boolean) extends SimpleHoconValue
+case class SimpleValue(value: Value, wasQuoted: Boolean)
+    extends SimpleHoconValue
 
 object SimpleValue {
 
@@ -30,5 +31,6 @@ object SimpleValue {
     tag[ValueTag][String](extractIfQuotedValue(value))
 
   //TODO test me
-  def apply(value: String): SimpleValue = new SimpleValue(tagValue(value), isQuotedValue(value))
+  def apply(value: String): SimpleValue =
+    new SimpleValue(tagValue(value), isQuotedValue(value))
 }

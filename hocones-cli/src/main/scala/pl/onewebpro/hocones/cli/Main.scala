@@ -10,30 +10,33 @@ import pl.onewebpro.hocones.parser.HoconParser
 
 object Main extends IOApp {
 
-  def runApp(properties: Properties.CliProperties, application: Application): IO[Unit] =
+  def runApp(properties: Properties.CliProperties,
+             application: Application): IO[Unit] =
     properties.mode match {
-      case ProgramMode.Default => application.all
-      case ProgramMode.EnvFile => application.envFiles
+      case ProgramMode.Default    => application.all
+      case ProgramMode.EnvFile    => application.envFiles
       case ProgramMode.Statistics => application.statistics
-      case ProgramMode.EnvDocs => application.environmentDocs
-      case ProgramMode.Docs => application.documentation
+      case ProgramMode.EnvDocs    => application.environmentDocs
+      case ProgramMode.Docs       => application.documentation
     }
 
   override def run(args: List[String]): IO[ExitCode] =
     Properties.parseArgs(args).toIO.flatMap {
-      case Right(properties) => for {
-        _ <- putStrLn("Loading configurations")
-        parsedFile <- HoconParser(ConfigFactory.parseFile(properties.input))
-        _ <- putStrLn("")
-        _ <- putStrLn("Configuration parsed without errors")
-        _ <- putStrLn("Generating file with meta information")
-        result <- MetaGenerator(MetaConfiguration(input = properties.input), parsedFile).toIO
-        (metaFile, metaInformation) = result
-        _ <- putStrLn(s"Generated meta file ${metaFile.getPath}")
-        application = new Application(properties, parsedFile, metaInformation)
-        _ <- runApp(properties, application)
-        _ <- putStrLn("Done. Bye bye!")
-      } yield ExitCode.Success
+      case Right(properties) =>
+        for {
+          _ <- putStrLn("Loading configurations")
+          parsedFile <- HoconParser(ConfigFactory.parseFile(properties.input))
+          _ <- putStrLn("")
+          _ <- putStrLn("Configuration parsed without errors")
+          _ <- putStrLn("Generating file with meta information")
+          result <- MetaGenerator(MetaConfiguration(input = properties.input),
+                                  parsedFile).toIO
+          (metaFile, metaInformation) = result
+          _ <- putStrLn(s"Generated meta file ${metaFile.getPath}")
+          application = new Application(properties, parsedFile, metaInformation)
+          _ <- runApp(properties, application)
+          _ <- putStrLn("Done. Bye bye!")
+        } yield ExitCode.Success
       case Left(_) => IO.pure(ExitCode.Error)
     }
 

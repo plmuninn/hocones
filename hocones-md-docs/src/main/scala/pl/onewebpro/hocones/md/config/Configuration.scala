@@ -12,8 +12,7 @@ object Configuration {
     val Left, Right, Center: TableAlignment = Value
   }
 
-  case class TableConfiguration(outputPath: Path,
-                                aligned: TableAlignment)
+  case class TableConfiguration(outputPath: Path, aligned: TableAlignment)
 
   case class DocumentConfiguration(outputPath: Path)
 

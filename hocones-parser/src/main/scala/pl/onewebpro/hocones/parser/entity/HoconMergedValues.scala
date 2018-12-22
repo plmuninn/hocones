@@ -6,6 +6,5 @@ import pl.onewebpro.hocones.common.implicits.Path
 case class HoconMergedValues(path: Path,
                              cfg: ConfigValue,
                              defaultValue: Result,
-                             replacedValue: Result) extends HoconValueType
-
-
+                             replacedValue: Result)
+    extends HoconValueType

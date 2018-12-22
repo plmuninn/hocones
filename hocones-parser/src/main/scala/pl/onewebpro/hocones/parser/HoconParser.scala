@@ -29,11 +29,13 @@ object HoconParser extends LazyLogging {
 
   type CanonicalClassName = String @@ CanonicalClassNameTag
 
-  private[parser] def tagCanonicalName(name: String): CanonicalClassName = tag[CanonicalClassNameTag][String](name)
+  private[parser] def tagCanonicalName(name: String): CanonicalClassName =
+    tag[CanonicalClassNameTag][String](name)
 
   type RenderedValue = String @@ RenderedValueTag
 
-  private[parser] def tagRenderedValue(value: String): RenderedValue = tag[RenderedValueTag][String](value)
+  private[parser] def tagRenderedValue(value: String): RenderedValue =
+    tag[RenderedValueTag][String](value)
 
   private val renderOptions = ConfigRenderOptions.concise().setFormatted(true)
 
@@ -42,7 +44,8 @@ object HoconParser extends LazyLogging {
   private val resultType = ResultType.values.map(_.toString)
 
   //TODO test me
-  private[parser] def mapEntryToTuple(entry: Entry[String, ConfigValue]): (Path, ConfigValue, CanonicalClassName) = {
+  private[parser] def mapEntryToTuple(entry: Entry[String, ConfigValue])
+    : (Path, ConfigValue, CanonicalClassName) = {
     val path = tagPath(entry.getKey)
     val value = entry.getValue
 
@@ -50,25 +53,37 @@ object HoconParser extends LazyLogging {
   }
 
   //TODO test me
-  private[parser] def render(configValue: ConfigValue): RenderedValue = tagRenderedValue(configValue.render(renderOptions))
+  private[parser] def render(configValue: ConfigValue): RenderedValue =
+    tagRenderedValue(configValue.render(renderOptions))
 
   //TODO test me
-  def parseValue(value: (Path, ConfigValue, CanonicalClassName))(implicit cfg: Config): IO[HoconResultValue] = {
+  def parseValue(value: (Path, ConfigValue, CanonicalClassName))(
+      implicit cfg: Config): IO[HoconResultValue] = {
     val (path, configValue, className) = value
     lazy val renderedValue = render(configValue)
 
     logger.info(s"Parsing path $path")
     logger.debug(value.toString())
 
-    if (simpleValueTypes.contains(className)) SimpleValueParser.parse(renderedValue, path, configValue, SimpleValueType.withName(className))
-    else if (valueTypes.contains(className)) ValueTypeParser.parse(path, ValueType.withName(className), renderedValue, configValue)
-    else if (resultType.contains(className)) ResultTypeParser.parse(path, ResultType.withName(className), configValue)
+    if (simpleValueTypes.contains(className))
+      SimpleValueParser.parse(renderedValue,
+                              path,
+                              configValue,
+                              SimpleValueType.withName(className))
+    else if (valueTypes.contains(className))
+      ValueTypeParser.parse(path,
+                            ValueType.withName(className),
+                            renderedValue,
+                            configValue)
+    else if (resultType.contains(className))
+      ResultTypeParser.parse(path, ResultType.withName(className), configValue)
     else IO.raiseError(ParsingError(s"Unhandled type $className on path $path"))
   }
 
   //TODO test me
-  private[parser] def parseEntrySet(values: Set[(Path, ConfigValue, CanonicalClassName)])
-                                   (implicit cfg: Config): IO[List[HoconResultValue]] =
+  private[parser] def parseEntrySet(
+      values: Set[(Path, ConfigValue, CanonicalClassName)])(
+      implicit cfg: Config): IO[List[HoconResultValue]] =
     values.toList.map(parseValue).sequence
 
   def apply(config: Config): IO[HoconResult] = {

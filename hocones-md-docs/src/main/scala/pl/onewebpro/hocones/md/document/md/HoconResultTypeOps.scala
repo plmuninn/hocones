@@ -16,7 +16,8 @@ trait HoconResultTypeOps {
     def environments(result: HoconResultType): TextBuilder = {
       val environments = result.values.environmentValues
 
-      if (environments.isEmpty) builder else {
+      if (environments.isEmpty) builder
+      else {
         builder
           .label("Environments:")
           .newLine()
@@ -28,7 +29,8 @@ trait HoconResultTypeOps {
     def references(result: HoconResultType): TextBuilder = {
       val references = result.values.resolvedRefValues
 
-      if (references.isEmpty) builder else {
+      if (references.isEmpty) builder
+      else {
         builder
           .label("References:")
           .newLine()
@@ -40,7 +42,8 @@ trait HoconResultTypeOps {
     def unresolvedReferences(result: HoconResultType): TextBuilder = {
       val references = result.values.notResolvedValues
 
-      if (references.isEmpty) builder else {
+      if (references.isEmpty) builder
+      else {
         builder
           .label("Unresolved references:")
           .newLine()

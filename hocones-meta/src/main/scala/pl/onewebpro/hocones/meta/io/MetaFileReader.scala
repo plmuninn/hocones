@@ -14,12 +14,17 @@ object MetaFileReader {
     if (metaFile.canRead)
       SyncIO.unit
     else
-      SyncIO.raiseError(MetaError(s"File ${metaFile.getAbsoluteFile} is not readable."))
+      SyncIO.raiseError(
+        MetaError(s"File ${metaFile.getAbsoluteFile} is not readable."))
 
-  def read(metaFile: MetaFile): SyncIO[Json] = for {
-    _ <- validateFile(metaFile)
-    text <- Resource.fromAutoCloseable(SyncIO(Source.fromFile(metaFile))).use(source => SyncIO(source.getLines().mkString("\n")))
-    parsedText <- if (text.nonEmpty) SyncIO.fromEither(parser.parse(text)) else SyncIO.pure(Json.Null)
-  } yield parsedText
+  def read(metaFile: MetaFile): SyncIO[Json] =
+    for {
+      _ <- validateFile(metaFile)
+      text <- Resource
+        .fromAutoCloseable(SyncIO(Source.fromFile(metaFile)))
+        .use(source => SyncIO(source.getLines().mkString("\n")))
+      parsedText <- if (text.nonEmpty) SyncIO.fromEither(parser.parse(text))
+      else SyncIO.pure(Json.Null)
+    } yield parsedText
 
 }
