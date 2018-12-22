@@ -41,11 +41,13 @@ val circe = Seq(
   "io.circe" %% "circe-yaml"
 ).map(_ % circeVersion)
 
-val scalaOptVersion = "3.7.0"
+val declineVersion = "0.5.0"
+val fansiVersion = "0.2.5"
 val console4CatsVersion = "0.3"
 
 val cli = Seq(
-  "com.github.scopt" %% "scopt" % scalaOptVersion,
+  "com.monovore" %% "decline" % declineVersion,
+  "com.lihaoyi" %% "fansi" % fansiVersion,
   "com.github.gvolpe" %% "console4cats" % console4CatsVersion
 )
 

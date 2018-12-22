@@ -1,3 +1,4 @@
+/*
 package pl.onewebpro.hocones.cli
 
 import java.io.File
@@ -150,3 +151,4 @@ object Properties {
       case _                => SyncIO.pure(Left(unit))
     }
 }
+ */

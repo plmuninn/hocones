@@ -1,43 +1,39 @@
 package pl.onewebpro.hocones.cli
 
+import cats.Show
 import cats.effect.Console.io._
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.{ExitCode, IO, IOApp, SyncIO}
+import cats.implicits._
+import com.monovore.decline.Help
 import com.typesafe.config.ConfigFactory
-import pl.onewebpro.hocones.cli.Properties.ProgramMode
-import pl.onewebpro.hocones.meta.MetaGenerator
-import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
+import fansi.Str
+import pl.onewebpro.hocones.cli.commands.Hocones
 import pl.onewebpro.hocones.parser.HoconParser
 
 object Main extends IOApp {
 
-  def runApp(properties: Properties.CliProperties,
-             application: Application): IO[Unit] =
-    properties.mode match {
-      case ProgramMode.Default    => application.all
-      case ProgramMode.EnvFile    => application.envFiles
-      case ProgramMode.Statistics => application.statistics
-      case ProgramMode.EnvDocs    => application.environmentDocs
-      case ProgramMode.Docs       => application.documentation
-    }
+  implicit private val showStr: Show[Str] = Show.show(_.toString())
+
+  private def displayHelpErrors: Help => IO[Unit] = { help =>
+    IO.pure(help.errors)
+      .flatMap(errors => errors.map(error => fansi.Color.Red(error)).map(str => putError(str)).sequence) *> IO.unit
+  }
+
+  private def displayHelp: Help => IO[Unit] = { help =>
+    for {
+      _ <- displayHelpErrors(help)
+      _ <- IO(help.copy(errors = Nil)).flatMap(helpWithoutErrors => putStr(helpWithoutErrors.toString()))
+    } yield ()
+  }
 
   override def run(args: List[String]): IO[ExitCode] =
-    Properties.parseArgs(args).toIO.flatMap {
-      case Right(properties) =>
+    SyncIO(Hocones.cmd.parse(args)).toIO.flatMap {
+      case Left(help) => displayHelp(help) *> IO.pure(ExitCode.Error)
+      case Right(inputFile) =>
         for {
-          _ <- putStrLn("Loading configurations")
-          parsedFile <- HoconParser(ConfigFactory.parseFile(properties.input))
-          _ <- putStrLn("")
-          _ <- putStrLn("Configuration parsed without errors")
-          _ <- putStrLn("Generating file with meta information")
-          result <- MetaGenerator(MetaConfiguration(input = properties.input),
-                                  parsedFile).toIO
-          (metaFile, metaInformation) = result
-          _ <- putStrLn(s"Generated meta file ${metaFile.getPath}")
-          application = new Application(properties, parsedFile, metaInformation)
-          _ <- runApp(properties, application)
-          _ <- putStrLn("Done. Bye bye!")
+          _ <- putStrLn(fansi.Color.Green("Loading hocon file"))
+          _ <- HoconParser(ConfigFactory.parseFile(inputFile))
         } yield ExitCode.Success
-      case Left(_) => IO.pure(ExitCode.Error)
     }
 
 }

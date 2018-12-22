@@ -9,8 +9,6 @@ import io.circe.yaml.Printer
 import shapeless.tag
 import shapeless.tag.@@
 
-import scala.collection.JavaConverters._
-
 object MetaFileWriter {
 
   def fileName(file: File): String = file.getAbsolutePath + ".hmeta"
@@ -26,11 +24,7 @@ object MetaFileWriter {
   def tagMetaFile(path: File): MetaFile = tag[MetaFileTag][File](path)
 
   def printer: SyncIO[Printer] =
-    SyncIO(
-      Printer(dropNullKeys = false,
-              preserveOrder = true,
-              mappingStyle = Printer.FlowStyle.Block,
-              indent = 2))
+    SyncIO(Printer(dropNullKeys = false, preserveOrder = true, mappingStyle = Printer.FlowStyle.Block, indent = 2))
 
   def metaFilePointer(input: File): SyncIO[MetaFile] =
     for {
