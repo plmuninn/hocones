@@ -7,7 +7,12 @@ import cats.implicits._
 import com.monovore.decline.Help
 import com.typesafe.config.ConfigFactory
 import fansi.Str
+import pl.onewebpro.hocones.cli.commands.Docs.DocsCommand
+import pl.onewebpro.hocones.cli.commands.Environment.EnvironmentCommand
+import pl.onewebpro.hocones.cli.commands.EnvironmentDocs.EnvironmentDocsCommand
 import pl.onewebpro.hocones.cli.commands.Hocones
+import pl.onewebpro.hocones.cli.commands.Hocones.HoconesCommand
+import pl.onewebpro.hocones.cli.commands.Statistics.StatisticsCommand
 import pl.onewebpro.hocones.parser.HoconParser
 
 object Main extends IOApp {
@@ -28,8 +33,12 @@ object Main extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
     SyncIO(Hocones.cmd.parse(args)).toIO.flatMap {
-      case Left(help) => displayHelp(help) *> IO.pure(ExitCode.Error)
-      case Right(inputFile) =>
+      case Left(help)                       => displayHelp(help) *> IO.pure(ExitCode.Error)
+      case Right(_: StatisticsCommand)      => ???
+      case Right(_: EnvironmentCommand)     => ???
+      case Right(_: EnvironmentDocsCommand) => ???
+      case Right(_: DocsCommand)            => ???
+      case Right(HoconesCommand(inputFile)) =>
         for {
           _ <- putStrLn(fansi.Color.Green("Loading hocon file"))
           _ <- HoconParser(ConfigFactory.parseFile(inputFile))
