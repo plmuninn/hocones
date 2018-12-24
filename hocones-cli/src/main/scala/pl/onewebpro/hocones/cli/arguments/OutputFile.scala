@@ -4,6 +4,7 @@ import java.nio.file.Path
 
 import cats.data.{Validated, ValidatedNel}
 import com.monovore.decline.Opts
+import pl.onewebpro.hocones.cli.io.OutputFile.{tagOutputFile, OutputFile}
 
 object OutputFile {
 
@@ -14,7 +15,7 @@ object OutputFile {
     else Validated.invalidNel(s"Output path ${file.getAbsolutePath} is unavailable")
   }
 
-  def opts(reason: String): Opts[File] =
+  def opts(reason: String): Opts[OutputFile] =
     Opts
       .option[Path](long = "output",
                     help = s"output is a required file property - for saving $reason",
@@ -22,4 +23,5 @@ object OutputFile {
                     metavar = "file")
       .map(_.toFile)
       .mapValidated(canWrite)
+      .map(tagOutputFile)
 }

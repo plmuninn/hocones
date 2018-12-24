@@ -1,6 +1,4 @@
 package pl.onewebpro.hocones.cli.arguments.environment
-import java.io.File
-
 import com.monovore.decline.Opts
 
 object WithComments {
