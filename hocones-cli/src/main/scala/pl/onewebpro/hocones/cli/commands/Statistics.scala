@@ -30,6 +30,10 @@ object Statistics {
   val cmd: Opts[CliCommand] =
     Opts.subcommand("statistics", "display statistics about configuration")(commandF)
 
+  val displayStatistics: Kleisli[IO, StatisticsMeta, Unit] = Kleisli { statistics =>
+    putStrLn(statistics)
+  }
+
   val statisticsCommand: Kleisli[IO, HoconResult, StatisticsMeta] = Kleisli { hocon =>
     for {
       _ <- putStrLn(Color.Green("Loading statistics about configuration"))

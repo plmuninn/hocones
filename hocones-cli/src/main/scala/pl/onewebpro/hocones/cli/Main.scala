@@ -29,11 +29,8 @@ object Main extends IOApp {
     } yield ()
   }
 
-  private val runStatisticsCommand: Kleisli[IO, commands.CliCommand, Unit] = {
-    import Statistics.showStatistics
-
-    Hocones.parse.andThen(Statistics.statisticsCommand).map(statistics => putStr(Color.Green(statistics.show)))
-  }
+  private val runStatisticsCommand: Kleisli[IO, commands.CliCommand, Unit] =
+    Hocones.parse.andThen(Statistics.statisticsCommand).andThen(Statistics.displayStatistics)
 
   private val runEnvironmentCommand: EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parse
@@ -60,7 +57,7 @@ object Main extends IOApp {
       parseAndMetaResult <- Hocones.parseAndLoadMetaInformation.run(cmd)
       (hocon, meta) = parseAndMetaResult
 
-      _ <- Statistics.statisticsCommand.run(hocon)
+      _ <- Statistics.statisticsCommand.andThen(Statistics.displayStatistics).run(hocon)
 
       environmentCommand <- IO(EnvironmentCommand.fromCommand(cmd))
       _ <- Environment.environmentCommand.run((hocon, environmentCommand))
