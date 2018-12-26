@@ -1,4 +1,5 @@
 package pl.onewebpro.hocones.cli.arguments.docs
+
 import cats.data.{Validated, ValidatedNel}
 import com.monovore.decline.{Argument, Opts}
 import pl.onewebpro.hocones.md.config.Configuration.TableAlignment.TableAlignment
