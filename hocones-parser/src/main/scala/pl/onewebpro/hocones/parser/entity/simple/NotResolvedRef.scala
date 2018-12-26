@@ -2,21 +2,12 @@ package pl.onewebpro.hocones.parser.entity.simple
 
 import cats.effect.IO
 import pl.onewebpro.hocones.parser.ParsingError
-import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue.{
-  EnvName,
-  EnvValue
-}
-import pl.onewebpro.hocones.parser.entity.simple.NotResolvedRef.{
-  HoconRefName,
-  HoconRefValue
-}
+import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue.{EnvName, EnvValue}
+import pl.onewebpro.hocones.parser.entity.simple.NotResolvedRef.{HoconRefName, HoconRefValue}
 import shapeless.tag
 import shapeless.tag.@@
 
-case class NotResolvedRef(env: HoconRefValue,
-                          name: HoconRefName,
-                          isOptional: Boolean)
-    extends ReferenceTypeValue {
+case class NotResolvedRef(env: HoconRefValue, name: HoconRefName, isOptional: Boolean) extends ReferenceTypeValue {
   lazy val nameChunks: Iterable[String] = name.split('.')
 }
 
@@ -59,9 +50,7 @@ object NotResolvedRef {
                              name = tagEnvNameToRefName(name),
                              isOptional = EnvironmentValue.isOptionalEnv(env)))
           case None =>
-            IO.raiseError(
-              ParsingError(
-                s"Error during extracting environment from string $value"))
+            IO.raiseError(ParsingError(s"Error during extracting environment from string $value"))
         }
       case None =>
         IO.raiseError(ParsingError(s"Value $value is not environment"))

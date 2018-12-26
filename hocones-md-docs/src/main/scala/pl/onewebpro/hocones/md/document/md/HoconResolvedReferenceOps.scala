@@ -6,8 +6,7 @@ import pl.onewebpro.hocones.parser.entity.HoconResolvedReference
 trait HoconResolvedReferenceOps {
   self: DocumentToMdGenerator[_] with HoconReferenceOps =>
 
-  implicit class ResolvedReferenceBuilderOps(builder: TextBuilder)
-      extends DefaultValue {
+  implicit class ResolvedReferenceBuilderOps(builder: TextBuilder) extends DefaultValue {
 
     def referenceTo(reference: HoconResolvedReference): TextBuilder =
       builder.referenceTo(reference.reference.result)

@@ -77,17 +77,29 @@ object Main extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
     SyncIO(Hocones.cmd.parse(args)).toIO.flatMap {
-      case Left(help) => displayHelp(help) *> IO.pure(ExitCode.Error)
+      case Left(help) =>
+        (displayHelp(help) *> IO.pure(ExitCode.Error))
+          .handleErrorWith(ErrorHandler.handler)
 
-      case Right(cmd: StatisticsCommand) => runStatisticsCommand.run(cmd) *> IO.pure(ExitCode.Success)
+      case Right(cmd: StatisticsCommand) =>
+        (runStatisticsCommand.run(cmd) *> IO.pure(ExitCode.Success))
+          .handleErrorWith(ErrorHandler.handler)
 
-      case Right(cmd: EnvironmentCommand) => runEnvironmentCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success)
+      case Right(cmd: EnvironmentCommand) =>
+        (runEnvironmentCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success))
+          .handleErrorWith(ErrorHandler.handler)
 
-      case Right(cmd: EnvironmentDocsCommand) => runEnvironmentDocsCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success)
+      case Right(cmd: EnvironmentDocsCommand) =>
+        (runEnvironmentDocsCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success))
+          .handleErrorWith(ErrorHandler.handler)
 
-      case Right(cmd: DocsCommand) => runDocsCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success)
+      case Right(cmd: DocsCommand) =>
+        (runDocsCommand(cmd).run(cmd) *> IO.pure(ExitCode.Success))
+          .handleErrorWith(ErrorHandler.handler)
 
-      case Right(cmd: CliCommand) => runFull(cmd) *> IO.pure(ExitCode.Success)
+      case Right(cmd: CliCommand) =>
+        (runFull(cmd) *> IO.pure(ExitCode.Success))
+          .handleErrorWith(ErrorHandler.handler)
     }
 
 }

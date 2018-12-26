@@ -14,8 +14,7 @@ object MetaFileReader {
     if (metaFile.canRead)
       SyncIO.unit
     else
-      SyncIO.raiseError(
-        MetaError(s"File ${metaFile.getAbsoluteFile} is not readable."))
+      SyncIO.raiseError(MetaError(s"File ${metaFile.getAbsoluteFile} is not readable."))
 
   def read(metaFile: MetaFile): SyncIO[Json] =
     for {

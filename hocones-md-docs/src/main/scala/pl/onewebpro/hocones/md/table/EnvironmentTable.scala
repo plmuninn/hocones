@@ -4,10 +4,7 @@ import java.util
 
 import cats.effect.SyncIO
 import net.steppschuh.markdowngenerator.table.{Table, TableRow}
-import pl.onewebpro.hocones.md.config.Configuration.{
-  TableAlignment,
-  TableConfiguration
-}
+import pl.onewebpro.hocones.md.config.Configuration.{TableAlignment, TableConfiguration}
 import pl.onewebpro.hocones.md.table.model.EnvironmentTableElement
 
 class EnvironmentTable(configuration: TableConfiguration) {
@@ -24,8 +21,7 @@ class EnvironmentTable(configuration: TableConfiguration) {
   private[table] def mapDetails(details: Map[String, String]): String =
     details.toList.map { case (key, value) => s"$key:$value" }.mkString(";")
 
-  private[table] def mapElementToRow(
-      element: EnvironmentTableElement): TableRow[String] =
+  private[table] def mapElementToRow(element: EnvironmentTableElement): TableRow[String] =
     new TableRow[String](
       util.Arrays.asList(
         element.environmentVariable,
@@ -41,8 +37,7 @@ class EnvironmentTable(configuration: TableConfiguration) {
       builder <- SyncIO(new Table.Builder())
       builder <- SyncIO(builder.withAlignment(alignment))
       builder <- SyncIO(builder.addRow(columns: _*))
-      columns <- SyncIO(
-        elements.sortBy(_.environmentVariable).map(mapElementToRow))
+      columns <- SyncIO(elements.sortBy(_.environmentVariable).map(mapElementToRow))
       builder <- SyncIO(columns.foldLeft(builder) { (table, row) =>
         table.addRow(row)
       })

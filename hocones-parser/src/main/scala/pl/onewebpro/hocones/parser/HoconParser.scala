@@ -44,8 +44,7 @@ object HoconParser extends LazyLogging {
   private val resultType = ResultType.values.map(_.toString)
 
   //TODO test me
-  private[parser] def mapEntryToTuple(entry: Entry[String, ConfigValue])
-    : (Path, ConfigValue, CanonicalClassName) = {
+  private[parser] def mapEntryToTuple(entry: Entry[String, ConfigValue]): (Path, ConfigValue, CanonicalClassName) = {
     val path = tagPath(entry.getKey)
     val value = entry.getValue
 
@@ -57,8 +56,7 @@ object HoconParser extends LazyLogging {
     tagRenderedValue(configValue.render(renderOptions))
 
   //TODO test me
-  def parseValue(value: (Path, ConfigValue, CanonicalClassName))(
-      implicit cfg: Config): IO[HoconResultValue] = {
+  def parseValue(value: (Path, ConfigValue, CanonicalClassName))(implicit cfg: Config): IO[HoconResultValue] = {
     val (path, configValue, className) = value
     lazy val renderedValue = render(configValue)
 
@@ -66,23 +64,16 @@ object HoconParser extends LazyLogging {
     logger.debug(value.toString())
 
     if (simpleValueTypes.contains(className))
-      SimpleValueParser.parse(renderedValue,
-                              path,
-                              configValue,
-                              SimpleValueType.withName(className))
+      SimpleValueParser.parse(renderedValue, path, configValue, SimpleValueType.withName(className))
     else if (valueTypes.contains(className))
-      ValueTypeParser.parse(path,
-                            ValueType.withName(className),
-                            renderedValue,
-                            configValue)
+      ValueTypeParser.parse(path, ValueType.withName(className), renderedValue, configValue)
     else if (resultType.contains(className))
       ResultTypeParser.parse(path, ResultType.withName(className), configValue)
     else IO.raiseError(ParsingError(s"Unhandled type $className on path $path"))
   }
 
   //TODO test me
-  private[parser] def parseEntrySet(
-      values: Set[(Path, ConfigValue, CanonicalClassName)])(
+  private[parser] def parseEntrySet(values: Set[(Path, ConfigValue, CanonicalClassName)])(
       implicit cfg: Config): IO[List[HoconResultValue]] =
     values.toList.map(parseValue).sequence
 

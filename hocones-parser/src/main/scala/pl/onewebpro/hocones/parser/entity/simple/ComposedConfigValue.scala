@@ -7,9 +7,7 @@ import pl.onewebpro.hocones.parser.ParsingError
 import shapeless.tag
 import shapeless.tag.@@
 
-case class ComposedConfigValue(pattern: HoconPattern,
-                               values: Seq[SimpleHoconValue])
-    extends SimpleHoconValue
+case class ComposedConfigValue(pattern: HoconPattern, values: Seq[SimpleHoconValue]) extends SimpleHoconValue
 
 object ComposedConfigValue {
 
@@ -33,11 +31,10 @@ object ComposedConfigValue {
       .nonEmpty
 
   //TODO test me
-  private[simple] def extractValues(
-      value: String): IO[List[SimpleHoconValue]] = {
+  private[simple] def extractValues(value: String): IO[List[SimpleHoconValue]] = {
     type Acc = List[IO[SimpleHoconValue]]
 
-    def split(str: String, acc: Acc): Acc = {
+    def split(str: String, acc: Acc): Acc =
       EnvironmentValue.envRegex.findFirstMatchIn(str) match {
         case Some(result) => {
           val name = result.subgroups.last
@@ -54,14 +51,11 @@ object ComposedConfigValue {
             val (beginning, end) = sb.splitAt(result.start)
             end.delete(0, beginning.size - 1)
             // If value was on end, split rest and value on end
-            (acc ++ split(beginning.toString(), acc) :+ hoconValue) ++ split(
-              end.toString(),
-              acc)
+            (acc ++ split(beginning.toString(), acc) :+ hoconValue) ++ split(end.toString(), acc)
           }
         }
         case None => if (str.isEmpty) acc else acc :+ IO.pure(SimpleValue(str))
       }
-    }
 
     split(value, Nil).sequence
   }
