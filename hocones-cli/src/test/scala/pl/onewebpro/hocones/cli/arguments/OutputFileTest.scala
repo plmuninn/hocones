@@ -1,8 +1,8 @@
 package pl.onewebpro.hocones.cli.arguments
 
-import java.io.File
+import pl.onewebpro.hocones.cli.CliSpec
 
-class OutputFileTest extends ArgumentSpec {
+class OutputFileTest extends CliSpec {
   "OutputFile.opts" should "return error if parent directory not exists" in {
     testOpts(OutputFile.opts(""), "-o /yxz/test.file") { result =>
       result.isLeft shouldBe true
@@ -11,16 +11,11 @@ class OutputFileTest extends ArgumentSpec {
     }
   }
 
-  "OutputFile.opts" should "return path to file if everything is ok" in {
-    val testFile = new File("./output-test-file")
-    testFile.createNewFile()
-
+  "OutputFile.opts" should "return path to file if everything is ok" in withTestFile("./output-test-file", "") {
     testOpts(OutputFile.opts(""), "-o ./output-test-file") { result =>
       result.isRight shouldBe true
       result.right.get.getPath shouldBe "./output-test-file"
     }
-
-    testFile.delete()
   }
 
   "OutputFile.opts" should "fail as default" in {

@@ -1,8 +1,8 @@
 package pl.onewebpro.hocones.cli.arguments.environment
 
-import pl.onewebpro.hocones.cli.arguments.ArgumentSpec
+import pl.onewebpro.hocones.cli.CliSpec
 
-class RemoveDuplicatesTest extends ArgumentSpec {
+class RemoveDuplicatesTest extends CliSpec {
 
   "RemoveDuplicates.opts" should "parse flag properly" in {
     testOpts(RemoveDuplicates.opts, "--remove-duplicates") { result =>

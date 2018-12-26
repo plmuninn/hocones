@@ -2,10 +2,10 @@ package pl.onewebpro.hocones.cli.arguments.docs
 
 import com.monovore.decline.Help
 import org.scalatest.Assertion
-import pl.onewebpro.hocones.cli.arguments.ArgumentSpec
+import pl.onewebpro.hocones.cli.CliSpec
 import pl.onewebpro.hocones.md.config.Configuration.{TableAlignment => MdTableAlignment}
 
-class TableAlignmentTest extends ArgumentSpec {
+class TableAlignmentTest extends CliSpec {
 
   val testAlignment: MdTableAlignment.TableAlignment => Either[Help, MdTableAlignment.TableAlignment] => Assertion = {
     alignment =>

@@ -29,31 +29,31 @@ object Main extends IOApp {
     } yield ()
   }
 
-  val runStatisticsCommand: Kleisli[IO, commands.CliCommand, Unit] = {
+  private val runStatisticsCommand: Kleisli[IO, commands.CliCommand, Unit] = {
     import Statistics.showStatistics
 
     Hocones.parse.andThen(Statistics.statisticsCommand).map(statistics => putStr(Color.Green(statistics.show)))
   }
 
-  val runEnvironmentCommand: EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+  private val runEnvironmentCommand: EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parse
       .map(result => (result, cmd))
       .andThen(Environment.environmentCommand)
   }
 
-  val runEnvironmentDocsCommand: EnvironmentDocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+  private val runEnvironmentDocsCommand: EnvironmentDocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parseAndLoadMetaInformation
       .map(result => result :+ cmd)
       .andThen(EnvironmentDocs.environmentDocsCommand)
   }
 
-  val runDocsCommand: DocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+  private val runDocsCommand: DocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parseAndLoadMetaInformation
       .map(result => result :+ cmd)
       .andThen(Docs.docsCommand)
   }
 
-  val runFull: CliCommand => IO[Unit] = { cmd =>
+  private val runFull: CliCommand => IO[Unit] = { cmd =>
     for {
       _ <- putStrLn(Color.Green("Running full process"))
 

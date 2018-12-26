@@ -1,8 +1,8 @@
 package pl.onewebpro.hocones.cli.arguments.environment
 
-import pl.onewebpro.hocones.cli.arguments.ArgumentSpec
+import pl.onewebpro.hocones.cli.CliSpec
 
-class WithCommentsTest extends ArgumentSpec {
+class WithCommentsTest extends CliSpec {
 
   "WithComments.opts" should "parse flag properly" in {
     testOpts(WithComments.opts, "--comments") { result =>
@@ -23,5 +23,4 @@ class WithCommentsTest extends ArgumentSpec {
       result.right.get shouldBe false
     }
   }
-
 }

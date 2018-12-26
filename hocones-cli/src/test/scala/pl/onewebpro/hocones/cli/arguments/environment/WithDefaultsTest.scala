@@ -1,8 +1,8 @@
 package pl.onewebpro.hocones.cli.arguments.environment
 
-import pl.onewebpro.hocones.cli.arguments.ArgumentSpec
+import pl.onewebpro.hocones.cli.CliSpec
 
-class WithDefaultsTest extends ArgumentSpec {
+class WithDefaultsTest extends CliSpec {
 
   "WithDefaults.opts" should "parse flag properly" in {
     testOpts(WithDefaults.opts, "--defaults") { result =>
