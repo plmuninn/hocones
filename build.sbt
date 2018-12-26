@@ -8,7 +8,8 @@ scalaVersion := "2.12.6"
 
 val compilerOptions = Seq(
   "-deprecation",
-  "-encoding", "UTF-8",
+  "-encoding",
+  "UTF-8",
   "-feature",
   "-language:existentials",
   "-language:higherKinds",
@@ -41,11 +42,13 @@ val circe = Seq(
   "io.circe" %% "circe-yaml"
 ).map(_ % circeVersion)
 
-val scalaOptVersion = "3.7.0"
+val declineVersion = "0.5.0"
+val fansiVersion = "0.2.5"
 val console4CatsVersion = "0.3"
 
 val cli = Seq(
-  "com.github.scopt" %% "scopt" % scalaOptVersion,
+  "com.monovore" %% "decline" % declineVersion,
+  "com.lihaoyi" %% "fansi" % fansiVersion,
   "com.github.gvolpe" %% "console4cats" % console4CatsVersion
 )
 
@@ -57,11 +60,16 @@ val hocon = Seq(
 
 val logbackVersion = "1.2.3"
 val scalaLoggingVersion = "3.9.0"
+val log4CatsVersion = "0.2.0"
 
 val logs = Seq(
+  "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
   "ch.qos.logback" % "logback-classic" % logbackVersion,
-  "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+  "io.chrisdavenport" %% "log4cats-core" % log4CatsVersion,
+  "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion,
+  "io.chrisdavenport" %% "log4cats-slf4j" % log4CatsVersion
 )
+
 
 val catsVersion = "1.3.1"
 val catsEffectVersion = "1.0.0"
@@ -101,7 +109,8 @@ val `hocones-parser` =
     .settings(
       name := "hocones-parser",
       libraryDependencies ++= (hocon ++ logs ++ fp ++ tests)
-    ).dependsOn(`hocones-common`)
+    )
+    .dependsOn(`hocones-common`)
 
 val `hocones-environment-files` =
   (project in file("hocones-environment-files"))
@@ -109,7 +118,8 @@ val `hocones-environment-files` =
     .settings(
       name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
-    ).dependsOn(`hocones-parser`, `hocones-common`)
+    )
+    .dependsOn(`hocones-parser`, `hocones-common`)
 
 val `hocones-meta` =
   (project in file("hocones-meta"))
@@ -123,9 +133,10 @@ val `hocones-meta` =
       name := "hocones-meta",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
       addCompilerPlugin(
-        "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+        ("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full)
       )
-    ).dependsOn(`hocones-parser`, `hocones-common`)
+    )
+    .dependsOn(`hocones-parser`, `hocones-common`)
 
 val `hocones-md-docs` =
   (project in file("hocones-md-docs"))
@@ -133,7 +144,8 @@ val `hocones-md-docs` =
     .settings(
       name := "hocones-md-docs",
       libraryDependencies ++= (logs ++ fp ++ markdown ++ tests)
-    ).dependsOn(`hocones-parser`, `hocones-meta`, `hocones-common`)
+    )
+    .dependsOn(`hocones-parser`, `hocones-meta`, `hocones-common`)
 
 val `hocones-statistics` =
   (project in file("hocones-statistics"))
@@ -141,7 +153,8 @@ val `hocones-statistics` =
     .settings(
       name := "hocones-statistics",
       libraryDependencies ++= (logs ++ fp ++ tests)
-    ).dependsOn(`hocones-parser`)
+    )
+    .dependsOn(`hocones-parser`)
 
 val `hocones-cli` =
   (project in file("hocones-cli"))
@@ -151,10 +164,11 @@ val `hocones-cli` =
       mainClass in assembly := Some("pl.onewebpro.hocones.cli.Main"),
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
       assemblyMergeStrategy in assembly := {
-        case PathList("META-INF", _ @ _*) => MergeStrategy.discard
-        case _ => MergeStrategy.first
+        case PathList("META-INF", _ @_*) => MergeStrategy.discard
+        case _                           => MergeStrategy.first
       }
-    ).dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
+    )
+    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
 
 lazy val `hocones-sbt-plugin` =
   (project in file("hocones-sbt-plugin"))
@@ -164,13 +178,14 @@ lazy val `hocones-sbt-plugin` =
       libraryDependencies ++= (hocon ++ logs ++ fp),
       sbtPlugin := true,
       sbtVersion := "1.2.3"
-    ).dependsOn(
-    `hocones-common`,
-    `hocones-parser`,
-    `hocones-environment-files`,
-    `hocones-meta`,
-    `hocones-md-docs`
-  )
+    )
+    .dependsOn(
+      `hocones-common`,
+      `hocones-parser`,
+      `hocones-environment-files`,
+      `hocones-meta`,
+      `hocones-md-docs`
+    )
 
 lazy val root = (project in file("."))
   .aggregate(

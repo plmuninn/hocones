@@ -70,8 +70,7 @@ package object model {
     def description: Option[String]
   }
 
-  case class MetaGenericInformation(name: String, description: Option[String])
-      extends MetaValue
+  case class MetaGenericInformation(name: String, description: Option[String]) extends MetaValue
 
   case class MetaString(name: String,
                         description: Option[String],
@@ -80,10 +79,7 @@ package object model {
                         `max-length`: Option[Int])
       extends MetaValue
 
-  case class MetaNumber(name: String,
-                        description: Option[String],
-                        `max-value`: Option[Int],
-                        `min-value`: Option[Int])
+  case class MetaNumber(name: String, description: Option[String], `max-value`: Option[Int], `min-value`: Option[Int])
       extends MetaValue
 
   case class MetaList(name: String,
@@ -92,9 +88,6 @@ package object model {
                       `element-type`: Option[String])
       extends MetaValue
 
-  case class MetaObject(name: String,
-                        description: Option[String],
-                        `element-type`: Option[String])
-      extends MetaValue
+  case class MetaObject(name: String, description: Option[String], `element-type`: Option[String]) extends MetaValue
 
 }

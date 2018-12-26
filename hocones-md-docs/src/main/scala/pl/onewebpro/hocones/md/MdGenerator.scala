@@ -3,28 +3,19 @@ package pl.onewebpro.hocones.md
 import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.common.io._
-import pl.onewebpro.hocones.md.config.Configuration.{
-  DocumentConfiguration,
-  TableConfiguration
-}
+import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableConfiguration}
 import pl.onewebpro.hocones.md.document.DocumentationGenerator
 import pl.onewebpro.hocones.md.io.DocumentationWriter
-import pl.onewebpro.hocones.md.table.{
-  EnvironmentTable,
-  EnvironmentTableGenerator
-}
+import pl.onewebpro.hocones.md.table.{EnvironmentTable, EnvironmentTableGenerator}
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
 
 object MdGenerator {
 
-  def generateTable(result: HoconResult,
-                    meta: MetaInformation,
-                    config: TableConfiguration) =
+  def generateTable(result: HoconResult, meta: MetaInformation, config: TableConfiguration) =
     for {
       outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
-      parentDirectory <- SyncIO(
-        tagParentDirectory(config.outputPath.getParent.toFile))
+      parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
       _ <- SyncIO.fromEither(
         OutputFileValidator
@@ -39,13 +30,10 @@ object MdGenerator {
       _ <- writer.write(text)
     } yield ()
 
-  def generateDocument(result: HoconResult,
-                       meta: MetaInformation,
-                       config: DocumentConfiguration) =
+  def generateDocument(result: HoconResult, meta: MetaInformation, config: DocumentConfiguration) =
     for {
       outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
-      parentDirectory <- SyncIO(
-        tagParentDirectory(config.outputPath.getParent.toFile))
+      parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
       _ <- SyncIO.fromEither(
         OutputFileValidator
@@ -58,10 +46,9 @@ object MdGenerator {
       _ <- writer.write(text)
     } yield ()
 
-  def generate(
-      result: HoconResult,
-      meta: MetaInformation,
-      configuration: Either[TableConfiguration, DocumentConfiguration]) =
+  def generate(result: HoconResult,
+               meta: MetaInformation,
+               configuration: Either[TableConfiguration, DocumentConfiguration]) =
     configuration match {
       case Left(tableConfiguration) =>
         generateTable(result, meta, tableConfiguration)

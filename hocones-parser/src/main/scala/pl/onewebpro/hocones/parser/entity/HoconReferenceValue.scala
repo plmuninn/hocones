@@ -4,7 +4,4 @@ import com.typesafe.config.ConfigValue
 import pl.onewebpro.hocones.common.implicits.Path
 import pl.onewebpro.hocones.parser.entity.simple.NotResolvedRef
 
-case class HoconReferenceValue(path: Path,
-                               cfg: ConfigValue,
-                               result: NotResolvedRef)
-    extends HoconValueType
+case class HoconReferenceValue(path: Path, cfg: ConfigValue, result: NotResolvedRef) extends HoconValueType

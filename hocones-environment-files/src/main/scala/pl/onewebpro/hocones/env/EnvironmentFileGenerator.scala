@@ -11,12 +11,10 @@ object EnvironmentFileGenerator {
 
   import pl.onewebpro.hocones.env.io._
 
-  def apply(config: EnvironmentConfiguration,
-            result: HoconResult): SyncIO[Unit] =
+  def apply(config: EnvironmentConfiguration, result: HoconResult): SyncIO[Unit] =
     for {
       outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
-      parentDirectory <- SyncIO(
-        tagParentDirectory(config.outputPath.getParent.toFile))
+      parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
       _ <- SyncIO.fromEither(
         OutputFileValidator
