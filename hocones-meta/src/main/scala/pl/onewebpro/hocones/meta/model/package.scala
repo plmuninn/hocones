@@ -29,7 +29,6 @@ package object model {
       findByPath(path).find(_.name == name)
 
     def findByPathAndName(pathWithName: String): Option[MetaValue] = {
-      //com.nordea.arc.craft.access-service.itss.user-id
       val splitted = pathWithName.split("\\.")
 
       if (splitted.length <= 2) findByName(pathWithName)
