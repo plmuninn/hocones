@@ -33,8 +33,8 @@ object Main extends IOApp {
     Hocones.parse.andThen(Statistics.statisticsCommand).andThen(Statistics.displayStatistics)
 
   private val runEnvironmentCommand: EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
-    Hocones.parse
-      .map(result => (result, cmd))
+    Hocones.parseAndLoadMetaInformation
+      .map(result => result :+ cmd)
       .andThen(Environment.environmentCommand)
   }
 
@@ -60,7 +60,7 @@ object Main extends IOApp {
       _ <- Statistics.statisticsCommand.andThen(Statistics.displayStatistics).run(hocon)
 
       environmentCommand <- IO(EnvironmentCommand.fromCommand(cmd))
-      _ <- Environment.environmentCommand.run((hocon, environmentCommand))
+      _ <- Environment.environmentCommand.run((hocon, meta, environmentCommand))
 
       environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
       _ <- EnvironmentDocs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))

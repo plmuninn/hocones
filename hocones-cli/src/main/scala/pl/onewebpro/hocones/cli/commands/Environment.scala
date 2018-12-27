@@ -6,12 +6,13 @@ import cats.implicits._
 import com.monovore.decline.Opts
 import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
-import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
+import pl.onewebpro.hocones.cli.arguments.environment.{DisplayMeta, RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
 import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
 import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
+import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
 
 object Environment {
@@ -22,7 +23,8 @@ object Environment {
                                 output: Option[OutputFile],
                                 withComments: Boolean,
                                 withDefaults: Boolean,
-                                removeDuplicates: Boolean)
+                                removeDuplicates: Boolean,
+                                displayMeta: Boolean)
       extends CliCommand
 
   object EnvironmentCommand {
@@ -31,7 +33,8 @@ object Environment {
                          output = None,
                          withComments = false,
                          withDefaults = false,
-                         removeDuplicates = false)
+                         removeDuplicates = false,
+                         displayMeta = false)
   }
 
   private val environmentCommandF: Opts[EnvironmentCommand] = (
@@ -39,7 +42,8 @@ object Environment {
     OutputFile.opts("environment file").orNone,
     WithComments.opts,
     WithDefaults.opts,
-    RemoveDuplicates.opts
+    RemoveDuplicates.opts,
+    DisplayMeta.opts
   ).mapN(EnvironmentCommand.apply)
 
   val cmd: Opts[CliCommand] =
@@ -50,16 +54,17 @@ object Environment {
       outputPath = command.output.getOrElse(IOOutputFile.fromInputPath(command.input, ".env")).toPath,
       withComments = command.withComments,
       withDefaults = command.withDefaults,
-      removeDuplicates = command.removeDuplicates
+      removeDuplicates = command.removeDuplicates,
+      displayMeta = command.displayMeta,
     )
   }
 
-  val environmentCommand: Kleisli[IO, (HoconResult, EnvironmentCommand), Unit] = Kleisli {
-    case (hocon, command) =>
+  val environmentCommand: Kleisli[IO, (HoconResult, MetaInformation, EnvironmentCommand), Unit] = Kleisli {
+    case (hocon, metaInformation, command) =>
       for {
         envConfiguration <- IO[EnvironmentConfiguration](command)
         _ <- putStrLn(Color.Green("Generating environment file"))
-        _ <- EnvironmentFileGenerator(envConfiguration, hocon).toIO
+        _ <- EnvironmentFileGenerator(envConfiguration, hocon, metaInformation).toIO
         _ <- putStrLn(Color.Green("File generated ") ++ envConfiguration.outputPath.toFile.getAbsolutePath)
       } yield ()
   }

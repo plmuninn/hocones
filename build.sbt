@@ -70,7 +70,6 @@ val logs = Seq(
   "io.chrisdavenport" %% "log4cats-slf4j" % log4CatsVersion
 )
 
-
 val catsVersion = "1.3.1"
 val catsEffectVersion = "1.0.0"
 
@@ -112,15 +111,6 @@ val `hocones-parser` =
     )
     .dependsOn(`hocones-common`)
 
-val `hocones-environment-files` =
-  (project in file("hocones-environment-files"))
-    .settings(defaultSettings)
-    .settings(
-      name := "hocones-environment-files",
-      libraryDependencies ++= (logs ++ fp ++ tests)
-    )
-    .dependsOn(`hocones-parser`, `hocones-common`)
-
 val `hocones-meta` =
   (project in file("hocones-meta"))
     .settings(defaultSettings)
@@ -137,6 +127,15 @@ val `hocones-meta` =
       )
     )
     .dependsOn(`hocones-parser`, `hocones-common`)
+
+val `hocones-environment-files` =
+  (project in file("hocones-environment-files"))
+    .settings(defaultSettings)
+    .settings(
+      name := "hocones-environment-files",
+      libraryDependencies ++= (logs ++ fp ++ tests)
+    )
+    .dependsOn(`hocones-parser`, `hocones-common`, `hocones-meta`)
 
 val `hocones-md-docs` =
   (project in file("hocones-md-docs"))
@@ -191,9 +190,9 @@ lazy val root = (project in file("."))
   .aggregate(
     `hocones-common`,
     `hocones-parser`,
-    `hocones-environment-files`,
-    `hocones-cli`,
-    `hocones-statistics`,
     `hocones-meta`,
-    `hocones-md-docs`
+    `hocones-statistics`,
+    `hocones-environment-files`,
+    `hocones-md-docs`,
+    `hocones-cli`
   )
