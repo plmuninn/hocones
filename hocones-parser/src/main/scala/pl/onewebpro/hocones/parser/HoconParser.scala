@@ -43,7 +43,6 @@ object HoconParser extends LazyLogging {
   private val valueTypes = ValueType.values.map(_.toString)
   private val resultType = ResultType.values.map(_.toString)
 
-  //TODO test me
   private[parser] def mapEntryToTuple(entry: Entry[String, ConfigValue]): (Path, ConfigValue, CanonicalClassName) = {
     val path = tagPath(entry.getKey)
     val value = entry.getValue
@@ -51,11 +50,9 @@ object HoconParser extends LazyLogging {
     (path, entry.getValue, value.canonicalName)
   }
 
-  //TODO test me
   private[parser] def render(configValue: ConfigValue): RenderedValue =
     tagRenderedValue(configValue.render(renderOptions))
 
-  //TODO test me
   def parseValue(value: (Path, ConfigValue, CanonicalClassName))(implicit cfg: Config): IO[HoconResultValue] = {
     val (path, configValue, className) = value
     lazy val renderedValue = render(configValue)
@@ -72,7 +69,6 @@ object HoconParser extends LazyLogging {
     else IO.raiseError(ParsingError(s"Unhandled type $className on path $path"))
   }
 
-  //TODO test me
   private[parser] def parseEntrySet(values: Set[(Path, ConfigValue, CanonicalClassName)])(
       implicit cfg: Config): IO[List[HoconResultValue]] =
     values.toList.map(parseValue).sequence
