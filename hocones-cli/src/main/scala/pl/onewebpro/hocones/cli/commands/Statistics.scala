@@ -16,7 +16,8 @@ object Statistics {
 
   case class StatisticsCommand(input: InputFile) extends CliCommand
 
-  private val commandF: Opts[CliCommand] = InputFile.opts.map(StatisticsCommand.apply)
+  private val commandF: Opts[CliCommand] =
+    InputFile.opts.map(StatisticsCommand.apply)
 
   implicit val showStatistics: Show[StatisticsMeta] = Show.show { statistics =>
     s"""
@@ -28,16 +29,19 @@ object Statistics {
   }
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand("statistics", "display statistics about configuration")(commandF)
+    Opts.subcommand("statistics", "display statistics about configuration")(
+      commandF)
 
-  val displayStatistics: Kleisli[IO, StatisticsMeta, Unit] = Kleisli { statistics =>
-    putStrLn(statistics)
+  val displayStatistics: Kleisli[IO, StatisticsMeta, Unit] = Kleisli {
+    statistics =>
+      putStrLn(statistics)
   }
 
-  val statisticsCommand: Kleisli[IO, HoconResult, StatisticsMeta] = Kleisli { hocon =>
-    for {
-      _ <- putStrLn(Color.Green("Loading statistics about configuration"))
-      result <- StatisticsMeta.fromParsedHocon(hocon).toIO
-    } yield result
+  val statisticsCommand: Kleisli[IO, HoconResult, StatisticsMeta] = Kleisli {
+    hocon =>
+      for {
+        _ <- putStrLn(Color.Green("Loading statistics about configuration"))
+        result <- StatisticsMeta.fromParsedHocon(hocon).toIO
+      } yield result
   }
 }

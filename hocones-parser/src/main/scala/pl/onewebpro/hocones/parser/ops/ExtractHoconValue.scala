@@ -1,9 +1,13 @@
 package pl.onewebpro.hocones.parser.ops
 
 import pl.onewebpro.hocones.parser.entity._
-import pl.onewebpro.hocones.parser.entity.simple.{ComposedConfigValue, SimpleHoconValue}
+import pl.onewebpro.hocones.parser.entity.simple.{
+  ComposedConfigValue,
+  SimpleHoconValue
+}
 
-private[ops] class ExtractHoconValue[T <: SimpleHoconValue](isType: Result => Boolean) {
+private[ops] class ExtractHoconValue[T <: SimpleHoconValue](
+    isType: Result => Boolean) {
 
   private[ops] def isValue: Result => Boolean = {
     case ComposedConfigValue(_, composedValues) =>
@@ -16,7 +20,8 @@ private[ops] class ExtractHoconValue[T <: SimpleHoconValue](isType: Result => Bo
       concatenatedValues.values.exists(isValue) || concatenatedValues.values
         .exists(resultContainsValue)
     case HoconMergedValues(_, _, default, replace) =>
-      isValue(default) || isValue(replace) || resultContainsValue(default) || resultContainsValue(replace)
+      isValue(default) || isValue(replace) || resultContainsValue(default) || resultContainsValue(
+        replace)
     case HoconArray(_, _, arrayValues) =>
       arrayValues.exists(resultContainsValue)
     case HoconObject(_, _, objectValues) =>
@@ -52,7 +57,8 @@ private[ops] class ExtractHoconValue[T <: SimpleHoconValue](isType: Result => Bo
     case _ => Nil
   }
 
-  private[ops] def toExtractedValues: HoconResultValue => Option[ExtractedValue[T]] = { value =>
+  private[ops] def toExtractedValues
+    : HoconResultValue => Option[ExtractedValue[T]] = { value =>
     if (!resultContainsValue(value)) None
     else Some(ExtractedValue[T](value.cfg, value, extractValues(value)))
   }

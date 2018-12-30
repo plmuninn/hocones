@@ -3,14 +3,19 @@ package pl.onewebpro.hocones.md.table
 import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.common.implicits.Path
-import pl.onewebpro.hocones.md.document.md.{DefaultValue, MetaValueDocumentation}
+import pl.onewebpro.hocones.md.document.md.{
+  DefaultValue,
+  MetaValueDocumentation
+}
 import pl.onewebpro.hocones.md.table.model.EnvironmentTableElement
 import pl.onewebpro.hocones.meta.model._
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue
 
-object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValue {
+object EnvironmentTableGenerator
+    extends MetaValueDocumentation
+    with DefaultValue {
 
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
@@ -20,10 +25,11 @@ object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValu
     case _ => None
   }
 
-  def generateTableElement(meta: MetaInformation,
-                           path: Path,
-                           parent: HoconResultValue,
-                           value: EnvironmentValue): SyncIO[EnvironmentTableElement] =
+  def generateTableElement(
+      meta: MetaInformation,
+      path: Path,
+      parent: HoconResultValue,
+      value: EnvironmentValue): SyncIO[EnvironmentTableElement] =
     for {
       name <- SyncIO.pure(value.name)
       meta <- SyncIO(meta.findByPathAndName(pathWithName = path))
@@ -40,12 +46,14 @@ object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValu
         path = path
       )
 
-  def removeDuplicates(values: Seq[EnvironmentTableElement]): SyncIO[Seq[EnvironmentTableElement]] =
+  def removeDuplicates(values: Seq[EnvironmentTableElement])
+    : SyncIO[Seq[EnvironmentTableElement]] =
     SyncIO.pure(values).map { values =>
       values.foldLeft(Vector.empty[EnvironmentTableElement]) {
         case (acc, element) =>
           acc
-            .find(value => value.path == element.path && value.environmentVariable == value.environmentVariable) match {
+            .find(value =>
+              value.path == element.path && value.environmentVariable == value.environmentVariable) match {
             case Some(_) =>
               acc // TODO make some validation and value higher elements with description etc
             case None => acc :+ element
@@ -53,13 +61,15 @@ object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValu
       }
     }
 
-  def apply(result: HoconResult, meta: MetaInformation): SyncIO[Seq[EnvironmentTableElement]] =
+  def apply(result: HoconResult,
+            meta: MetaInformation): SyncIO[Seq[EnvironmentTableElement]] =
     SyncIO(result.results.containsEnvironmentValues)
       .flatMap { values =>
         values
           .flatMap {
             case (path, model) =>
-              model.values.map(environment => generateTableElement(meta, path, model.parent, environment))
+              model.values.map(environment =>
+                generateTableElement(meta, path, model.parent, environment))
           }
           .toList
           .sequence

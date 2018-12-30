@@ -2,17 +2,22 @@ package pl.onewebpro.hocones.parser.entity.simple
 
 import cats.effect.IO
 import pl.onewebpro.hocones.parser.ParsingError
-import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue.{EnvName, EnvValue}
+import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue.{
+  EnvName,
+  EnvValue
+}
 import shapeless.tag
 import shapeless.tag.@@
 
 import scala.util.matching.Regex
 
-case class EnvironmentValue(env: EnvValue, name: EnvName, isOptional: Boolean) extends ReferenceTypeValue
+case class EnvironmentValue(env: EnvValue, name: EnvName, isOptional: Boolean)
+    extends ReferenceTypeValue
 
 object EnvironmentValue {
 
-  val envRegex: Regex = """(\$\{\??\w*.*?\})""".r // For finding any env name in string
+  val envRegex
+    : Regex = """(\$\{\??\w*.*?\})""".r // For finding any env name in string
 
   val envNameRegex: Regex =
     """\$\{\??(\w*.*?)\}""".r // For extracting env name from string
@@ -66,9 +71,14 @@ object EnvironmentValue {
       case Some(env) =>
         extractName(env) match {
           case Some(name) =>
-            IO(EnvironmentValue(env = env, name = name, isOptional = isOptionalEnv(env)))
+            IO(
+              EnvironmentValue(env = env,
+                               name = name,
+                               isOptional = isOptionalEnv(env)))
           case _ =>
-            IO.raiseError(ParsingError(s"Error during extracting environment from string $value"))
+            IO.raiseError(
+              ParsingError(
+                s"Error during extracting environment from string $value"))
         }
       case None =>
         IO.raiseError(ParsingError(s"Value $value is not environment"))

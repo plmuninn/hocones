@@ -26,7 +26,9 @@ object MetaParser {
 
   import InternalMetaParser._
 
-  private[meta] def mapSimpleHoconValue(name: String, value: SimpleHoconValue): SyncIO[MetaValue] =
+  private[meta] def mapSimpleHoconValue(
+      name: String,
+      value: SimpleHoconValue): SyncIO[MetaValue] =
     SyncIO.pure(MetaGenericInformation(name = name, description = None))
 
   private[meta] def mapResultValue: Result => SyncIO[MetaValue] = {
@@ -34,13 +36,18 @@ object MetaParser {
       val name = result.path.name
       result match {
         case _: HoconArray =>
-          SyncIO.pure(MetaList(name = name, description = None, `can-be-empty` = None, `element-type` = None))
+          SyncIO.pure(
+            MetaList(name = name,
+                     description = None,
+                     `can-be-empty` = None,
+                     `element-type` = None))
         case _: HoconConcatenation =>
           SyncIO.pure(MetaGenericInformation(name = name, description = None))
         case _: HoconEnvironmentValue =>
           SyncIO.pure(MetaGenericInformation(name = name, description = None))
         case _: HoconObject =>
-          SyncIO.pure(MetaObject(name = name, description = None, `element-type` = None))
+          SyncIO.pure(
+            MetaObject(name = name, description = None, `element-type` = None))
         case _: HoconReferenceValue =>
           SyncIO.pure(MetaGenericInformation(name = name, description = None))
 
@@ -61,20 +68,42 @@ object MetaParser {
           value.valueType match {
             case SimpleValueType.UNQUOTED_STRING =>
               SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None))
+                MetaString(name = name,
+                           description = None,
+                           pattern = None,
+                           `min-length` = None,
+                           `max-length` = None))
             case SimpleValueType.QUOTED_STRING =>
               SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None))
+                MetaString(name = name,
+                           description = None,
+                           pattern = None,
+                           `min-length` = None,
+                           `max-length` = None))
             case SimpleValueType.BOOLEAN =>
-              SyncIO.pure(MetaGenericInformation(name = name, description = None))
+              SyncIO.pure(
+                MetaGenericInformation(name = name, description = None))
             case SimpleValueType.DOUBLE =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
+              SyncIO.pure(
+                MetaNumber(name = name,
+                           description = None,
+                           `max-value` = None,
+                           `min-value` = None))
             case SimpleValueType.INT =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
+              SyncIO.pure(
+                MetaNumber(name = name,
+                           description = None,
+                           `max-value` = None,
+                           `min-value` = None))
             case SimpleValueType.LONG =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
+              SyncIO.pure(
+                MetaNumber(name = name,
+                           description = None,
+                           `max-value` = None,
+                           `min-value` = None))
             case SimpleValueType.NULL =>
-              SyncIO.pure(MetaGenericInformation(name = name, description = None))
+              SyncIO.pure(
+                MetaGenericInformation(name = name, description = None))
           }
       }
     case _ => SyncIO.raiseError(MetaParsingError("Wrong type of value"))
@@ -136,8 +165,9 @@ object MetaParser {
   }
 
   //TODO make it more IO
-  private[meta] def generateMetaValues(roots: Seq[String],
-                                       hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
+  private[meta] def generateMetaValues(
+      roots: Seq[String],
+      hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
     SyncIO {
       val result =
         roots.map(path => path -> Map.empty[String, Seq[MetaValue]]).toMap
@@ -159,7 +189,8 @@ object MetaParser {
                     .unsafeRunSync()))
                 case _ =>
                   val packageName = path.packageName.replace(s"$key.", "")
-                  cont + (packageName -> Seq(mapResultValue(value).unsafeRunSync()))
+                  cont + (packageName -> Seq(
+                    mapResultValue(value).unsafeRunSync()))
               }
 
               rootsList + (key -> res)
@@ -170,7 +201,8 @@ object MetaParser {
 
     }
 
-  private[meta] def roots(hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
+  private[meta] def roots(
+      hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
     for {
       rootsKeys <- generateRoots(hocones)
       generatedMetaValues <- generateMetaValues(rootsKeys, hocones)

@@ -24,7 +24,8 @@ object ValueTypeParser {
   private def divideRenderedValue(renderedValue: String): List[String] =
     renderedValue.lines.toList.map(_.replace("\",", "\""))
 
-  private[parser] def divideToLeftAndRight(values: List[String]): IO[(String, String)] = {
+  private[parser] def divideToLeftAndRight(
+      values: List[String]): IO[(String, String)] = {
     def createListString: List[String] => String =
       "[" + _.drop(1).dropRight(1).mkString(",") + "]"
 
@@ -60,30 +61,41 @@ object ValueTypeParser {
              | $path : $value
        """.stripMargin)
       })
-      value <- OptionT(IO(parsed.entrySet().asScala.find(_.getKey == path).map(_.getValue)))
+      value <- OptionT(
+        IO(parsed.entrySet().asScala.find(_.getKey == path).map(_.getValue)))
     } yield value).value.flatMap {
       case Some(result) => IO.pure(result)
       case None =>
-        IO.raiseError(ParsingError(s"There was problem with parsing array value $path:$value"))
+        IO.raiseError(
+          ParsingError(
+            s"There was problem with parsing array value $path:$value"))
     }
 
-  private[parser] def parseMergeableArrays(path: Path,
-                                           value: ValueType,
-                                           renderedValue: RenderedValue,
-                                           configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
+  private[parser] def parseMergeableArrays(
+      path: Path,
+      value: ValueType,
+      renderedValue: RenderedValue,
+      configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
     for {
       asList <- IO(divideRenderedValue(renderedValue))
       leftAndRight <- divideToLeftAndRight(asList)
       (leftSide, rightSide) = leftAndRight
       leftHoconValue <- parseAsValue(path, leftSide)
       rightHoconValue <- parseAsValue(path, rightSide)
-      leftValue <- HoconParser.parseValue(path, leftHoconValue, leftHoconValue.canonicalName)
-      rigthValue <- HoconParser.parseValue(path, rightHoconValue, rightHoconValue.canonicalName)
+      leftValue <- HoconParser.parseValue(path,
+                                          leftHoconValue,
+                                          leftHoconValue.canonicalName)
+      rigthValue <- HoconParser.parseValue(path,
+                                           rightHoconValue,
+                                           rightHoconValue.canonicalName)
     } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
 
   //TODO test me
-  def parse(path: Path, value: ValueType, renderedValue: RenderedValue, configValue: ConfigValue)(
-      implicit cfg: Config): IO[HoconResultValue] =
+  def parse(
+      path: Path,
+      value: ValueType,
+      renderedValue: RenderedValue,
+      configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
     value match {
       case ValueType.CONCATENATION =>
         for {
@@ -96,7 +108,9 @@ object ValueTypeParser {
           case result: NotResolvedRef =>
             IO.pure(HoconReferenceValue(path, configValue, result))
           case result =>
-            IO.raiseError(ParsingError(s"Wrong value of ${result.getClass.getCanonicalName}"))
+            IO.raiseError(
+              ParsingError(
+                s"Wrong value of ${result.getClass.getCanonicalName}"))
         }
       case ValueType.MERGE =>
         renderedValue match {
@@ -108,11 +122,20 @@ object ValueTypeParser {
                 for {
                   leftHoconValue <- parseAsValue(path, left)
                   rightHoconValue <- parseAsValue(path, right)
-                  leftValue <- HoconParser.parseValue(path, leftHoconValue, leftHoconValue.canonicalName)
-                  rigthValue <- HoconParser.parseValue(path, rightHoconValue, rightHoconValue.canonicalName)
-                } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
+                  leftValue <- HoconParser.parseValue(
+                    path,
+                    leftHoconValue,
+                    leftHoconValue.canonicalName)
+                  rigthValue <- HoconParser.parseValue(
+                    path,
+                    rightHoconValue,
+                    rightHoconValue.canonicalName)
+                } yield
+                  HoconMergedValues(path, configValue, leftValue, rigthValue)
               case _ =>
-                IO.raiseError(ParsingError(s"Value $renderedValue is not handled merge value"))
+                IO.raiseError(
+                  ParsingError(
+                    s"Value $renderedValue is not handled merge value"))
             }
         }
     }

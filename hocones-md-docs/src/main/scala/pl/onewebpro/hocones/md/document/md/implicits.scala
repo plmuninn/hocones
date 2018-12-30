@@ -13,7 +13,8 @@ object implicits {
 
   implicit val markdownArray: DocumentToMdGenerator[ArrayDocument] =
     new ArrayDocumentMarkdown()
-  implicit val markdownConcatenation: DocumentToMdGenerator[ConcatenationDocument] =
+  implicit val markdownConcatenation
+    : DocumentToMdGenerator[ConcatenationDocument] =
     new ConcatenationDocumentMarkdown()
   implicit val markdownEnvironment: DocumentToMdGenerator[EnvironmentDocument] =
     new EnvironmentDocumentMarkdown()
@@ -21,9 +22,11 @@ object implicits {
     new MergedValuesDocumentMarkdown()
   implicit val markdownObject: DocumentToMdGenerator[ObjectDocument] =
     new ObjectDocumentMarkdown()
-  implicit val markdownReference: DocumentToMdGenerator[ReferenceValueDocument] =
+  implicit val markdownReference
+    : DocumentToMdGenerator[ReferenceValueDocument] =
     new ReferenceValueDocumentMarkdown()
-  implicit val markdownResolvedReference: DocumentToMdGenerator[ResolvedReferenceDocument] =
+  implicit val markdownResolvedReference
+    : DocumentToMdGenerator[ResolvedReferenceDocument] =
     new ResolvedReferenceDocumentMarkdown()
   implicit val markdownValue: DocumentToMdGenerator[ValueDocument] =
     new ValueDocumentMarkdown()

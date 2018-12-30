@@ -7,7 +7,11 @@ import pl.onewebpro.hocones.common.implicits._
 import pl.onewebpro.hocones.parser.HoconParser._
 import pl.onewebpro.hocones.parser.ParsingError
 import pl.onewebpro.hocones.parser.`type`.ResultType.ResultType
-import pl.onewebpro.hocones.parser.entity.{HoconArray, HoconObject, HoconResultValue}
+import pl.onewebpro.hocones.parser.entity.{
+  HoconArray,
+  HoconObject,
+  HoconResultValue
+}
 
 import scala.collection.JavaConverters._
 
@@ -16,7 +20,8 @@ object ResultTypeParser {
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   //TODO test me
-  def parse(path: Path, value: ResultType, configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
+  def parse(path: Path, value: ResultType, configValue: ConfigValue)(
+      implicit cfg: Config): IO[HoconResultValue] =
     value match {
       case ResultType.LIST =>
         configValue match {
@@ -30,7 +35,8 @@ object ResultTypeParser {
               }.sequence
             } yield HoconArray(path, configValue, values)
           case _ =>
-            IO.raiseError(ParsingError(s"Something is wrong $path is not ConfigList"))
+            IO.raiseError(
+              ParsingError(s"Something is wrong $path is not ConfigList"))
         }
       case ResultType.OBJECT =>
         configValue match {
@@ -45,7 +51,8 @@ object ResultTypeParser {
               results <- parseEntrySet(withExtraPath)
             } yield HoconObject(path, configValue, results)
           case _ =>
-            IO.raiseError(ParsingError(s"Something is wrong $path is not ConfigList"))
+            IO.raiseError(
+              ParsingError(s"Something is wrong $path is not ConfigList"))
         }
     }
 }

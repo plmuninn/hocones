@@ -4,7 +4,8 @@ import pl.onewebpro.hocones.parser.entity.simple.SimpleValue.Value
 import shapeless.tag
 import shapeless.tag.@@
 
-case class SimpleValue(value: Value, wasQuoted: Boolean) extends SimpleHoconValue
+case class SimpleValue(value: Value, wasQuoted: Boolean)
+    extends SimpleHoconValue
 
 object SimpleValue {
 

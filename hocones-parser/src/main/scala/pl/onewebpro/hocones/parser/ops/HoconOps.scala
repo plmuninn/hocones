@@ -2,14 +2,23 @@ package pl.onewebpro.hocones.parser.ops
 
 import com.typesafe.config.ConfigValue
 import pl.onewebpro.hocones.common.implicits._
-import pl.onewebpro.hocones.parser.HoconParser.{tagCanonicalName, CanonicalClassName}
+import pl.onewebpro.hocones.parser.HoconParser.{
+  tagCanonicalName,
+  CanonicalClassName
+}
 import pl.onewebpro.hocones.parser.entity._
-import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef, SimpleHoconValue}
+import pl.onewebpro.hocones.parser.entity.simple.{
+  EnvironmentValue,
+  NotResolvedRef,
+  ResolvedRef,
+  SimpleHoconValue
+}
 
 object HoconOps {
 
   implicit class ConfigValueImplicits(value: ConfigValue) {
-    val canonicalName: CanonicalClassName = tagCanonicalName(value.getClass.getCanonicalName)
+    val canonicalName: CanonicalClassName = tagCanonicalName(
+      value.getClass.getCanonicalName)
   }
 
   type FlatResultList = Map[Path, HoconResultValue]
@@ -29,7 +38,8 @@ object HoconOps {
       }.toMap
   }
 
-  implicit private[ops] class ExtractHoconValueOps(values: Seq[HoconResultValue]) {
+  implicit private[ops] class ExtractHoconValueOps(
+      values: Seq[HoconResultValue]) {
 
     private[ops] def containsValues[T <: SimpleHoconValue](
         implicit ex: ExtractHoconValue[T]): Map[Path, ExtractedValue[T]] =
@@ -40,19 +50,22 @@ object HoconOps {
           case (key, Some(value)) => key -> value
         }
 
-    private[ops] def extractedValues[T <: SimpleHoconValue](implicit ex: ExtractHoconValue[T]): Seq[T] =
+    private[ops] def extractedValues[T <: SimpleHoconValue](
+        implicit ex: ExtractHoconValue[T]): Seq[T] =
       containsValues[T].values.flatMap(_.values).toSeq.distinct
   }
 
   implicit class ExtractEnvironmentValuesOps(values: Seq[HoconResultValue]) {
-    lazy val containsEnvironmentValues: Map[Path, ExtractedValue[EnvironmentValue]] =
+    lazy val containsEnvironmentValues
+      : Map[Path, ExtractedValue[EnvironmentValue]] =
       values.containsValues[EnvironmentValue]
     lazy val environmentValues: Seq[EnvironmentValue] =
       values.extractedValues[EnvironmentValue]
   }
 
   implicit class ExtractNotResolvedRefOps(values: Seq[HoconResultValue]) {
-    lazy val containsNotResolvedValues: Map[Path, ExtractedValue[NotResolvedRef]] =
+    lazy val containsNotResolvedValues
+      : Map[Path, ExtractedValue[NotResolvedRef]] =
       values.containsValues[NotResolvedRef]
     lazy val notResolvedValues: Seq[NotResolvedRef] =
       values.extractedValues[NotResolvedRef]

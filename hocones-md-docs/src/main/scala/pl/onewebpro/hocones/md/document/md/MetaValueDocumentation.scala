@@ -16,9 +16,11 @@ trait MetaValueDocumentation {
           "min-length" -> model.`min-length`.map(_.toString),
           "max-length" -> model.`max-length`.map(_.toString)).flatten.toMap
     case Some(model: MetaNumber) =>
-      Map("max-value" -> model.`max-value`.map(_.toString), "min-value" -> model.`min-value`.map(_.toString)).flatten.toMap
+      Map("max-value" -> model.`max-value`.map(_.toString),
+          "min-value" -> model.`min-value`.map(_.toString)).flatten.toMap
     case Some(model: MetaList) =>
-      Map("can-be-empty" -> model.`can-be-empty`.map(_.toString), "element-type" -> model.`element-type`).flatten.toMap
+      Map("can-be-empty" -> model.`can-be-empty`.map(_.toString),
+          "element-type" -> model.`element-type`).flatten.toMap
     case Some(model: MetaObject) =>
       Map("element-type" -> model.`element-type`).flatten.toMap
     case Some(_) => Map.empty
