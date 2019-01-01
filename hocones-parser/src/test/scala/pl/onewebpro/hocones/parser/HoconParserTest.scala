@@ -1,6 +1,6 @@
 package pl.onewebpro.hocones.parser
 
-import com.typesafe.config.{Config, ConfigValue, ConfigValueFactory}
+import com.typesafe.config.{Config, ConfigList, ConfigValue, ConfigValueFactory}
 import pl.onewebpro.hocones.common.implicits._
 import pl.onewebpro.hocones.parser.HoconParser.CanonicalClassName
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
@@ -56,11 +56,23 @@ class HoconParserTest extends TestSpec {
     }
   }
 
-  it should "parseValue for result types" in new ParserConfigFixture {
+  it should "parseValue for list result type" in new ParserConfigFixture {
     val listValue = valueTuple(s"$pathPrefix.array.value_1",
       "com.typesafe.config.impl.SimpleConfigList")
     HoconParser.parseValue(listValue).unsafeRunSync() should matchPattern {
-      case HoconArray(listValue._1, _, _) =>
+      case HoconArray(listValue._1, listValue._2, _) =>
+    }
+  }
+
+  it should "parseValue for object result type" in {
+    implicit val config: Config = loadConfig("object.conf")
+    val path = "pl.onewebpro.test.object.value_1"
+    val entries = getEntriesMap
+    // retrieve first item of array which should be ConfigObject
+    val value = entries(path).asInstanceOf[ConfigList].asScala.head
+    val objectValue = (tagPath(path), value, HoconParser.tagCanonicalName("com.typesafe.config.impl.SimpleConfigObject"))
+    HoconParser.parseValue(objectValue).unsafeRunSync() should matchPattern {
+      case HoconObject(objectValue._1, objectValue._2, _) =>
     }
   }
 
@@ -346,8 +358,7 @@ class HoconParserTest extends TestSpec {
 
   trait ParserConfigFixture {
     implicit val config: Config = loadConfig("parser.conf")
-    val entries: Map[String, ConfigValue] =
-      config.entrySet().asScala.map(entry => entry.getKey -> entry.getValue).toMap
+    val entries: Map[String, ConfigValue] = getEntriesMap
 
     def valueTuple(path: String, className: String): (Path, ConfigValue, CanonicalClassName) =
       (tagPath(path), entries(path), HoconParser.tagCanonicalName(className))
