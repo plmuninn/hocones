@@ -81,7 +81,6 @@ object ValueTypeParser {
       rigthValue <- HoconParser.parseValue(path, rightHoconValue, rightHoconValue.canonicalName)
     } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
 
-  //TODO test me
   def parse(path: Path, value: ValueType, renderedValue: RenderedValue, configValue: ConfigValue)(
       implicit cfg: Config): IO[HoconResultValue] =
     value match {

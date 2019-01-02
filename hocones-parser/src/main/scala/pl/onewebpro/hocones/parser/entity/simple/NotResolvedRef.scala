@@ -35,11 +35,9 @@ object NotResolvedRef {
   //TODO test me
   private[simple] def envIsRef(env: EnvValue): Boolean = env.contains(".")
 
-  //TODO test me
   private[simple] def isRef(value: String): Boolean =
     EnvironmentValue.envName(value).exists(_.contains("."))
 
-  //TODO test me
   def apply(value: String): IO[NotResolvedRef] =
     EnvironmentValue.envName(value).filter(envIsRef) match {
       case Some(env) =>
