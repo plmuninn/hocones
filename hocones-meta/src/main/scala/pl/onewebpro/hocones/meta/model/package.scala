@@ -4,9 +4,11 @@ import scala.collection.immutable.ListMap
 
 package object model {
 
-  case class MetaInformation(hoconesVersion: String,
-                             roots: Map[String, Map[String, Seq[MetaValue]]],
-                             orphans: Seq[MetaValue]) {
+  case class MetaInformation(
+    hoconesVersion: String,
+    roots: Map[String, Map[String, Seq[MetaValue]]],
+    orphans: Seq[MetaValue]
+  ) {
 
     def findByName(name: String): Option[MetaValue] =
       orphans
@@ -53,9 +55,11 @@ package object model {
                   .map({
                     case (subKey, elements) => subKey -> elements.sortBy(_.name)
                   })
-                  .sortBy(_._1): _*)
+                  .sortBy(_._1): _*
+              )
           }
-          .sortBy(_._1): _*)
+          .sortBy(_._1): _*
+      )
 
       val sortedOrphans = information.orphans.sortBy(_.name)
 
@@ -69,31 +73,26 @@ package object model {
     def description: Option[String]
   }
 
-  case class MetaGenericInformation(name: String, description: Option[String])
+  case class MetaGenericInformation(name: String, description: Option[String]) extends MetaValue
+
+  case class MetaString(
+    name: String,
+    description: Option[String],
+    pattern: Option[String],
+    `min-length`: Option[Int],
+    `max-length`: Option[Int]
+  ) extends MetaValue
+
+  case class MetaNumber(name: String, description: Option[String], `max-value`: Option[Int], `min-value`: Option[Int])
       extends MetaValue
 
-  case class MetaString(name: String,
-                        description: Option[String],
-                        pattern: Option[String],
-                        `min-length`: Option[Int],
-                        `max-length`: Option[Int])
-      extends MetaValue
+  case class MetaList(
+    name: String,
+    description: Option[String],
+    `can-be-empty`: Option[Boolean],
+    `element-type`: Option[String]
+  ) extends MetaValue
 
-  case class MetaNumber(name: String,
-                        description: Option[String],
-                        `max-value`: Option[Int],
-                        `min-value`: Option[Int])
-      extends MetaValue
-
-  case class MetaList(name: String,
-                      description: Option[String],
-                      `can-be-empty`: Option[Boolean],
-                      `element-type`: Option[String])
-      extends MetaValue
-
-  case class MetaObject(name: String,
-                        description: Option[String],
-                        `element-type`: Option[String])
-      extends MetaValue
+  case class MetaObject(name: String, description: Option[String], `element-type`: Option[String]) extends MetaValue
 
 }

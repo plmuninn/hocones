@@ -1,15 +1,10 @@
 package pl.onewebpro.hocones.md.document.md.documents
 
 import net.steppschuh.markdowngenerator.MarkdownElement
-import pl.onewebpro.hocones.md.document.md.{
-  DocumentToMdGenerator,
-  HoconConcatenationOps
-}
+import pl.onewebpro.hocones.md.document.md.{DocumentToMdGenerator, HoconConcatenationOps}
 import pl.onewebpro.hocones.md.document.model.ConcatenationDocument
 
-class ConcatenationDocumentMarkdown
-    extends DocumentToMdGenerator[ConcatenationDocument]
-    with HoconConcatenationOps {
+class ConcatenationDocumentMarkdown extends DocumentToMdGenerator[ConcatenationDocument] with HoconConcatenationOps {
 
   override def toMd(document: ConcatenationDocument): MarkdownElement =
     heading(document)

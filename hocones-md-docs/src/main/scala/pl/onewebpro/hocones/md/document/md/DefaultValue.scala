@@ -1,10 +1,6 @@
 package pl.onewebpro.hocones.md.document.md
 
-import pl.onewebpro.hocones.parser.entity.{
-  HoconResolvedReference,
-  HoconValue,
-  Result
-}
+import pl.onewebpro.hocones.parser.entity.{HoconResolvedReference, HoconValue, Result}
 import pl.onewebpro.hocones.parser.entity.simple.{ResolvedRef, SimpleValue}
 
 trait DefaultValue {

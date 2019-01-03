@@ -6,12 +6,7 @@ import cats.implicits._
 import com.monovore.decline.Opts
 import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
-import pl.onewebpro.hocones.cli.arguments.environment.{
-  DisplayMeta,
-  RemoveDuplicates,
-  WithComments,
-  WithDefaults
-}
+import pl.onewebpro.hocones.cli.arguments.environment.{DisplayMeta, RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
 import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
 import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
@@ -24,22 +19,25 @@ object Environment {
 
   import pl.onewebpro.hocones.cli.show.showStr
 
-  case class EnvironmentCommand(input: InputFile,
-                                output: Option[OutputFile],
-                                withComments: Boolean,
-                                withDefaults: Boolean,
-                                removeDuplicates: Boolean,
-                                displayMeta: Boolean)
-      extends CliCommand
+  case class EnvironmentCommand(
+    input: InputFile,
+    output: Option[OutputFile],
+    withComments: Boolean,
+    withDefaults: Boolean,
+    removeDuplicates: Boolean,
+    displayMeta: Boolean
+  ) extends CliCommand
 
   object EnvironmentCommand {
     def fromCommand(command: CliCommand): EnvironmentCommand =
-      EnvironmentCommand(input = command.input,
-                         output = None,
-                         withComments = false,
-                         withDefaults = false,
-                         removeDuplicates = false,
-                         displayMeta = false)
+      EnvironmentCommand(
+        input = command.input,
+        output = None,
+        withComments = false,
+        withDefaults = false,
+        removeDuplicates = false,
+        displayMeta = false
+      )
   }
 
   private val environmentCommandF: Opts[EnvironmentCommand] = (
@@ -52,12 +50,9 @@ object Environment {
   ).mapN(EnvironmentCommand.apply)
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand[CliCommand](
-      name = "env-file",
-      help = "generate environment file")(environmentCommandF)
+    Opts.subcommand[CliCommand](name = "env-file", help = "generate environment file")(environmentCommandF)
 
-  implicit private def mapCommandToConfig
-    : EnvironmentCommand => EnvironmentConfiguration = { command =>
+  implicit private def mapCommandToConfig: EnvironmentCommand => EnvironmentConfiguration = { command =>
     EnvironmentConfiguration(
       outputPath = command.output
         .getOrElse(IOOutputFile.fromInputPath(command.input, ".env"))
@@ -69,19 +64,17 @@ object Environment {
     )
   }
 
-  val environmentCommand
-    : Kleisli[IO, (HoconResult, MetaInformation, EnvironmentCommand), Unit] =
+  val environmentCommand: Kleisli[IO, (HoconResult, MetaInformation, EnvironmentCommand), Unit] =
     Kleisli {
       case (hocon, metaInformation, command) =>
         for {
           envConfiguration <- IO[EnvironmentConfiguration](command)
           _ <- putStrLn(Color.Green("Generating environment file"))
-          _ <- EnvironmentFileGenerator(envConfiguration,
-                                        hocon,
-                                        metaInformation).toIO
+          _ <- EnvironmentFileGenerator(envConfiguration, hocon, metaInformation).toIO
           _ <- putStrLn(
             Color
-              .Green("File generated ") ++ envConfiguration.outputPath.toFile.getAbsolutePath)
+              .Green("File generated ") ++ envConfiguration.outputPath.toFile.getAbsolutePath
+          )
         } yield ()
     }
 }

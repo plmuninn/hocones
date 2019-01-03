@@ -2,6 +2,7 @@ package pl.onewebpro.hocones.md.document.md
 
 import net.steppschuh.markdowngenerator.text.TextBuilder
 import pl.onewebpro.hocones.parser.entity.HoconResultType
+import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef}
 
 trait HoconResultTypeOps {
   self: DocumentToMdGenerator[_] =>
@@ -14,7 +15,7 @@ trait HoconResultTypeOps {
       builder.label("Size:").text(result.values.size).newParagraph()
 
     def environments(result: HoconResultType): TextBuilder = {
-      val environments = result.values.environmentValues
+      val environments = result.values.extract[EnvironmentValue]
 
       if (environments.isEmpty) builder
       else {
@@ -27,7 +28,7 @@ trait HoconResultTypeOps {
     }
 
     def references(result: HoconResultType): TextBuilder = {
-      val references = result.values.resolvedRefValues
+      val references = result.values.extract[ResolvedRef]
 
       if (references.isEmpty) builder
       else {
@@ -40,7 +41,7 @@ trait HoconResultTypeOps {
     }
 
     def unresolvedReferences(result: HoconResultType): TextBuilder = {
-      val references = result.values.notResolvedValues
+      val references = result.values.extract[NotResolvedRef]
 
       if (references.isEmpty) builder
       else {

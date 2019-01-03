@@ -30,8 +30,7 @@ object ErrorHandler {
     for {
       logger <- loggerIO
       _ <- logger.error(error)("Parsing error")
-      _ <- putStrLn(Color.Red(
-        s"Error during parsing process of configuration file: ${error.getMessage}"))
+      _ <- putStrLn(Color.Red(s"Error during parsing process of configuration file: ${error.getMessage}"))
     } yield ()
   }
 
@@ -39,9 +38,7 @@ object ErrorHandler {
     for {
       logger <- loggerIO
       _ <- logger.error(error)("Generating environment file error")
-      _ <- putStrLn(
-        Color.Red(
-          s"Error during generation of environment file: ${error.getMessage}"))
+      _ <- putStrLn(Color.Red(s"Error during generation of environment file: ${error.getMessage}"))
     } yield ()
   }
 
@@ -49,9 +46,7 @@ object ErrorHandler {
     for {
       logger <- loggerIO
       _ <- logger.error(error)("Generating md file error")
-      _ <- putStrLn(
-        Color.Red(
-          s"Error during generation of markdown file: ${error.message}"))
+      _ <- putStrLn(Color.Red(s"Error during generation of markdown file: ${error.message}"))
     } yield ()
   }
 
@@ -59,9 +54,7 @@ object ErrorHandler {
     for {
       logger <- loggerIO
       _ <- logger.error(error)("Meta information parsing error")
-      _ <- putStrLn(
-        Color.Red(
-          s"Error during parsing meta information file: ${error.getMessage}"))
+      _ <- putStrLn(Color.Red(s"Error during parsing meta information file: ${error.getMessage}"))
     } yield ()
   }
 
@@ -69,9 +62,7 @@ object ErrorHandler {
     for {
       logger <- loggerIO
       _ <- logger.error(error)("Meta error")
-      _ <- putStrLn(
-        Color.Red(
-          s"Error during meta information processing: ${error.getMessage}"))
+      _ <- putStrLn(Color.Red(s"Error during meta information processing: ${error.getMessage}"))
     } yield ()
   }
 

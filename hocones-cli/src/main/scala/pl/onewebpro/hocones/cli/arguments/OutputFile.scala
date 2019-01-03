@@ -9,15 +9,13 @@ import pl.onewebpro.hocones.cli.io.OutputFile.{tagOutputFile, OutputFile}
 
 object OutputFile {
 
-  private[arguments] def canWrite: File => ValidatedNel[String, File] = {
-    file =>
-      val parentFile = file.getParentFile
+  private[arguments] def canWrite: File => ValidatedNel[String, File] = { file =>
+    val parentFile = file.getParentFile
 
-      if ((file.exists() && file.canWrite) || (parentFile
-            .exists() && parentFile.canWrite)) Validated.valid(file)
-      else
-        Validated.invalidNel(
-          s"Output path ${file.getAbsolutePath} is unavailable")
+    if ((file.exists() && file.canWrite) || (parentFile
+          .exists() && parentFile.canWrite)) Validated.valid(file)
+    else
+      Validated.invalidNel(s"Output path ${file.getAbsolutePath} is unavailable")
   }
 
   def opts(reason: String): Opts[OutputFile] =
@@ -26,7 +24,8 @@ object OutputFile {
         long = "output",
         help = s"output is a required file property - for saving $reason",
         short = "o",
-        metavar = "file")
+        metavar = "file"
+      )
       .map(_.toFile)
       .mapValidated(canWrite)
       .map(tagOutputFile)

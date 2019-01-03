@@ -31,8 +31,7 @@ object JsonCodecs {
       }
     }
 
-  private val encodeMetaRootsMap
-    : Encoder[Map[String, Map[String, Seq[MetaValue]]]] =
+  private val encodeMetaRootsMap: Encoder[Map[String, Map[String, Seq[MetaValue]]]] =
     new Encoder[Map[String, Map[String, Seq[MetaValue]]]] {
       override def apply(a: Map[String, Map[String, Seq[MetaValue]]]): Json =
         if (a.isEmpty) Json.Null
@@ -82,11 +81,9 @@ object JsonCodecs {
         }
     }
 
-  implicit private val decodeMetaChildMap
-    : Decoder[Map[String, Map[String, Seq[MetaValue]]]] =
+  implicit private val decodeMetaChildMap: Decoder[Map[String, Map[String, Seq[MetaValue]]]] =
     new Decoder[Map[String, Map[String, Seq[MetaValue]]]] {
-      override def apply(
-          c: HCursor): Result[Map[String, Map[String, Seq[MetaValue]]]] =
+      override def apply(c: HCursor): Result[Map[String, Map[String, Seq[MetaValue]]]] =
         if (c.value.isNull) Right(Map.empty)
         else Decoder.decodeMap[String, Map[String, Seq[MetaValue]]].apply(c)
     }
@@ -96,8 +93,7 @@ object JsonCodecs {
       override def apply(c: HCursor): Result[MetaInformation] =
         for {
           hoconVersion <- c.downField(hoconVersionK).as[String]
-          roots <- c.getOrElse[Map[String, Map[String, Seq[MetaValue]]]](
-            rootsK)(Map.empty)(decodeMetaChildMap)
+          roots <- c.getOrElse[Map[String, Map[String, Seq[MetaValue]]]](rootsK)(Map.empty)(decodeMetaChildMap)
           orphans <- c.getOrElse[Seq[MetaValue]](orphansK)(Seq.empty)
         } yield MetaInformation(hoconVersion, roots, orphans)
     }

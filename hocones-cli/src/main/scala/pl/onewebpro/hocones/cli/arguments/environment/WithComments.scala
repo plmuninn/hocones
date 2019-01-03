@@ -9,6 +9,7 @@ object WithComments {
         long = "comments",
         help =
           "comments is boolean property - should comments about environment variables be printed in file - default false",
-        short = "c")
+        short = "c"
+      )
       .orFalse
 }

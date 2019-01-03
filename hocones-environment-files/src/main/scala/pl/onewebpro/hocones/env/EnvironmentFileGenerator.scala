@@ -12,18 +12,16 @@ object EnvironmentFileGenerator {
 
   import pl.onewebpro.hocones.env.io._
 
-  def apply(config: EnvironmentConfiguration,
-            result: HoconResult,
-            meta: MetaInformation): SyncIO[Unit] =
+  def apply(config: EnvironmentConfiguration, result: HoconResult, meta: MetaInformation): SyncIO[Unit] =
     for {
       outputFile <- SyncIO(tagOutputFile(config.outputPath.toFile))
-      parentDirectory <- SyncIO(
-        tagParentDirectory(config.outputPath.getParent.toFile))
+      parentDirectory <- SyncIO(tagParentDirectory(config.outputPath.getParent.toFile))
 
       _ <- SyncIO.fromEither(
         OutputFileValidator
           .validate(outputFile, parentDirectory)
-          .leftMap(error => EnvironmentFileError(error.message)))
+          .leftMap(error => EnvironmentFileError(error.message))
+      )
 
       writer <- SyncIO(new EnvironmentFileWriter(outputFile))
       values <- SyncIO(ModelParser.parse(config, result, meta))

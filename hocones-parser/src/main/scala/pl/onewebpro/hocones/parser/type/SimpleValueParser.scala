@@ -10,10 +10,12 @@ import pl.onewebpro.hocones.parser.entity.simple.SimpleValue
 
 object SimpleValueParser {
 
-  def parse(renderedValue: RenderedValue,
-            path: Path,
-            configValue: ConfigValue,
-            valueType: SimpleValueType): IO[HoconResultValue] =
+  def parse(
+    renderedValue: RenderedValue,
+    path: Path,
+    configValue: ConfigValue,
+    valueType: SimpleValueType
+  ): IO[HoconResultValue] =
     for {
       value <- IO(SimpleValue(renderedValue))
     } yield HoconValue(path, configValue, valueType, value)
