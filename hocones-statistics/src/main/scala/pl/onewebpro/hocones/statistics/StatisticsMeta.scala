@@ -14,9 +14,7 @@ object StatisticsMeta {
   private[statistics] def numOfPaths(hocon: HoconResult): SyncIO[Int] =
     SyncIO(hocon.results.flattenResultValues(true).keys.size)
 
-  private[statistics] def numOfEnvironmentValues(
-    hocon: HoconResult
-  ): SyncIO[Int] =
+  private[statistics] def numOfEnvironmentValues(hocon: HoconResult): SyncIO[Int] =
     SyncIO(hocon.results.extract[EnvironmentValue].size)
 
   private[statistics] def numOfNotResolvedRef(hocon: HoconResult): SyncIO[Int] =
@@ -26,10 +24,6 @@ object StatisticsMeta {
     SyncIO(hocon.results.extract[ResolvedRef].size)
 
   def fromParsedHocon(result: HoconResult): SyncIO[StatisticsMeta] =
-    (
-      numOfPaths(result),
-      numOfEnvironmentValues(result),
-      numOfNotResolvedRef(result),
-      numOfResolvedRef(result)
-    ).mapN(StatisticsMeta.apply)
+    (numOfPaths(result), numOfEnvironmentValues(result), numOfNotResolvedRef(result), numOfResolvedRef(result))
+      .mapN(StatisticsMeta.apply)
 }
