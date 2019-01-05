@@ -16,7 +16,8 @@ object Statistics {
 
   case class StatisticsCommand(input: InputFile) extends CliCommand
 
-  private val commandF: Opts[CliCommand] = InputFile.opts.map(StatisticsCommand.apply)
+  private val commandF: Opts[CliCommand] =
+    InputFile.opts.map(StatisticsCommand.apply)
 
   implicit val showStatistics: Show[StatisticsMeta] = Show.show { statistics =>
     s"""

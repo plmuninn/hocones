@@ -30,11 +30,14 @@ object Docs {
   val docsCommandF: Opts[DocsCommand] =
     (InputFile.opts, OutputFile.opts("documentation").orNone, TableAlignment.opts).mapN(DocsCommand.apply)
 
-  val cmd: Opts[CliCommand] = Opts.subcommand("docs", "generate md table with environments")(docsCommandF)
+  val cmd: Opts[CliCommand] =
+    Opts.subcommand("docs", "generate md table with environments")(docsCommandF)
 
   implicit private def mapCommandToConfig: DocsCommand => TableConfiguration = { command =>
     TableConfiguration(
-      outputPath = command.output.getOrElse(IOOutputFile.fromInputPath(command.input, ".env.md")).toPath,
+      outputPath = command.output
+        .getOrElse(IOOutputFile.fromInputPath(command.input, ".env.md"))
+        .toPath,
       aligned = command.alignment
     )
   }
@@ -47,7 +50,10 @@ object Docs {
         _ <- MdGenerator
           .generateTable(hocon, meta, tableConfiguration)
           .toIO
-        _ <- putStrLn(Color.Green("File generated: ") ++ tableConfiguration.outputPath.toFile.getAbsolutePath)
+        _ <- putStrLn(
+          Color
+            .Green("File generated: ") ++ tableConfiguration.outputPath.toFile.getAbsolutePath
+        )
       } yield ()
   }
 }

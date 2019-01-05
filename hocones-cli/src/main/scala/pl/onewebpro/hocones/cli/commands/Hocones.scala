@@ -19,7 +19,8 @@ object Hocones {
 
   case class HoconesCommand(input: InputFile) extends CliCommand
 
-  private val hoconesF: Opts[HoconesCommand] = InputFile.opts.map(HoconesCommand.apply)
+  private val hoconesF: Opts[HoconesCommand] =
+    InputFile.opts.map(HoconesCommand.apply)
 
   private val commandF: Opts[CliCommand] =
     Statistics.cmd
@@ -43,15 +44,16 @@ object Hocones {
     } yield result
   }
 
-  val metaInformation: Kleisli[IO, (CliCommand, HoconResult), (HoconResult, MetaInformation)] = Kleisli {
-    case (command, result) =>
-      for {
-        _ <- putStrLn(Color.Green("Generating file with meta information"))
-        metaResult <- MetaGenerator(MetaConfiguration(input = command.input), result).toIO
-        (metaFile, metaInformation) = metaResult
-        _ <- putStrLn(Color.Green("Generated meta file ") ++ metaFile.getPath)
-      } yield (result, metaInformation)
-  }
+  val metaInformation: Kleisli[IO, (CliCommand, HoconResult), (HoconResult, MetaInformation)] =
+    Kleisli {
+      case (command, result) =>
+        for {
+          _ <- putStrLn(Color.Green("Generating file with meta information"))
+          metaResult <- MetaGenerator(MetaConfiguration(input = command.input), result).toIO
+          (metaFile, metaInformation) = metaResult
+          _ <- putStrLn(Color.Green("Generated meta file ") ++ metaFile.getPath)
+        } yield (result, metaInformation)
+    }
 
   val parseAndLoadMetaInformation: Kleisli[IO, CliCommand, (HoconResult, MetaInformation)] =
     Kleisli { command =>

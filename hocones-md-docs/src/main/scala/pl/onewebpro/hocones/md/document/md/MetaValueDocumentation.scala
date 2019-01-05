@@ -12,9 +12,11 @@ trait MetaValueDocumentation {
   // TODO use shapless
   def getDetails: Option[MetaValue] => Map[String, String] = {
     case Some(model: MetaString) =>
-      Map("pattern" -> model.pattern,
-          "min-length" -> model.`min-length`.map(_.toString),
-          "max-length" -> model.`max-length`.map(_.toString)).flatten.toMap
+      Map(
+        "pattern" -> model.pattern,
+        "min-length" -> model.`min-length`.map(_.toString),
+        "max-length" -> model.`max-length`.map(_.toString)
+      ).flatten.toMap
     case Some(model: MetaNumber) =>
       Map("max-value" -> model.`max-value`.map(_.toString), "min-value" -> model.`min-value`.map(_.toString)).flatten.toMap
     case Some(model: MetaList) =>

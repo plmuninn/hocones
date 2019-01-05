@@ -20,7 +20,8 @@ object MdGenerator {
       _ <- SyncIO.fromEither(
         OutputFileValidator
           .validate(outputFile, parentDirectory)
-          .leftMap(error => MdFileError(error.message)))
+          .leftMap(error => MdFileError(error.message))
+      )
 
       table = new EnvironmentTable(config)
       writer = new DocumentationWriter(outputFile)
@@ -38,7 +39,8 @@ object MdGenerator {
       _ <- SyncIO.fromEither(
         OutputFileValidator
           .validate(outputFile, parentDirectory)
-          .leftMap(error => MdFileError(error.message)))
+          .leftMap(error => MdFileError(error.message))
+      )
 
       writer = new DocumentationWriter(outputFile)
       documentation <- DocumentationGenerator(result, meta)
@@ -46,9 +48,11 @@ object MdGenerator {
       _ <- writer.write(text)
     } yield ()
 
-  def generate(result: HoconResult,
-               meta: MetaInformation,
-               configuration: Either[TableConfiguration, DocumentConfiguration]) =
+  def generate(
+    result: HoconResult,
+    meta: MetaInformation,
+    configuration: Either[TableConfiguration, DocumentConfiguration]
+  ) =
     configuration match {
       case Left(tableConfiguration) =>
         generateTable(result, meta, tableConfiguration)

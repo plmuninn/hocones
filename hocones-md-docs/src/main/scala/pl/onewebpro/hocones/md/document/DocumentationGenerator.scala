@@ -31,8 +31,8 @@ class DocumentationGenerator(documentation: Documentation) {
         case (bb, (root, models)) =>
           models.foldLeft(
             bb.heading(root, 2)
-              .asInstanceOf[MarkdownBuilder[TextBuilder, Text]])((acc, element) =>
-            acc.append(documentToMd(element)).rule())
+              .asInstanceOf[MarkdownBuilder[TextBuilder, Text]]
+          )((acc, element) => acc.append(documentToMd(element)).rule())
       })
       orphans <- SyncIO(documentation.orphans.map(documentToMd))
       builder <- SyncIO(orphans.foldLeft(builder)((acc, element) => acc.append(element).rule()))
@@ -43,14 +43,16 @@ object DocumentationGenerator {
 
   import pl.onewebpro.hocones.common.implicits._
 
-  private[document] def generateDocumentation(metaInformation: MetaInformation)(
-      documents: List[Document[_]]): SyncIO[Documentation] =
+  private[document] def generateDocumentation(
+    metaInformation: MetaInformation
+  )(documents: List[Document[_]]): SyncIO[Documentation] =
     for {
       orphans <- SyncIO(documents.filter(_.path.isOrphan))
       roots <- SyncIO(
         metaInformation.roots.keys
           .map(root => root -> documents.filter(document => document.path.contains(root)))
-          .toMap)
+          .toMap
+      )
     } yield Documentation(roots, orphans)
 
   private[document] def mapToDocument(metaInformation: MetaInformation)(result: HoconResultValue): SyncIO[Document[_]] =

@@ -30,7 +30,8 @@ class EnvironmentTable(configuration: TableConfiguration) {
         mapDetails(element.details),
         element.isOptional.toString,
         element.path
-      ))
+      )
+    )
 
   def fromRows(elements: Seq[EnvironmentTableElement]): SyncIO[String] =
     for {

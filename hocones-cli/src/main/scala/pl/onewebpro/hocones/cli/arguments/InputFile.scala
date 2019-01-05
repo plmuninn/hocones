@@ -21,7 +21,8 @@ object InputFile {
 
   type InputFile = File @@ InputFileTag
 
-  private def tagInputFile(file: File): InputFile = tag[InputFileTag][File](file)
+  private def tagInputFile(file: File): InputFile =
+    tag[InputFileTag][File](file)
 
   private[arguments] def exists: File => ValidatedNel[String, File] = { file =>
     if (file.exists) Validated.valid(file)
@@ -35,7 +36,8 @@ object InputFile {
 
   private[arguments] def isHocon: File => ValidatedNel[String, File] = { file =>
     if (Try(ConfigFactory.parseFile(file)).isSuccess) Validated.valid(file)
-    else Validated.invalidNel(s"File ${file.getAbsolutePath} is not proper hocon")
+    else
+      Validated.invalidNel(s"File ${file.getAbsolutePath} is not proper hocon")
   }
 
   val opts: Opts[InputFile] =

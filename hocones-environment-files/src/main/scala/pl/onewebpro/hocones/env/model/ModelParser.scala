@@ -49,10 +49,12 @@ object ModelParser {
     case _ => Iterable()
   }
 
-  private[model] def createComments(path: Path,
-                                    cfg: ConfigValue,
-                                    value: SimpleEnvironmentValue,
-                                    metaValue: Option[MetaValue]): Iterable[String] =
+  private[model] def createComments(
+    path: Path,
+    cfg: ConfigValue,
+    value: SimpleEnvironmentValue,
+    metaValue: Option[MetaValue]
+  ): Iterable[String] =
     (Iterable(
       Some(s"Path : $path"),
       Option(cfg.origin().filename()).map(fileName => s"From file: $fileName"),
@@ -60,15 +62,17 @@ object ModelParser {
     ) ++ createMetaFields(metaValue)).flatten.map("# " + _)
 
   private[model] def createEnvironmentValue(
-      path: Path,
-      cfg: ConfigValue,
-      value: SimpleEnvironmentValue,
-      defaultValue: Option[String],
-      metaValue: Option[MetaValue])(implicit config: EnvironmentConfiguration): EnvironmentValue = {
+    path: Path,
+    cfg: ConfigValue,
+    value: SimpleEnvironmentValue,
+    defaultValue: Option[String],
+    metaValue: Option[MetaValue]
+  )(implicit config: EnvironmentConfiguration): EnvironmentValue = {
 
     val default = if (config.withDefaults) defaultValue else None
     val comments =
-      if (config.withComments) createComments(path, cfg, value, metaValue) else Nil
+      if (config.withComments) createComments(path, cfg, value, metaValue)
+      else Nil
 
     EnvironmentValue(name = value.name, defaultValue = default, comments = comments)
   }
@@ -89,19 +93,25 @@ object ModelParser {
     case _                         => None
   }
 
-  private[model] def asLocalModel: (Path,
-                                    ExtractedValue[SimpleEnvironmentValue],
-                                    MetaInformation) => EnvironmentConfiguration => Iterable[EnvironmentValue] = {
+  private[model] def asLocalModel
+    : (Path, ExtractedValue[SimpleEnvironmentValue], MetaInformation) => EnvironmentConfiguration => Iterable[
+      EnvironmentValue
+    ] = {
     case (path, ExtractedValue(cfg, parent, values), metaInformation) =>
       implicit config: EnvironmentConfiguration =>
         val defaultValue = createDefaultValue(parent)
         values.map(
           value =>
-            createEnvironmentValue(path,
-                                   cfg,
-                                   value,
-                                   defaultValue,
-                                   if (config.displayMeta) metaInformation.findByPathAndName(path) else None))
+            createEnvironmentValue(
+              path,
+              cfg,
+              value,
+              defaultValue,
+              if (config.displayMeta)
+                metaInformation.findByPathAndName(path)
+              else None
+          )
+        )
   }
 
   def removeDuplicates(values: Iterable[EnvironmentValue]): Iterable[EnvironmentValue] =
@@ -120,13 +130,16 @@ object ModelParser {
 
     }
 
-  def parse(config: EnvironmentConfiguration,
-            result: HoconResult,
-            meta: MetaInformation): Iterable[EnvironmentValue] = {
+  def parse(
+    config: EnvironmentConfiguration,
+    result: HoconResult,
+    meta: MetaInformation
+  ): Iterable[EnvironmentValue] = {
     implicit val cfg: EnvironmentConfiguration = config
 
     val values =
-      result.results.containsEnvironmentValues
+      result.results
+        .extractWithPath[SimpleEnvironmentValue]
         .map {
           case (path, value) => path -> asLocalModel(path, value, meta)(cfg)
         }

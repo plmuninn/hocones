@@ -9,6 +9,7 @@ object WithDefaults {
         long = "defaults",
         help =
           "defaults is boolean property - should default values of environment variables be set in file - default false",
-        short = "d")
+        short = "d"
+      )
       .orFalse
 }

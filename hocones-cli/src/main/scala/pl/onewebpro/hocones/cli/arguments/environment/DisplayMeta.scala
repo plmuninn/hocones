@@ -9,6 +9,7 @@ object DisplayMeta {
         long = "meta-information",
         help =
           "meta is boolean property - should meta information of environment variables be set in file - default false",
-        short = "m")
+        short = "m"
+      )
       .orFalse
 }

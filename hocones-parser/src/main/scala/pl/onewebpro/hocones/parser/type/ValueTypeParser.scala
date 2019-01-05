@@ -7,12 +7,7 @@ import pl.onewebpro.hocones.common.implicits.Path
 import pl.onewebpro.hocones.parser.HoconParser.RenderedValue
 import pl.onewebpro.hocones.parser.`type`.ValueType.ValueType
 import pl.onewebpro.hocones.parser.entity._
-import pl.onewebpro.hocones.parser.entity.simple.{
-  ComposedConfigValue,
-  EnvironmentValue,
-  NotResolvedRef,
-  SimpleHoconValue
-}
+import pl.onewebpro.hocones.parser.entity.simple.{ComposedConfigValue, EnvironmentValue, NotResolvedRef, SimpleHoconValue}
 import pl.onewebpro.hocones.parser.{HoconParser, ParsingError}
 
 import scala.collection.JavaConverters._
@@ -67,10 +62,12 @@ object ValueTypeParser {
         IO.raiseError(ParsingError(s"There was problem with parsing array value $path:$value"))
     }
 
-  private[parser] def parseMergeableArrays(path: Path,
-                                           value: ValueType,
-                                           renderedValue: RenderedValue,
-                                           configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
+  private[parser] def parseMergeableArrays(
+    path: Path,
+    value: ValueType,
+    renderedValue: RenderedValue,
+    configValue: ConfigValue
+  )(implicit cfg: Config): IO[HoconResultValue] =
     for {
       asList <- IO(divideRenderedValue(renderedValue))
       leftAndRight <- divideToLeftAndRight(asList)
@@ -82,7 +79,8 @@ object ValueTypeParser {
     } yield HoconMergedValues(path, configValue, leftValue, rigthValue)
 
   def parse(path: Path, value: ValueType, renderedValue: RenderedValue, configValue: ConfigValue)(
-      implicit cfg: Config): IO[HoconResultValue] =
+    implicit cfg: Config
+  ): IO[HoconResultValue] =
     value match {
       case ValueType.CONCATENATION =>
         for {

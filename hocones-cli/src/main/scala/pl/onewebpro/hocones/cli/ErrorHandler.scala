@@ -67,12 +67,13 @@ object ErrorHandler {
   }
 
   val handler: Throwable => IO[ExitCode] = {
-    case error: ParsingError         => handleParsingError(error) *> errorStatus
-    case error: EnvironmentFileError => handleEnvironmentFileError(error) *> errorStatus
-    case error: MdFileError          => handleMdFileError(error) *> errorStatus
-    case error: MetaParsingError     => handleMetaParsingError(error) *> errorStatus
-    case error: MetaError            => handleMetaError(error) *> errorStatus
-    case error: Throwable            => handleUnexpectedError(error) *> errorStatus
+    case error: ParsingError => handleParsingError(error) *> errorStatus
+    case error: EnvironmentFileError =>
+      handleEnvironmentFileError(error) *> errorStatus
+    case error: MdFileError      => handleMdFileError(error) *> errorStatus
+    case error: MetaParsingError => handleMetaParsingError(error) *> errorStatus
+    case error: MetaError        => handleMetaError(error) *> errorStatus
+    case error: Throwable        => handleUnexpectedError(error) *> errorStatus
   }
 
 }

@@ -44,9 +44,12 @@ object NotResolvedRef {
         EnvironmentValue.extractName(env) match {
           case Some(name) =>
             IO(
-              NotResolvedRef(env = tagEnvToRef(env),
-                             name = tagEnvNameToRefName(name),
-                             isOptional = EnvironmentValue.isOptionalEnv(env)))
+              NotResolvedRef(
+                env = tagEnvToRef(env),
+                name = tagEnvNameToRefName(name),
+                isOptional = EnvironmentValue.isOptionalEnv(env)
+              )
+            )
           case None =>
             IO.raiseError(ParsingError(s"Error during extracting environment from string $value"))
         }

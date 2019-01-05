@@ -9,7 +9,8 @@ private[parser] object HoconReferenceResolver {
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   private[parser] def resolveReferenceValueAsHoconEnvironmentValue(
-      hrv: HoconReferenceValue): Option[HoconEnvironmentValue] =
+    hrv: HoconReferenceValue
+  ): Option[HoconEnvironmentValue] =
     notResolvedReferenceToEnvironmentValue(hrv.result)
       .map(environmentValue => HoconEnvironmentValue(hrv.path, hrv.cfg, environmentValue))
 
@@ -26,18 +27,23 @@ private[parser] object HoconReferenceResolver {
         resolveSimpleValue(resultList, notResolvedRef)
       case composedConfigValue: ComposedConfigValue =>
         composedConfigValue.copy(
-          values = composedConfigValue.values.map(configValue => resolveSimpleValue(resultList, configValue)))
+          values = composedConfigValue.values.map(configValue => resolveSimpleValue(resultList, configValue))
+        )
       case arr: HoconArray =>
         arr.copy(values = resolveReferences(resultList, arr.values))
       case obj: HoconObject =>
         obj.copy(values = resolveReferences(resultList, obj.values))
       case hrv: HoconReferenceValue => resolveReferenceValue(resultList, hrv)
       case merged: HoconMergedValues =>
-        merged.copy(defaultValue = resolveResult(resultList, merged.defaultValue),
-                    replacedValue = resolveResult(resultList, merged.replacedValue))
+        merged.copy(
+          defaultValue = resolveResult(resultList, merged.defaultValue),
+          replacedValue = resolveResult(resultList, merged.replacedValue)
+        )
       case concatenation: HoconConcatenation =>
-        concatenation.copy(value = concatenation.value.copy(values = concatenation.value.values.map(value =>
-          resolveSimpleValue(resultList, value))))
+        concatenation.copy(
+          value = concatenation.value
+            .copy(values = concatenation.value.values.map(value => resolveSimpleValue(resultList, value)))
+        )
       case default => default
     }
 
@@ -57,7 +63,8 @@ private[parser] object HoconReferenceResolver {
 
       case composedConfigValue: ComposedConfigValue =>
         composedConfigValue.copy(
-          values = composedConfigValue.values.map(configValue => resolveSimpleValue(resultList, configValue)))
+          values = composedConfigValue.values.map(configValue => resolveSimpleValue(resultList, configValue))
+        )
       case default => default
     }
 
@@ -70,11 +77,15 @@ private[parser] object HoconReferenceResolver {
           obj.copy(values = resolveReferences(resultList, obj.values))
         case hrv: HoconReferenceValue => resolveReferenceValue(resultList, hrv)
         case merged: HoconMergedValues =>
-          merged.copy(defaultValue = resolveResult(resultList, merged.defaultValue),
-                      replacedValue = resolveResult(resultList, merged.replacedValue))
+          merged.copy(
+            defaultValue = resolveResult(resultList, merged.defaultValue),
+            replacedValue = resolveResult(resultList, merged.replacedValue)
+          )
         case concatenation: HoconConcatenation =>
-          concatenation.copy(value = concatenation.value.copy(values = concatenation.value.values.map(value =>
-            resolveSimpleValue(resultList, value))))
+          concatenation.copy(
+            value = concatenation.value
+              .copy(values = concatenation.value.values.map(value => resolveSimpleValue(resultList, value)))
+          )
         case default => default
       }
 

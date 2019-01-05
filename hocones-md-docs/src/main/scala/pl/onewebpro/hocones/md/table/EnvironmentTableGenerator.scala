@@ -20,10 +20,12 @@ object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValu
     case _ => None
   }
 
-  def generateTableElement(meta: MetaInformation,
-                           path: Path,
-                           parent: HoconResultValue,
-                           value: EnvironmentValue): SyncIO[EnvironmentTableElement] =
+  def generateTableElement(
+    meta: MetaInformation,
+    path: Path,
+    parent: HoconResultValue,
+    value: EnvironmentValue
+  ): SyncIO[EnvironmentTableElement] =
     for {
       name <- SyncIO.pure(value.name)
       meta <- SyncIO(meta.findByPathAndName(pathWithName = path))
@@ -54,7 +56,7 @@ object EnvironmentTableGenerator extends MetaValueDocumentation with DefaultValu
     }
 
   def apply(result: HoconResult, meta: MetaInformation): SyncIO[Seq[EnvironmentTableElement]] =
-    SyncIO(result.results.containsEnvironmentValues)
+    SyncIO(result.results.extractWithPath[EnvironmentValue])
       .flatMap { values =>
         values
           .flatMap {

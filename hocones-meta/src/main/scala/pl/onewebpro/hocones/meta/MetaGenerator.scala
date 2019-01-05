@@ -21,7 +21,8 @@ object MetaGenerator {
       .flatMap(
         json =>
           if (json.isNull) SyncIO.pure(defaultMetaInformation)
-          else SyncIO.fromEither(json.as[MetaInformation]))
+          else SyncIO.fromEither(json.as[MetaInformation])
+      )
 
   def apply(config: MetaConfiguration, hocones: HoconResult): SyncIO[(MetaFile, MetaInformation)] =
     for {

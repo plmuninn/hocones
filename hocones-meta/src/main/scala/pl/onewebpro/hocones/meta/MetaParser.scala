@@ -61,10 +61,12 @@ object MetaParser {
           value.valueType match {
             case SimpleValueType.UNQUOTED_STRING =>
               SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None))
+                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None)
+              )
             case SimpleValueType.QUOTED_STRING =>
               SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None))
+                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None)
+              )
             case SimpleValueType.BOOLEAN =>
               SyncIO.pure(MetaGenericInformation(name = name, description = None))
             case SimpleValueType.DOUBLE =>
@@ -136,8 +138,10 @@ object MetaParser {
   }
 
   //TODO make it more IO
-  private[meta] def generateMetaValues(roots: Seq[String],
-                                       hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
+  private[meta] def generateMetaValues(
+    roots: Seq[String],
+    hocones: HoconResult
+  ): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
     SyncIO {
       val result =
         roots.map(path => path -> Map.empty[String, Seq[MetaValue]]).toMap

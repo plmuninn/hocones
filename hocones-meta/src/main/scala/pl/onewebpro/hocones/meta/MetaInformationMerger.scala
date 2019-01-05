@@ -14,8 +14,10 @@ object MetaInformationMerger {
           .getOrElse(value)
       })
 
-  def updateRoots(loaded: MetaInformation,
-                  generated: MetaInformation): SyncIO[Map[String, Map[String, Seq[model.MetaValue]]]] =
+  def updateRoots(
+    loaded: MetaInformation,
+    generated: MetaInformation
+  ): SyncIO[Map[String, Map[String, Seq[model.MetaValue]]]] =
     SyncIO(generated.roots).map(_.map {
       case (key, roots) =>
         key -> roots.map {
