@@ -4,7 +4,7 @@ import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.common.io._
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
-import pl.onewebpro.hocones.env.model.ModelParser
+import pl.onewebpro.hocones.env.model.ModelGenerator
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
 
@@ -24,7 +24,7 @@ object EnvironmentFileGenerator {
       )
 
       writer <- SyncIO(new EnvironmentFileWriter(outputFile))
-      values <- SyncIO(ModelParser.parse(config, result, meta))
+      values <- SyncIO(ModelGenerator.generate(config, result, meta))
 
       _ <- writer.write(values)
     } yield ()

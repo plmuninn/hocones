@@ -5,15 +5,15 @@ import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.env.model.comment.CommentsGenerator
 import pl.onewebpro.hocones.meta.model._
 import pl.onewebpro.hocones.parser.HoconResult
-import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue => SimpleEnvironmentValue}
+import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue => HoconEnvironmentValue}
 import pl.onewebpro.hocones.parser.ops.ExtractedValue
 
-object ModelParser {
+object ModelGenerator {
 
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
   private[model] def createEnvironmentValues
-    : (HPath, ExtractedValue[SimpleEnvironmentValue], MetaInformation) => EnvironmentConfiguration => Iterable[
+    : (HPath, ExtractedValue[HoconEnvironmentValue], MetaInformation) => EnvironmentConfiguration => Iterable[
       EnvironmentValue
     ] = {
     case (path, ExtractedValue(cfg, parent, values), metaInformation) =>
@@ -21,7 +21,7 @@ object ModelParser {
         val defaultValue: Option[DefaultValue] = DefaultValue.createDefaultValue(parent)
 
         values.map { value =>
-          val metaValue: Option[MetaValue] = if (config.displayMeta) metaInformation.findByPathAndName(path) else None
+          val metaValue: Option[MetaValue] = metaInformation.findByPathAndName(path)
           val comments: Iterable[comment.Comment] =
             if (config.withComments) CommentsGenerator.createComments(path, cfg, value, metaValue) else Nil
 
@@ -45,18 +45,24 @@ object ModelParser {
 
     }
 
-  def parse(
+  private[model] def orderValues: Iterable[EnvironmentValue] => Iterable[EnvironmentValue] =
+    _.toList.sortBy(_.name.toString)
+
+  def generate(
     config: EnvironmentConfiguration,
     result: HoconResult,
     meta: MetaInformation
   ): Iterable[EnvironmentValue] = {
     val values: Iterable[EnvironmentValue] =
       result.results
-        .extractWithPath[SimpleEnvironmentValue]
+        .extractWithPath[HoconEnvironmentValue]
         .flatMap {
           case (path, value) => createEnvironmentValues(path, value, meta)(config)
         }
 
-    if (config.removeDuplicates) removeDuplicates(values) else values
+    val transformResults: Iterable[EnvironmentValue] => Iterable[EnvironmentValue] =
+      if (config.removeDuplicates) (removeDuplicates _).compose(orderValues) else orderValues
+
+    transformResults(values)
   }
 }

@@ -6,7 +6,7 @@ import cats.implicits._
 import com.monovore.decline.Opts
 import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
-import pl.onewebpro.hocones.cli.arguments.environment.{DisplayMeta, RemoveDuplicates, WithComments, WithDefaults}
+import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
 import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
 import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
@@ -24,8 +24,7 @@ object Environment {
     output: Option[OutputFile],
     withComments: Boolean,
     withDefaults: Boolean,
-    removeDuplicates: Boolean,
-    displayMeta: Boolean
+    removeDuplicates: Boolean
   ) extends CliCommand
 
   object EnvironmentCommand {
@@ -35,8 +34,7 @@ object Environment {
         output = None,
         withComments = false,
         withDefaults = false,
-        removeDuplicates = false,
-        displayMeta = false
+        removeDuplicates = false
       )
   }
 
@@ -45,8 +43,7 @@ object Environment {
     OutputFile.opts("environment file").orNone,
     WithComments.opts,
     WithDefaults.opts,
-    RemoveDuplicates.opts,
-    DisplayMeta.opts
+    RemoveDuplicates.opts
   ).mapN(EnvironmentCommand.apply)
 
   val cmd: Opts[CliCommand] =
@@ -59,8 +56,7 @@ object Environment {
         .toPath,
       withComments = command.withComments,
       withDefaults = command.withDefaults,
-      removeDuplicates = command.removeDuplicates,
-      displayMeta = command.displayMeta,
+      removeDuplicates = command.removeDuplicates
     )
   }
 
