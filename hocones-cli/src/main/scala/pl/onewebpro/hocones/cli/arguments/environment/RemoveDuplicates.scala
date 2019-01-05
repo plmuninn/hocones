@@ -7,8 +7,8 @@ object RemoveDuplicates {
     Opts
       .flag(
         long = "remove-duplicates",
-        help =
-          "remove-duplicates is boolean property - should duplicates be removed from output file - default false",
-        short = "r")
+        help = "remove-duplicates is boolean property - should duplicates be removed from output file - default false",
+        short = "r"
+      )
       .orFalse
 }

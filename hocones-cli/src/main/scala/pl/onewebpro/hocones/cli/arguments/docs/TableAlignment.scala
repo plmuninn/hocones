@@ -3,9 +3,7 @@ package pl.onewebpro.hocones.cli.arguments.docs
 import cats.data.{Validated, ValidatedNel}
 import com.monovore.decline.{Argument, Opts}
 import pl.onewebpro.hocones.md.config.Configuration.TableAlignment.TableAlignment
-import pl.onewebpro.hocones.md.config.Configuration.{
-  TableAlignment => MdTableAlignment
-}
+import pl.onewebpro.hocones.md.config.Configuration.{TableAlignment => MdTableAlignment}
 
 object TableAlignment {
 
@@ -20,8 +18,7 @@ object TableAlignment {
           case "right"  => Validated.valid(MdTableAlignment.Right)
           case "center" => Validated.valid(MdTableAlignment.Center)
           case value =>
-            Validated.invalidNel(
-              s"Invalid value '$value'. Proper values are: left, right or center.")
+            Validated.invalidNel(s"Invalid value '$value'. Proper values are: left, right or center.")
         }
 
       override def defaultMetavar: String = "alignment"
@@ -31,9 +28,9 @@ object TableAlignment {
     Opts
       .option[TableAlignment](
         long = "alignment",
-        help =
-          "alignment of values in table (left, right, center) - default left",
-        short = "a")
+        help = "alignment of values in table (left, right, center) - default left",
+        short = "a"
+      )
       .withDefault(defaultAlignment)
 
 }

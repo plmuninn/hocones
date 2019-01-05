@@ -26,18 +26,16 @@ class DocumentationGenerator(documentation: Documentation) {
 
   def toMd: SyncIO[String] =
     for {
-      builder <- SyncIO(
-        new TextBuilder().asInstanceOf[MarkdownBuilder[TextBuilder, Text]])
+      builder <- SyncIO(new TextBuilder().asInstanceOf[MarkdownBuilder[TextBuilder, Text]])
       builder <- SyncIO(documentation.roots.foldLeft(builder) {
         case (bb, (root, models)) =>
           models.foldLeft(
             bb.heading(root, 2)
-              .asInstanceOf[MarkdownBuilder[TextBuilder, Text]])(
-            (acc, element) => acc.append(documentToMd(element)).rule())
+              .asInstanceOf[MarkdownBuilder[TextBuilder, Text]]
+          )((acc, element) => acc.append(documentToMd(element)).rule())
       })
       orphans <- SyncIO(documentation.orphans.map(documentToMd))
-      builder <- SyncIO(
-        orphans.foldLeft(builder)((acc, element) => acc.append(element).rule()))
+      builder <- SyncIO(orphans.foldLeft(builder)((acc, element) => acc.append(element).rule()))
     } yield builder.toString
 }
 
@@ -45,19 +43,19 @@ object DocumentationGenerator {
 
   import pl.onewebpro.hocones.common.implicits._
 
-  private[document] def generateDocumentation(metaInformation: MetaInformation)(
-      documents: List[Document[_]]): SyncIO[Documentation] =
+  private[document] def generateDocumentation(
+    metaInformation: MetaInformation
+  )(documents: List[Document[_]]): SyncIO[Documentation] =
     for {
       orphans <- SyncIO(documents.filter(_.path.isOrphan))
       roots <- SyncIO(
         metaInformation.roots.keys
-          .map(root =>
-            root -> documents.filter(document => document.path.contains(root)))
-          .toMap)
+          .map(root => root -> documents.filter(document => document.path.contains(root)))
+          .toMap
+      )
     } yield Documentation(roots, orphans)
 
-  private[document] def mapToDocument(metaInformation: MetaInformation)(
-      result: HoconResultValue): SyncIO[Document[_]] =
+  private[document] def mapToDocument(metaInformation: MetaInformation)(result: HoconResultValue): SyncIO[Document[_]] =
     metaInformation.findByPathAndName(result.path) match {
       case Some(meta) =>
         result match {
@@ -79,12 +77,10 @@ object DocumentationGenerator {
             SyncIO.pure(ValueDocument(model.path, meta, model))
         }
       case None =>
-        SyncIO.raiseError(
-          MdFileError(s"No meta information for path ${result.path}"))
+        SyncIO.raiseError(MdFileError(s"No meta information for path ${result.path}"))
     }
 
-  def apply(result: HoconResult,
-            meta: MetaInformation): SyncIO[DocumentationGenerator] =
+  def apply(result: HoconResult, meta: MetaInformation): SyncIO[DocumentationGenerator] =
     SyncIO
       .pure(result.results)
       .flatMap { values =>

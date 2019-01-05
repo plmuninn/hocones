@@ -24,14 +24,14 @@ object Main extends IOApp {
           errors
             .map(error => Color.Red(error))
             .map(str => putError(str))
-            .sequence) *> IO.unit
+            .sequence
+      ) *> IO.unit
   }
 
   private def displayHelp: Help => IO[Unit] = { help =>
     for {
       _ <- displayHelpErrors(help)
-      _ <- IO(help.copy(errors = Nil)).flatMap(helpWithoutErrors =>
-        putStrLn(helpWithoutErrors.toString()))
+      _ <- IO(help.copy(errors = Nil)).flatMap(helpWithoutErrors => putStrLn(helpWithoutErrors.toString()))
     } yield ()
   }
 
@@ -40,23 +40,19 @@ object Main extends IOApp {
       .andThen(Statistics.statisticsCommand)
       .andThen(Statistics.displayStatistics)
 
-  private val runEnvironmentCommand
-    : EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+  private val runEnvironmentCommand: EnvironmentCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parseAndLoadMetaInformation
       .map(result => result :+ cmd)
       .andThen(Environment.environmentCommand)
   }
 
-  private val runEnvironmentDocsCommand
-    : EnvironmentDocsCommand => Kleisli[IO, commands.CliCommand, Unit] = {
-    cmd =>
-      Hocones.parseAndLoadMetaInformation
-        .map(result => result :+ cmd)
-        .andThen(EnvironmentDocs.environmentDocsCommand)
+  private val runEnvironmentDocsCommand: EnvironmentDocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+    Hocones.parseAndLoadMetaInformation
+      .map(result => result :+ cmd)
+      .andThen(EnvironmentDocs.environmentDocsCommand)
   }
 
-  private val runDocsCommand
-    : DocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
+  private val runDocsCommand: DocsCommand => Kleisli[IO, commands.CliCommand, Unit] = { cmd =>
     Hocones.parseAndLoadMetaInformation
       .map(result => result :+ cmd)
       .andThen(Docs.docsCommand)
@@ -77,8 +73,7 @@ object Main extends IOApp {
       _ <- Environment.environmentCommand.run((hocon, meta, environmentCommand))
 
       environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
-      _ <- EnvironmentDocs.environmentDocsCommand.run(
-        (hocon, meta, environmentDocsCommand))
+      _ <- EnvironmentDocs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))
 
       docsCommand <- IO(DocsCommand.fromCommand(cmd))
       _ <- Docs.docsCommand.run((hocon, meta, docsCommand))

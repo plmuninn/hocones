@@ -10,8 +10,8 @@ trait HoconConcatenationOps {
   implicit class ConcatenationBuilderOps(builder: TextBuilder) {
 
     private def filterAndMapSimpleValues[T <: SimpleHoconValue](
-        values: Seq[SimpleHoconValue])(
-        isValue: SimpleHoconValue => Boolean): Seq[T] =
+      values: Seq[SimpleHoconValue]
+    )(isValue: SimpleHoconValue => Boolean): Seq[T] =
       values.filter(isValue).map(_.asInstanceOf[T])
 
     def pattern(value: ComposedConfigValue): TextBuilder =

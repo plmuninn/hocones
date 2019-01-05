@@ -1,11 +1,7 @@
 package pl.onewebpro.hocones.md.document.md.documents
 
 import net.steppschuh.markdowngenerator.MarkdownElement
-import pl.onewebpro.hocones.md.document.md.{
-  DocumentToMdGenerator,
-  HoconReferenceOps,
-  HoconResolvedReferenceOps
-}
+import pl.onewebpro.hocones.md.document.md.{DocumentToMdGenerator, HoconReferenceOps, HoconResolvedReferenceOps}
 import pl.onewebpro.hocones.md.document.model.ResolvedReferenceDocument
 
 class ResolvedReferenceDocumentMarkdown
