@@ -25,7 +25,6 @@ object EnvironmentFileGenerator {
 
       writer <- SyncIO(new EnvironmentFileWriter(outputFile))
       values <- SyncIO(ModelParser.parse(config, result, meta))
-        .map(_.toList.sortBy(_.name))
 
       _ <- writer.write(values)
     } yield ()
