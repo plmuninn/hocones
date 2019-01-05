@@ -69,8 +69,9 @@ object HoconParser extends LazyLogging {
     else IO.raiseError(ParsingError(s"Unhandled type $className on path $path"))
   }
 
-  private[parser] def parseEntrySet(values: Set[(Path, ConfigValue, CanonicalClassName)])(
-      implicit cfg: Config): IO[List[HoconResultValue]] =
+  private[parser] def parseEntrySet(
+    values: Set[(Path, ConfigValue, CanonicalClassName)]
+  )(implicit cfg: Config): IO[List[HoconResultValue]] =
     values.toList.map(parseValue).sequence
 
   def apply(config: Config): IO[HoconResult] = {

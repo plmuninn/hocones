@@ -5,12 +5,13 @@ import pl.onewebpro.hocones.common.implicits._
 import pl.onewebpro.hocones.parser.HoconParser.CanonicalClassName
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity._
+import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue
 
 import scala.collection.JavaConverters._
 
 class HoconParserTest extends TestSpec {
 
-  behavior of "HoconParser"
+  behavior.of("HoconParser")
 
   it should "map java map entries to tagged tuples" in {
     val map = new java.util.HashMap[String, ConfigValue]()
@@ -31,20 +32,17 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "parseValue for simple value types" in new ParserConfigFixture {
-    simpleValues.map {
-      value => HoconParser.parseValue(value).unsafeRunSync() should matchPattern {
+    simpleValues.map { value =>
+      HoconParser.parseValue(value).unsafeRunSync() should matchPattern {
         case HoconValue(value._1, _, _, _) =>
       }
     }
   }
 
   it should "parseValue for value types" in new ParserConfigFixture {
-    val concatValue = valueTuple(s"$pathPrefix.concatenation.value_1",
-      "com.typesafe.config.impl.ConfigConcatenation")
-    val mergeValue = valueTuple(s"$pathPrefix.merge.value_1",
-      "com.typesafe.config.impl.ConfigDelayedMerge")
-    val referenceValue = valueTuple(s"$pathPrefix.reference.value_1",
-      "com.typesafe.config.impl.ConfigReference")
+    val concatValue = valueTuple(s"$pathPrefix.concatenation.value_1", "com.typesafe.config.impl.ConfigConcatenation")
+    val mergeValue = valueTuple(s"$pathPrefix.merge.value_1", "com.typesafe.config.impl.ConfigDelayedMerge")
+    val referenceValue = valueTuple(s"$pathPrefix.reference.value_1", "com.typesafe.config.impl.ConfigReference")
     HoconParser.parseValue(concatValue).unsafeRunSync() should matchPattern {
       case HoconConcatenation(concatValue._1, _, _) =>
     }
@@ -57,8 +55,7 @@ class HoconParserTest extends TestSpec {
   }
 
   it should "parseValue for list result type" in new ParserConfigFixture {
-    val listValue = valueTuple(s"$pathPrefix.array.value_1",
-      "com.typesafe.config.impl.SimpleConfigList")
+    val listValue = valueTuple(s"$pathPrefix.array.value_1", "com.typesafe.config.impl.SimpleConfigList")
     HoconParser.parseValue(listValue).unsafeRunSync() should matchPattern {
       case HoconArray(listValue._1, listValue._2, _) =>
     }
@@ -70,15 +67,15 @@ class HoconParserTest extends TestSpec {
     val entries = getEntriesMap
     // retrieve first item of array which should be ConfigObject
     val value = entries(path).asInstanceOf[ConfigList].asScala.head
-    val objectValue = (tagPath(path), value, HoconParser.tagCanonicalName("com.typesafe.config.impl.SimpleConfigObject"))
+    val objectValue =
+      (tagPath(path), value, HoconParser.tagCanonicalName("com.typesafe.config.impl.SimpleConfigObject"))
     HoconParser.parseValue(objectValue).unsafeRunSync() should matchPattern {
       case HoconObject(objectValue._1, objectValue._2, _) =>
     }
   }
 
   it should "raise error when calling parseValue for unknown type" in new ParserConfigFixture {
-    val badValue = valueTuple(s"$pathPrefix.simple.value_3",
-      "com.typesafe.config.ConfigSomething")
+    val badValue = valueTuple(s"$pathPrefix.simple.value_3", "com.typesafe.config.ConfigSomething")
     assertThrows[ParsingError](HoconParser.parseValue(badValue).unsafeRunSync())
   }
 
@@ -86,7 +83,7 @@ class HoconParserTest extends TestSpec {
     val result = HoconParser.parseEntrySet(simpleValues).unsafeRunSync()
     result.size shouldBe 6
     result.head should matchPattern {
-        case HoconValue(_, _, _, _) =>
+      case HoconValue(_, _, _, _) =>
     }
   }
 
@@ -96,7 +93,7 @@ class HoconParserTest extends TestSpec {
     result.results.size shouldBe 7
 
     val sortedValues = result.results.map(_.asInstanceOf[HoconValue]).sortWith(_.path < _.path)
-    val expectedPaths = (1 to 7).map(i =>tagPath(s"pl.onewebpro.test.simple.value_$i"))
+    val expectedPaths = (1 to 7).map(i => tagPath(s"pl.onewebpro.test.simple.value_$i"))
     val expectedValueTypes = List(
       SimpleValueType.QUOTED_STRING,
       SimpleValueType.QUOTED_STRING,
@@ -213,7 +210,6 @@ class HoconParserTest extends TestSpec {
 
     val resultList = result.results.flattenResultValues(true)
 
-
     resultList.get("pl.onewebpro.test.object.reference").isDefined shouldBe true
     resultList.get("pl.onewebpro.test.object.value_1").isDefined shouldBe true
     resultList.get("pl.onewebpro.test.object.value_1.0.value_1_1_1").isDefined shouldBe true
@@ -229,7 +225,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("simple.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 0
   }
@@ -240,7 +236,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("reference.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
@@ -251,7 +247,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("concatenation.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 9
   }
@@ -262,7 +258,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("merge.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 6
   }
@@ -273,7 +269,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 4
   }
@@ -284,11 +280,10 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.containsEnvironmentValues
+    val extractonResult = result.results.extractWithPath[EnvironmentValue]
 
     extractonResult.size shouldBe 5
   }
-
 
   it should "extract proper env values from simple.conf" in {
 
@@ -296,7 +291,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("simple.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 0
   }
@@ -307,7 +302,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("reference.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
@@ -318,7 +313,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("concatenation.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
@@ -329,7 +324,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("merge.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
@@ -340,7 +335,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("array.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
@@ -351,7 +346,7 @@ class HoconParserTest extends TestSpec {
 
     val config: Config = loadConfig("object.conf")
     val result: HoconResult = HoconParser(config).unsafeRunSync()
-    val extractonResult = result.results.environmentValues
+    val extractonResult = result.results.extract[EnvironmentValue]
 
     extractonResult.size shouldBe 2
   }
