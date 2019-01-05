@@ -10,7 +10,7 @@ class EnvironmentDocsTest extends CliSpec {
     "{}"
   ) {
     withTestFile("./env-docs-test-output-file", "") {
-      testOpts(EnvironmentDocs.cmd, "env-docs -o ./env-docs-test-output-file -a right ./env-docs-test-file") { result =>
+      testOpts(EnvironmentDocs.cmd, "env-docs -o ./env-docs-test-output-file ./env-docs-test-file") { result =>
         result.isRight shouldBe true
 
         result.right.get.input.getPath shouldBe "./env-docs-test-file"
