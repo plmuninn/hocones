@@ -23,17 +23,17 @@ package object show {
 
   implicit val showDefaultValue: Show[Option[DefaultValue]] = Show(value => value.map(_.toString).getOrElse(""))
 
-  implicit val showEnvironmentValue: Show[EnvironmentValue] = Show { value =>
-    val comments = value.comments.map(_.show).mkString("\n")
-
-    comments + "\n" + value.name.show + value.defaultValue.show
-  }
-
   implicit val showComment: Show[Comment] = Show {
     case comment: MetaComment   => prefixComment(comment)
     case path: Path             => prefixComment(path)
     case fileName: FileName     => prefixComment(fileName)
     case isOptional: IsOptional => prefixComment(isOptional)
+  }
+
+  implicit val showEnvironmentValue: Show[EnvironmentValue] = Show { value =>
+    val comments = value.comments.map(_.show).mkString("\n")
+
+    comments + "\n" + value.name.show + value.defaultValue.show
   }
 
 }

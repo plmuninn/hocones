@@ -18,7 +18,8 @@ object ModelGenerator {
     ] = {
     case (path, ExtractedValue(cfg, parent, values), metaInformation) =>
       implicit config: EnvironmentConfiguration =>
-        val defaultValue: Option[DefaultValue] = DefaultValue.createDefaultValue(parent)
+        val defaultValue: Option[DefaultValue] =
+          if (config.withDefaults) DefaultValue.createDefaultValue(parent) else None
 
         values.map { value =>
           val metaValue: Option[MetaValue] = metaInformation.findByPathAndName(path)
@@ -29,7 +30,7 @@ object ModelGenerator {
         }
   }
 
-  def removeDuplicates(values: Iterable[EnvironmentValue]): Iterable[EnvironmentValue] =
+  private[model] def removeDuplicates(values: Iterable[EnvironmentValue]): Iterable[EnvironmentValue] =
     values.foldLeft(Vector.empty[EnvironmentValue]) {
       case (acc, value) =>
         def compareName: EnvironmentValue => Boolean = _.name == value.name
