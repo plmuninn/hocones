@@ -66,7 +66,7 @@ object Environment {
         for {
           envConfiguration <- IO[EnvironmentConfiguration](command)
           _ <- putStrLn(Color.Green("Generating environment file"))
-          _ <- EnvironmentFileGenerator(envConfiguration, hocon, metaInformation).toIO
+          _ <- EnvironmentFileGenerator.run(envConfiguration, hocon, metaInformation).toIO
           _ <- putStrLn(
             Color
               .Green("File generated ") ++ envConfiguration.outputPath.toFile.getAbsolutePath

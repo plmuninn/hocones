@@ -1,4 +1,5 @@
 package pl.onewebpro.hocones.env
+
 import shapeless.tag
 import shapeless.tag.@@
 
