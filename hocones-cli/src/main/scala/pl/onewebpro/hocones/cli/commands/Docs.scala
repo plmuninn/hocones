@@ -23,6 +23,7 @@ object Docs {
       extends CliCommand
 
   object DocsCommand {
+
     def fromCommand(cliCommand: CliCommand): DocsCommand =
       DocsCommand(input = cliCommand.input, output = None, alignment = TableAlignment.defaultAlignment)
   }

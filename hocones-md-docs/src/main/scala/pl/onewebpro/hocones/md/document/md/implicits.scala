@@ -7,6 +7,7 @@ import pl.onewebpro.hocones.md.document.model._
 object implicits {
 
   implicit class DocumentToMd[T <: Document[_]](document: T) {
+
     def toMd(implicit dToMD: DocumentToMdGenerator[T]): MarkdownSerializable =
       dToMD.toMd(document)
   }

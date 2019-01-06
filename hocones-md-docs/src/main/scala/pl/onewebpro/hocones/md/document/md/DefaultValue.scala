@@ -4,6 +4,7 @@ import pl.onewebpro.hocones.parser.entity.{HoconResolvedReference, HoconValue, R
 import pl.onewebpro.hocones.parser.entity.simple.{ResolvedRef, SimpleValue}
 
 trait DefaultValue {
+
   // TODO copied from env - maybe we can unify it
   def extractDefaultValue: Result => Option[String] = {
     case ResolvedRef(value: SimpleValue, _) => extractDefaultValue(value)

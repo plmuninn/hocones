@@ -24,6 +24,7 @@ object EnvironmentDocs {
   ) extends CliCommand
 
   object EnvironmentDocsCommand {
+
     def fromCommand(command: CliCommand): EnvironmentDocsCommand =
       EnvironmentDocsCommand(input = command.input, output = None)
   }

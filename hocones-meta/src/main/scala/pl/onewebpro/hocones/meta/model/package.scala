@@ -45,6 +45,7 @@ package object model {
   }
 
   object MetaInformation {
+
     def sortMetaInformation(information: MetaInformation): MetaInformation = {
       val sortedRoots = ListMap(
         information.roots.toSeq
