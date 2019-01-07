@@ -8,6 +8,7 @@ import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
+import pl.onewebpro.hocones.cli.commands.Hocones.HoconesCommand
 import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
 import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
@@ -30,16 +31,27 @@ object Environment {
   object EnvironmentCommand {
 
     def fromCommand(command: CliCommand): EnvironmentCommand =
-      EnvironmentCommand(
-        input = command.input,
-        output = None,
-        withComments = false,
-        withDefaults = false,
-        removeDuplicates = false
-      )
+      command match {
+        case HoconesCommand(input, _, withComments, withDefaults, removeDuplicates) =>
+          EnvironmentCommand(
+            input = input,
+            output = None,
+            withComments = withComments.getOrElse(false),
+            withDefaults = withDefaults.getOrElse(false),
+            removeDuplicates = removeDuplicates.getOrElse(false)
+          )
+        case _ =>
+          EnvironmentCommand(
+            input = command.input,
+            output = None,
+            withComments = false,
+            withDefaults = false,
+            removeDuplicates = false
+          )
+      }
   }
 
-  private val environmentCommandF: Opts[EnvironmentCommand] = (
+  val environmentCommandF: Opts[EnvironmentCommand] = (
     InputFile.opts,
     OutputFile.opts("environment file").orNone,
     WithComments.opts,

@@ -8,8 +8,7 @@ object WithDefaults {
     Opts
       .flag(
         long = "defaults",
-        help =
-          "defaults is boolean property - should default values of environment variables be set in file - default false",
+        help = "should default values of environment variables be set in environment file - default no",
         short = "d"
       )
       .orFalse
