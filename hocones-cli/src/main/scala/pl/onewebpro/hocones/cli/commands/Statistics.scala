@@ -16,7 +16,7 @@ object Statistics {
 
   case class StatisticsCommand(input: InputFile) extends CliCommand
 
-  private val commandF: Opts[CliCommand] =
+  private val statisticsOpts: Opts[CliCommand] =
     InputFile.opts.map(StatisticsCommand.apply)
 
   implicit val showStatistics: Show[StatisticsMeta] = Show.show { statistics =>
@@ -29,7 +29,7 @@ object Statistics {
   }
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand("statistics", "display statistics about configuration")(commandF)
+    Opts.subcommand("statistics", "display statistics about configuration")(statisticsOpts)
 
   val displayStatistics: Kleisli[IO, StatisticsMeta, Unit] = Kleisli { statistics =>
     putStrLn(statistics)

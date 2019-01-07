@@ -34,11 +34,11 @@ object Docs {
       }
   }
 
-  val docsCommandF: Opts[DocsCommand] =
+  val docsCommandOpts: Opts[DocsCommand] =
     (InputFile.opts, OutputFile.opts("documentation").orNone, TableAlignment.opts).mapN(DocsCommand.apply)
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand("docs", "generate markdown table with environments")(docsCommandF)
+    Opts.subcommand("docs", "generate markdown table with environments")(docsCommandOpts)
 
   implicit private def mapCommandToConfig: DocsCommand => TableConfiguration = { command =>
     TableConfiguration(

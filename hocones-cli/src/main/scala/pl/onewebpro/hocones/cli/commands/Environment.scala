@@ -51,7 +51,7 @@ object Environment {
       }
   }
 
-  val environmentCommandF: Opts[EnvironmentCommand] = (
+  val environmentCommandOpts: Opts[EnvironmentCommand] = (
     InputFile.opts,
     OutputFile.opts("environment file").orNone,
     WithComments.opts,
@@ -60,7 +60,7 @@ object Environment {
   ).mapN(EnvironmentCommand.apply)
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand[CliCommand](name = "env-file", help = "generate environment file")(environmentCommandF)
+    Opts.subcommand[CliCommand](name = "env-file", help = "generate environment file")(environmentCommandOpts)
 
   implicit private def mapCommandToConfig: EnvironmentCommand => EnvironmentConfiguration = { command =>
     EnvironmentConfiguration(

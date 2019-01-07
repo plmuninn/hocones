@@ -7,7 +7,6 @@ import cats.implicits._
 import com.monovore.decline.{Command, Opts}
 import com.typesafe.config.ConfigFactory
 import fansi.Color
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import pl.onewebpro.hocones.cli.arguments.InputFile
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.docs.TableAlignment
@@ -30,7 +29,7 @@ object Hocones {
     removeDuplicates: Option[Boolean]
   ) extends CliCommand
 
-  private val hoconesF: Opts[HoconesCommand] =
+  val hoconesOpts: Opts[HoconesCommand] =
     (
       InputFile.opts,
       TableAlignment.opts.orNone,
@@ -44,7 +43,7 @@ object Hocones {
       .orElse(Environment.cmd)
       .orElse(EnvironmentDocs.cmd)
       .orElse(Docs.cmd)
-      .orElse(hoconesF)
+      .orElse(hoconesOpts)
 
   val cmd: Command[CliCommand] =
     Command(
@@ -54,7 +53,6 @@ object Hocones {
 
   val parse: Kleisli[IO, CliCommand, HoconResult] = Kleisli { command =>
     for {
-      logger <- Slf4jLogger.create[IO]
       _ <- putStrLn(Color.Green("Loading hocon file"))
       result <- HoconParser(ConfigFactory.parseFile(command.input))
       _ <- putStrLn(Color.Green("Configuration parsed without errors"))

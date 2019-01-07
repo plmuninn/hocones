@@ -29,12 +29,12 @@ object EnvironmentDocs {
       EnvironmentDocsCommand(input = command.input, output = None)
   }
 
-  val environmentDocsCommandF: Opts[EnvironmentDocsCommand] =
+  val environmentDocsCommandOpts: Opts[EnvironmentDocsCommand] =
     (InputFile.opts, OutputFile.opts("environment documentation").orNone)
       .mapN(EnvironmentDocsCommand.apply)
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand("env-docs", "generate markdown table with environments")(environmentDocsCommandF)
+    Opts.subcommand("env-docs", "generate markdown table with environments")(environmentDocsCommandOpts)
 
   implicit private def mapCommandToConfig: EnvironmentDocsCommand => DocumentConfiguration = { command =>
     DocumentConfiguration(
