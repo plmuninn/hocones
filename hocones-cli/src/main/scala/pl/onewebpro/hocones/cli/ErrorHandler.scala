@@ -8,7 +8,8 @@ import _root_.io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import _root_.io.chrisdavenport.log4cats.SelfAwareStructuredLogger
 import pl.onewebpro.hocones.env.EnvironmentFileError
 import pl.onewebpro.hocones.md.MdFileError
-import pl.onewebpro.hocones.meta.{MetaError, MetaParsingError}
+import pl.onewebpro.hocones.meta.MetaParsingError
+import pl.onewebpro.hocones.meta.error.{MetaError, MetaParsingError}
 import pl.onewebpro.hocones.parser.ParsingError
 
 object ErrorHandler {

@@ -3,13 +3,15 @@ package pl.onewebpro.hocones.meta.io
 import cats.effect.{Resource, SyncIO}
 import io.circe.Json
 import io.circe.yaml.parser
-import pl.onewebpro.hocones.meta.MetaError
+import pl.onewebpro.hocones.meta.error.MetaError
 import pl.onewebpro.hocones.meta.io.MetaFileWriter.MetaFile
 
 import scala.io.Source
 
+// TODO Refactor me plis
 object MetaFileReader {
 
+  // TODO make it better and move it to common
   private[io] def validateFile(metaFile: MetaFile): SyncIO[Unit] =
     if (metaFile.canRead)
       SyncIO.unit

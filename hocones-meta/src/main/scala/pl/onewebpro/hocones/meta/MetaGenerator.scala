@@ -10,6 +10,7 @@ import pl.onewebpro.hocones.meta.model.JsonCodecs._
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.meta.BuildInfo.version
 
+// TODO Refactor me plis
 object MetaGenerator {
 
   def defaultMetaInformation =

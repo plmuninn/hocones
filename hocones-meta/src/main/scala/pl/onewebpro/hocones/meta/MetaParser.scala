@@ -1,18 +1,40 @@
 package pl.onewebpro.hocones.meta
 
 import cats.effect.SyncIO
-import cats.implicits._
+import pl.onewebpro.hocones.common.implicits
 import pl.onewebpro.hocones.meta.BuildInfo.version
+import pl.onewebpro.hocones.meta.error.MetaError
 import pl.onewebpro.hocones.meta.model._
 import pl.onewebpro.hocones.parser.HoconResult
-import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity._
-import pl.onewebpro.hocones.parser.entity.simple.SimpleHoconValue
 import pl.onewebpro.hocones.parser.ops.HoconOps._
 
+/**
+  * Parser is decomposing structure of configuration with paths like:
+  *
+  *  Map( pl.onewebpro.hocones.value -> 1, pl.onewebpro.test.value -> 2, pl.onewebpro.hocones.test.value -> 3)
+  *
+  *  to
+  *
+  *  Map(
+  *    pl.onewebpro -> Map(
+  *       hocones -> Map(
+  *         value -> 1
+  *       ),
+  *       hocones.test -> Map(
+  *         value -> 3
+  *       ),
+  *       test -> Map(
+  *         value -> 2
+  *       )
+  *    )
+  *  )
+  *
+  */
 object MetaParser {
 
   import pl.onewebpro.hocones.common.implicits._
+  import pl.onewebpro.hocones.meta.codecs._
 
   private[MetaParser] object InternalMetaParser {
 
@@ -21,171 +43,163 @@ object MetaParser {
 
       def isOrphan: Boolean = path.isOrphan
     }
-
   }
 
   import InternalMetaParser._
 
-  private[meta] def mapSimpleHoconValue(name: String, value: SimpleHoconValue): SyncIO[MetaValue] =
-    SyncIO.pure(MetaGenericInformation(name = name, description = None))
+  /**
+    * Method generate roots for structure. For example:
+    *  Map( pl.onewebpro.hocones.value -> 1)
+    *
+    *  Root will be:
+    *
+    *  `pl.onewebpro`
+    *
+    *  But for:
+    *
+    *  Map(pl.onewebpro.hocones.value -> 1, pl.onewebpro.value -> 2)
+    *
+    *  Possible root is only `pl`
+    *
+    */
+  private[meta] def generateRoots(hocones: HoconResult): Seq[String] = {
+    val paths: Iterable[implicits.Path] = hocones.results.asMap.filterNot(_.isOrphan).keys
 
-  private[meta] def mapResultValue: Result => SyncIO[MetaValue] = {
-    case result: HoconResultValue =>
-      val name = result.path.name
-      result match {
-        case _: HoconArray =>
-          SyncIO.pure(MetaList(name = name, description = None, `can-be-empty` = None, `element-type` = None))
-        case _: HoconConcatenation =>
-          SyncIO.pure(MetaGenericInformation(name = name, description = None))
-        case _: HoconEnvironmentValue =>
-          SyncIO.pure(MetaGenericInformation(name = name, description = None))
-        case _: HoconObject =>
-          SyncIO.pure(MetaObject(name = name, description = None, `element-type` = None))
-        case _: HoconReferenceValue =>
-          SyncIO.pure(MetaGenericInformation(name = name, description = None))
+    if (paths.isEmpty) Nil
+    else // Iterate trough whole list of packages
+      paths.foldLeft(Seq.empty[String]) {
+        case (acc, path) =>
+          val root: Path = path.packageName.dropRight(1)
+          val rootChunks = root.splitPath
 
-        case value: HoconMergedValues =>
-          value.defaultValue match {
-            case defaultValue: SimpleHoconValue =>
-              mapSimpleHoconValue(name, defaultValue)
-            case defaultValue => mapResultValue(defaultValue)
+          // Function check if path passed to it is in same namespace as actually processed path
+          // They are the same if first segment is the same
+          def inSameNamespace(root: Path): Boolean = {
+            val rootHead = root.splitPath.head
+
+            rootChunks.head == rootHead
           }
-        case value: HoconResolvedReference =>
-          value.value match {
-            case referencedValue: SimpleHoconValue =>
-              mapSimpleHoconValue(name, referencedValue)
-            case referencedValue => mapResultValue(referencedValue)
-          }
 
-        case value: HoconValue =>
-          value.valueType match {
-            case SimpleValueType.UNQUOTED_STRING =>
-              SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None)
-              )
-            case SimpleValueType.QUOTED_STRING =>
-              SyncIO.pure(
-                MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None)
-              )
-            case SimpleValueType.BOOLEAN =>
-              SyncIO.pure(MetaGenericInformation(name = name, description = None))
-            case SimpleValueType.DOUBLE =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
-            case SimpleValueType.INT =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
-            case SimpleValueType.LONG =>
-              SyncIO.pure(MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None))
-            case SimpleValueType.NULL =>
-              SyncIO.pure(MetaGenericInformation(name = name, description = None))
-          }
-      }
-    case _ => SyncIO.raiseError(MetaParsingError("Wrong type of value"))
-  }
+          // If there is no roots or root not exists in list, just add it
+          if (acc.isEmpty || !acc.exists(inSameNamespace(_))) acc :+ root
+          else {
+            // If exists, we still need to find if this root should not be the new root in this namespace
+            // because its for example shorter
 
-  private[meta] def orphans(hocones: HoconResult): SyncIO[Seq[MetaValue]] =
-    for {
-      results <- SyncIO.pure(hocones.results)
-      orphans <- results
-        .filter(_.path.isOrphan)
-        .map(mapResultValue)
-        .toList
-        .sequence
-    } yield orphans
-
-  // TODO make it more IO
-  private[meta] def generateRoots(hocones: HoconResult): SyncIO[Seq[String]] = {
-    val resultKeys = hocones.results.asMap.filterNot(_.isOrphan).keys
-
-    if (resultKeys.isEmpty) SyncIO.pure(Nil)
-    else
-      SyncIO {
-        resultKeys.foldLeft(Seq.empty[String]) {
-          case (acc, path) =>
-            val packageName: Path = path.packageName.dropRight(1)
-            val packageNameChunks = packageName.splitPath
-
-            def pathExists(path: String): Boolean = {
-              val root: Path = path
-              val rootHead = root.splitPath.head
-
-              packageNameChunks.head == rootHead
+            // We are creating list of similar roots to root that we are processing
+            val similar: Seq[(String, Int)] = acc.zipWithIndex.filter {
+              case (rootPath, _) => inSameNamespace(rootPath)
             }
 
-            if (acc.isEmpty || !acc.exists(pathExists)) acc :+ packageName
-            else {
-              val similar = acc.zipWithIndex.filter {
-                case (rootPath, _) => pathExists(rootPath)
-              }
-
-              val clean = similar.map {
+            // We are mapping each similar root
+            val clean: Seq[(Int, String)] =
+              similar.map {
                 case (rootPath, index) =>
                   val root: Path = rootPath
-                  index -> root.splitPath
-                    .filter(part => packageNameChunks.contains(part))
-                    .mkString(".")
+                  index -> root.splitPath // And we are filtering parts of similar root
+                    .filter(part => rootChunks.contains(part)) // Is their contained in root we are actually processing
+                    .mkString(".") // Thanks of that, we should achieve most common part of in root
               }
 
-              val updated = clean.foldLeft(acc) {
-                case (accm, (index, rootPath)) => accm.updated(index, rootPath)
-              }
-
-              val withoutDuplicates = updated.filter(_.nonEmpty).distinct
-
-              withoutDuplicates
+            // We must update our accumulator
+            val updated = clean.foldLeft(acc) {
+              case (accm, (index, rootPath)) => accm.updated(index, rootPath)
             }
-        }
+
+            // There is chance after process of filtering we will end with empty roots or duplicates - we need to clean them
+            val withoutDuplicates = updated.filter(_.nonEmpty).distinct
+
+            withoutDuplicates
+          }
       }
   }
 
-  //TODO make it more IO
+  /**
+    * This method is generating from list of roots, structure Map(Root, Map(SubPackage -> Seq[MetaValue])). For example:
+    *
+    * For result:
+    *
+    *   Map( pl.onewebpro.hocones.value -> 1)
+    *
+    * and roots:
+    *
+    *   Seq( pl.onewebpro )
+    *
+    * We should get :
+    *
+    *   Map(pl.onewebpro -> Map(hocones -> Seq( MetaNumber(1) ))
+    *
+    */
   private[meta] def generateMetaValues(
     roots: Seq[String],
     hocones: HoconResult
-  ): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
-    SyncIO {
-      val result =
-        roots.map(path => path -> Map.empty[String, Seq[MetaValue]]).toMap
+  ): Map[String, Map[String, Seq[MetaValue]]] = {
+    // Create empty accumulator with roots
+    val result =
+      roots.map(path => path -> Map.empty[String, Seq[MetaValue]]).toMap
 
-      hocones.results.asMap.filterNot(_.isOrphan).foldLeft(result) {
-        case (rootsList, (path, value)) =>
-          rootsList.find {
-            case (key, _) => path.startsWith(key)
-          } match {
-            case Some((key, cont)) =>
-              val res: Map[String, Seq[MetaValue]] = cont.find {
-                case (subKey, _) =>
-                  val actualPath = key + "." + subKey
-                  val cleared: Path = path.replace(s"$actualPath.", "")
-                  cleared.splitPath.length == 1
-              } match {
-                case Some((subPath, valueAcc)) =>
-                  cont + (subPath -> (valueAcc :+ mapResultValue(value)
-                    .unsafeRunSync()))
-                case _ =>
-                  val packageName = path.packageName.replace(s"$key.", "")
-                  cont + (packageName -> Seq(mapResultValue(value).unsafeRunSync()))
+    // Get only results that are not orphans
+    val withoutOrphans: Map[implicits.Path, HoconResultValue] = hocones.results.asMap.filterNot(_.isOrphan)
+
+    withoutOrphans.foldLeft(result) {
+      case (rootsList, (path, value)) =>
+        // Fist we are looking for root that is part of path we are processing
+        rootsList.find {
+          case (key, _) => path.startsWith(key) // Path needs to start with root to be in same namespace
+        } match {
+          case Some((root: String, subPackages: Map[String, Seq[MetaValue]])) => // When we found root for this path
+            val subPackageAccumulator: Map[String, Seq[MetaValue]] =
+              subPackages
+                .find { // We are checking if path should be added to existing subpackage or part of it should become subpackage
+                  case (subKey, _) =>
+                    val actualPath = root + "." + subKey // We are creating actual Path - from root.subpackage
+                    // We are removing actualPath from path to see how much left
+                    val cleared: Path = path.replace(s"$actualPath.", "")
+                    // If there left only 1 element - tha means only name of left and it should be added to existing package
+                    cleared.splitPath.length == 1
+                } match {
+                case Some((subPackage: String, metaValueSeq: Seq[MetaValue])) => // Add to existing package
+                  subPackages + (subPackage -> (metaValueSeq :+ value.encode[MetaValue]))
+                case _ => // Create new subpackage name
+                  // To create package name, we are getting only path without name and we are removing root from it
+                  val packageName = path.packageName.replace(s"$root.", "")
+                  subPackages + (packageName -> Seq(value.encode[MetaValue]))
               }
 
-              rootsList + (key -> res)
-            case _ =>
-              throw new Exception("Something went wrong, not root found")
-          }
-      }
-
+            rootsList + (root -> subPackageAccumulator) // Update Map
+          case _ =>
+            // If we didn't found a root, that means generating roots or differencing orphans failed and
+            // value shouldn't be here
+            throw MetaError("Something went wrong, not root found")
+        }
     }
+
+  }
+
+  /**
+    * Creates list of "orphans" MetaValues
+    *
+    * Orphan is a path where there is no root because its too short
+    */
+  private[meta] def orphans(hocones: HoconResult): Seq[MetaValue] =
+    hocones.results
+      .filter(_.path.isOrphan)
+      .map(_.encode[MetaValue])
+      .toList
 
   private[meta] def roots(hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
     for {
-      rootsKeys <- generateRoots(hocones)
-      generatedMetaValues <- generateMetaValues(rootsKeys, hocones)
-      filteredMetaValues <- SyncIO(generatedMetaValues.filterNot {
+      hocones <- SyncIO.pure(hocones)
+      rootsKeys = generateRoots(hocones)
+      generatedMetaValues = generateMetaValues(rootsKeys, hocones)
+      filteredMetaValues = generatedMetaValues.filterNot {
         case (_, value) => value.isEmpty
-      })
+      }
     } yield filteredMetaValues
 
   def generate(hocones: HoconResult): SyncIO[MetaInformation] =
     for {
       rootsResult <- roots(hocones)
-      orphansResult <- orphans(hocones)
+      orphansResult = orphans(hocones)
     } yield MetaInformation.apply(version, rootsResult, orphansResult)
 }

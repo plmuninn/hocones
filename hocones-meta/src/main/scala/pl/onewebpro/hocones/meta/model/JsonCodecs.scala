@@ -4,6 +4,7 @@ import _root_.io.circe._
 import _root_.io.circe.Decoder._
 import _root_.io.circe.generic.semiauto._
 
+// TODO Refactor me plis
 object JsonCodecs {
 
   private val hoconVersionK = "hocones-version"

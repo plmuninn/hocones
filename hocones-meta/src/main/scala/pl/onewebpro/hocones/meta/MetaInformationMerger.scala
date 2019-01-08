@@ -3,6 +3,7 @@ package pl.onewebpro.hocones.meta
 import cats.effect.SyncIO
 import pl.onewebpro.hocones.meta.model.MetaInformation
 
+// TODO Refactor me plis
 object MetaInformationMerger {
 
   private def updateOrphans(loaded: MetaInformation, generated: MetaInformation): SyncIO[Seq[model.MetaValue]] =
