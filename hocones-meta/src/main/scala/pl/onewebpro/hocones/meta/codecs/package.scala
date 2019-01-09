@@ -14,7 +14,7 @@ package object codecs {
   implicit val resultToMetaValue: Codec[Result, MetaValue] = {
     case value: HoconResultValue =>
       val name: implicits.Name = value.path.name
-      (name, value).encode[MetaValue]
+      (name, value).encodeTo[MetaValue]
     case value => throw DecodingError(s"Error during encoding $value")
   }
 
@@ -41,16 +41,16 @@ package object codecs {
   implicit val hoconMergedValuesToMetaValue: Codec[(Name, HoconMergedValues), MetaValue] = {
     case (name, value) =>
       value.defaultValue match {
-        case simpleValue: SimpleHoconValue => simpleValueToMetaValue(name, simpleValue)
-        case result                        => resultToMetaValue(result)
+        case simpleValue: SimpleHoconValue => (name, simpleValue).encodeTo[MetaValue]
+        case result                        => result.encodeTo[MetaValue]
       }
   }
 
   implicit val hoconResolvedReferenceToMetaValue: Codec[(Name, HoconResolvedReference), MetaValue] = {
     case (name, value) =>
       value.value match {
-        case simpleValue: SimpleHoconValue => simpleValueToMetaValue(name, simpleValue)
-        case result                        => resultToMetaValue(result)
+        case simpleValue: SimpleHoconValue => (name, simpleValue).encodeTo[MetaValue]
+        case result                        => result.encodeTo[MetaValue]
       }
   }
 
@@ -66,15 +66,15 @@ package object codecs {
       }
   }
 
-  implicit val hoconResultToMetaValue: Codec[(Name, HoconResultValue), MetaValue] = {
-    case (name, value: SimpleHoconValue)       => simpleValueToMetaValue(name, value)
-    case (name, value: HoconArray)             => hoconArrayToMetaValue(name, value)
-    case (name, value: HoconConcatenation)     => hoconConcatenationToMetaValue(name, value)
-    case (name, value: HoconReferenceValue)    => hoconReferenceToMetaValue(name, value)
-    case (name, value: HoconEnvironmentValue)  => hoconEnvironmentToMetaValue(name, value)
-    case (name, value: HoconMergedValues)      => hoconMergedValuesToMetaValue(name, value)
-    case (name, value: HoconResolvedReference) => hoconResolvedReferenceToMetaValue(name, value)
-    case (name, value: HoconValue)             => hoconValueToMetaValue(name, value)
+  implicit def hoconResultToMetaValue[T <: HoconResultValue]: Codec[(Name, T), MetaValue] = {
+    case (name, value: SimpleHoconValue)       => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconArray)             => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconConcatenation)     => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconReferenceValue)    => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconEnvironmentValue)  => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconMergedValues)      => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconResolvedReference) => (name, value).encodeTo[MetaValue]
+    case (name, value: HoconValue)             => (name, value).encodeTo[MetaValue]
     case (name, value)                         => throw DecodingError(s"Error during encoding $name: $value")
   }
 }

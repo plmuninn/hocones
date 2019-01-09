@@ -103,7 +103,7 @@ object MetaParser {
 
             // We must update our accumulator
             val updated = clean.foldLeft(acc) {
-              case (accm, (index, rootPath)) => accm.updated(index, rootPath)
+              case (accumulator, (index, rootPath)) => accumulator.updated(index, rootPath)
             }
 
             // There is chance after process of filtering we will end with empty roots or duplicates - we need to clean them
@@ -159,11 +159,11 @@ object MetaParser {
                     cleared.splitPath.length == 1
                 } match {
                 case Some((subPackage: String, metaValueSeq: Seq[MetaValue])) => // Add to existing package
-                  subPackages + (subPackage -> (metaValueSeq :+ value.encode[MetaValue]))
+                  subPackages + (subPackage -> (metaValueSeq :+ value.encodeTo[MetaValue]))
                 case _ => // Create new subpackage name
                   // To create package name, we are getting only path without name and we are removing root from it
                   val packageName = path.packageName.replace(s"$root.", "")
-                  subPackages + (packageName -> Seq(value.encode[MetaValue]))
+                  subPackages + (packageName -> Seq(value.encodeTo[MetaValue]))
               }
 
             rootsList + (root -> subPackageAccumulator) // Update Map
@@ -184,7 +184,7 @@ object MetaParser {
   private[meta] def orphans(hocones: HoconResult): Seq[MetaValue] =
     hocones.results
       .filter(_.path.isOrphan)
-      .map(_.encode[MetaValue])
+      .map(_.encodeTo[MetaValue])
       .toList
 
   private[meta] def roots(hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
