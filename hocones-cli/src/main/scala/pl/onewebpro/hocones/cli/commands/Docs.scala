@@ -8,6 +8,7 @@ import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.docs.TableAlignment
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
+import pl.onewebpro.hocones.cli.commands.Hocones.HoconesCommand
 import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
 import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.md.MdGenerator
@@ -25,14 +26,19 @@ object Docs {
   object DocsCommand {
 
     def fromCommand(cliCommand: CliCommand): DocsCommand =
-      DocsCommand(input = cliCommand.input, output = None, alignment = TableAlignment.defaultAlignment)
+      cliCommand match {
+        case HoconesCommand(input, alignment, _, _, _) =>
+          DocsCommand(input = input, output = None, alignment = alignment.getOrElse(TableAlignment.defaultAlignment))
+        case _ =>
+          DocsCommand(input = cliCommand.input, output = None, alignment = TableAlignment.defaultAlignment)
+      }
   }
 
-  val docsCommandF: Opts[DocsCommand] =
+  val docsCommandOpts: Opts[DocsCommand] =
     (InputFile.opts, OutputFile.opts("documentation").orNone, TableAlignment.opts).mapN(DocsCommand.apply)
 
   val cmd: Opts[CliCommand] =
-    Opts.subcommand("docs", "generate md table with environments")(docsCommandF)
+    Opts.subcommand("docs", "generate markdown table with environments")(docsCommandOpts)
 
   implicit private def mapCommandToConfig: DocsCommand => TableConfiguration = { command =>
     TableConfiguration(

@@ -8,8 +8,7 @@ object WithComments {
     Opts
       .flag(
         long = "comments",
-        help =
-          "comments is boolean property - should comments about environment variables be printed in file - default false",
+        help = "should comments about environment variables be printed in environment file - default no",
         short = "c"
       )
       .orFalse

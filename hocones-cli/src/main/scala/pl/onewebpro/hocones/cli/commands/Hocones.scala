@@ -1,13 +1,17 @@
 package pl.onewebpro.hocones.cli.commands
+
 import cats.data.Kleisli
 import cats.effect.Console.io.putStrLn
 import cats.effect.IO
+import cats.implicits._
 import com.monovore.decline.{Command, Opts}
 import com.typesafe.config.ConfigFactory
 import fansi.Color
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import pl.onewebpro.hocones.cli.arguments.InputFile
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
+import pl.onewebpro.hocones.cli.arguments.docs.TableAlignment
+import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
+import pl.onewebpro.hocones.md.config.Configuration.{TableAlignment => MTableAlignment}
 import pl.onewebpro.hocones.meta.MetaGenerator
 import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
 import pl.onewebpro.hocones.meta.model.MetaInformation
@@ -17,17 +21,29 @@ object Hocones {
 
   import pl.onewebpro.hocones.cli.show.showStr
 
-  case class HoconesCommand(input: InputFile) extends CliCommand
+  case class HoconesCommand(
+    input: InputFile,
+    alignment: Option[MTableAlignment.TableAlignment],
+    withComments: Option[Boolean],
+    withDefaults: Option[Boolean],
+    removeDuplicates: Option[Boolean]
+  ) extends CliCommand
 
-  private val hoconesF: Opts[HoconesCommand] =
-    InputFile.opts.map(HoconesCommand.apply)
+  val hoconesOpts: Opts[HoconesCommand] =
+    (
+      InputFile.opts,
+      TableAlignment.opts.orNone,
+      WithComments.opts.orNone,
+      WithDefaults.opts.orNone,
+      RemoveDuplicates.opts.orNone
+    ).mapN(HoconesCommand.apply)
 
   private val commandF: Opts[CliCommand] =
     Statistics.cmd
       .orElse(Environment.cmd)
       .orElse(EnvironmentDocs.cmd)
       .orElse(Docs.cmd)
-      .orElse(hoconesF)
+      .orElse(hoconesOpts)
 
   val cmd: Command[CliCommand] =
     Command(
@@ -37,7 +53,6 @@ object Hocones {
 
   val parse: Kleisli[IO, CliCommand, HoconResult] = Kleisli { command =>
     for {
-      logger <- Slf4jLogger.create[IO]
       _ <- putStrLn(Color.Green("Loading hocon file"))
       result <- HoconParser(ConfigFactory.parseFile(command.input))
       _ <- putStrLn(Color.Green("Configuration parsed without errors"))
@@ -55,7 +70,7 @@ object Hocones {
         } yield (result, metaInformation)
     }
 
-  val parseAndLoadMetaInformation: Kleisli[IO, CliCommand, (HoconResult, MetaInformation)] =
+  def parseAndLoadMetaInformation[T <: CliCommand]: Kleisli[IO, T, (HoconResult, MetaInformation)] =
     Kleisli { command =>
       parse(command).flatMap(result => metaInformation(command, result))
     }
