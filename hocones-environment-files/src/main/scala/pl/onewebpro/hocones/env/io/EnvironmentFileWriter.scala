@@ -9,11 +9,10 @@ import pl.onewebpro.hocones.env.model.EnvironmentValue
 
 class EnvironmentFileWriter(file: OutputFile) {
 
-  private[io] def environmentValueToString(value: EnvironmentValue): Iterable[String] =
-    value.comments ++ Iterable(s"${value.name}=${value.defaultValue.getOrElse("")}\n")
+  import pl.onewebpro.hocones.env.model.show._
 
   private[io] def composeEnvironmentValues(values: Iterable[EnvironmentValue]): SyncIO[Iterable[String]] =
-    SyncIO(values.map(environmentValueToString).filter(_.nonEmpty).flatten)
+    SyncIO(values.map(_.show + "\n"))
 
   private[io] def writeValuesToFile(values: Iterable[String]): SyncIO[OutputFile] =
     Resource

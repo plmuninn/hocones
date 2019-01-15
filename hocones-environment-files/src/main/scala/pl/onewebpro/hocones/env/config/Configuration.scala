@@ -8,8 +8,7 @@ object Configuration {
     outputPath: Path,
     withComments: Boolean,
     withDefaults: Boolean,
-    removeDuplicates: Boolean,
-    displayMeta: Boolean
+    removeDuplicates: Boolean
   )
 
 }

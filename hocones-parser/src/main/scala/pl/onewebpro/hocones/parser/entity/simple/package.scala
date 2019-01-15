@@ -10,6 +10,7 @@ package object simple {
 
   //TODO test me
   object SimpleHoconValue {
+
     def apply(value: String): IO[SimpleHoconValue] =
       if (NotResolvedRef.isRef(value)) NotResolvedRef(value)
       else if (ComposedConfigValue.isComposedValue(value))

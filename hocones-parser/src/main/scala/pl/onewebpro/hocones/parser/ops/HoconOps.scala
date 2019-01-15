@@ -11,6 +11,7 @@ import scala.reflect.ClassTag
 object HoconOps {
 
   implicit class ConfigValueImplicits(value: ConfigValue) {
+
     val canonicalName: CanonicalClassName = tagCanonicalName(
       value.getClass.getCanonicalName
     )
@@ -19,6 +20,7 @@ object HoconOps {
   type FlatResultList = Map[Path, HoconResultValue]
 
   implicit class ResultValuesOps(values: Seq[HoconResultValue]) {
+
     def asMap: Map[Path, HoconResultValue] =
       values.map(value => value.path -> value).toMap
 

@@ -1,3 +1,5 @@
 package pl.onewebpro.hocones.env.model
 
-case class EnvironmentValue(name: String, defaultValue: Option[String], comments: Iterable[String])
+import pl.onewebpro.hocones.env.model.comment.Comment
+
+case class EnvironmentValue(name: Name, defaultValue: Option[DefaultValue], comments: Iterable[Comment])

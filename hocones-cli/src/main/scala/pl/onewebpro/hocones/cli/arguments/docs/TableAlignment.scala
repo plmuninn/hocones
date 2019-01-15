@@ -28,7 +28,7 @@ object TableAlignment {
     Opts
       .option[TableAlignment](
         long = "alignment",
-        help = "alignment of values in table (left, right, center) - default left",
+        help = "alignment of values in markdown table (left, right, center) - default left",
         short = "a"
       )
       .withDefault(defaultAlignment)

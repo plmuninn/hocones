@@ -9,6 +9,7 @@ trait HoconValueOps {
   self: DocumentToMdGenerator[_] =>
 
   implicit class ValueTextBuilderOps(builder: TextBuilder) {
+
     def typeOfValue(value: HoconValue): TextBuilder = {
       val bb = builder.label("Value Type:")
       (value.valueType match {
