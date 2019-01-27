@@ -4,8 +4,8 @@ import cats.implicits._
 import cats.effect.Console.io.putStrLn
 import cats.effect.{ExitCode, IO}
 import fansi.Color
-import _root_.io.chrisdavenport.log4cats.slf4j.Slf4jLogger
-import _root_.io.chrisdavenport.log4cats.SelfAwareStructuredLogger
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import io.chrisdavenport.log4cats.SelfAwareStructuredLogger
 import pl.onewebpro.hocones.env.EnvironmentFileError
 import pl.onewebpro.hocones.md.MdFileError
 import pl.onewebpro.hocones.meta.error.{MetaError, MetaParsingError}

@@ -1,4 +1,4 @@
-package pl.onewebpro.hocones.cli.io
+package pl.onewebpro.hocones.cli.file
 import java.io.File
 
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile

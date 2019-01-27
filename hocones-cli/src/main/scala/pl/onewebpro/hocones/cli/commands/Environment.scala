@@ -9,8 +9,8 @@ import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
 import pl.onewebpro.hocones.cli.commands.Hocones.HoconesCommand
-import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
-import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
+import pl.onewebpro.hocones.cli.file.OutputFile.OutputFile
+import pl.onewebpro.hocones.cli.file.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.meta.model.MetaInformation

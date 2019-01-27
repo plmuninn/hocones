@@ -1,16 +1,15 @@
 package pl.onewebpro.hocones.meta
 
-import _root_.io.circe.syntax._
+import io.circe.syntax._
 import cats.effect.SyncIO
 import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
-import pl.onewebpro.hocones.meta.io.MetaFileWriter.MetaFile
-import pl.onewebpro.hocones.meta.io.{MetaFileReader, MetaFileWriter}
+import pl.onewebpro.hocones.meta.file.MetaFileWriter.MetaFile
+import pl.onewebpro.hocones.meta.file.{MetaFileReader, MetaFileWriter}
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.meta.model.JsonCodecs._
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.meta.BuildInfo.version
 
-// TODO Refactor me plis
 object MetaGenerator {
 
   def defaultMetaInformation =

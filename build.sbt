@@ -18,7 +18,8 @@ val compilerOptions = Seq(
   "-Ywarn-numeric-widen",
   "-Xfuture",
   "-Ywarn-unused-import",
-  "-Ypartial-unification"
+  "-Ypartial-unification",
+  "-Xfatal-warnings"
 )
 
 resolvers ++= Seq(
@@ -82,7 +83,7 @@ val fp = Seq(
 )
 
 val markdown = Seq(
-  "net.steppschuh.markdowngenerator" % "markdowngenerator" % "1.3.1.1"
+  "pl.muninn" %% "scala-md-tag" % "0.2"
 )
 
 val scalaTestVersion = "3.0.5"
@@ -111,16 +112,11 @@ val `hocones-parser` =
     )
     .dependsOn(`hocones-common`)
 
-val `hocones-meta` =
-  (project in file("hocones-meta"))
+val `hocones-meta-files` =
+  (project in file("hocones-meta-files"))
     .settings(defaultSettings)
-    .enablePlugins(BuildInfoPlugin)
     .settings(
-      buildInfoKeys := Seq[BuildInfoKey](name, version),
-      buildInfoPackage := "pl.onewebpro.hocones.meta"
-    )
-    .settings(
-      name := "hocones-meta",
+      name := "hocones-meta-files",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
       addCompilerPlugin(
         ("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full)
@@ -135,7 +131,7 @@ val `hocones-environment-files` =
       name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
     )
-    .dependsOn(`hocones-parser`, `hocones-common`, `hocones-meta`)
+    .dependsOn(`hocones-parser`, `hocones-common`, `hocones-meta-files`)
 
 val `hocones-md-docs` =
   (project in file("hocones-md-docs"))
@@ -144,7 +140,7 @@ val `hocones-md-docs` =
       name := "hocones-md-docs",
       libraryDependencies ++= (logs ++ fp ++ markdown ++ tests)
     )
-    .dependsOn(`hocones-parser`, `hocones-meta`, `hocones-common`)
+    .dependsOn(`hocones-parser`, `hocones-meta-files`, `hocones-common`)
 
 val `hocones-statistics` =
   (project in file("hocones-statistics"))
@@ -167,7 +163,7 @@ val `hocones-cli` =
         case _                           => MergeStrategy.first
       }
     )
-    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta`, `hocones-md-docs`)
+    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta-files`, `hocones-md-docs`)
 
 lazy val `hocones-sbt-plugin` =
   (project in file("hocones-sbt-plugin"))
@@ -182,7 +178,7 @@ lazy val `hocones-sbt-plugin` =
       `hocones-common`,
       `hocones-parser`,
       `hocones-environment-files`,
-      `hocones-meta`,
+      `hocones-meta-files`,
       `hocones-md-docs`
     )
 
@@ -190,7 +186,7 @@ lazy val root = (project in file("."))
   .aggregate(
     `hocones-common`,
     `hocones-parser`,
-    `hocones-meta`,
+    `hocones-meta-files`,
     `hocones-statistics`,
     `hocones-environment-files`,
     `hocones-md-docs`,

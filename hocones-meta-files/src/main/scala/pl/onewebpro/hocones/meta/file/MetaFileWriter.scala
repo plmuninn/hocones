@@ -1,4 +1,4 @@
-package pl.onewebpro.hocones.meta.io
+package pl.onewebpro.hocones.meta.file
 
 import java.io.{File, PrintWriter}
 
@@ -32,7 +32,7 @@ object MetaFileWriter {
       metaFile <- SyncIO(tagMetaFile(new File(name)))
     } yield metaFile
 
-  private[io] def createIfNotExists(file: MetaFile): SyncIO[Unit] =
+  private[file] def createIfNotExists(file: MetaFile): SyncIO[Unit] =
     if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit
     else SyncIO.unit
 

@@ -2,10 +2,10 @@ package pl.onewebpro.hocones.md
 
 import cats.effect.SyncIO
 import cats.implicits._
-import pl.onewebpro.hocones.common.io._
+import pl.onewebpro.hocones.common.file._
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableConfiguration}
 import pl.onewebpro.hocones.md.document.DocumentationGenerator
-import pl.onewebpro.hocones.md.io.DocumentationWriter
+import pl.onewebpro.hocones.md.file.DocumentationWriter
 import pl.onewebpro.hocones.md.table.{EnvironmentTable, EnvironmentTableGenerator}
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult

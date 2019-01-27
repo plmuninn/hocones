@@ -1,10 +1,10 @@
-package pl.onewebpro.hocones.md.io
+package pl.onewebpro.hocones.md.file
 
 import java.io.PrintWriter
 
 import cats.implicits._
 import cats.effect.{Resource, SyncIO}
-import pl.onewebpro.hocones.common.io.OutputFile
+import pl.onewebpro.hocones.common.file.OutputFile
 
 class DocumentationWriter(outputPath: OutputFile) {
 

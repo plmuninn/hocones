@@ -1,8 +1,8 @@
 package pl.onewebpro.hocones.meta.model
 
-import _root_.io.circe._
-import _root_.io.circe.Decoder._
-import _root_.io.circe.generic.semiauto._
+import io.circe._
+import io.circe.Decoder._
+import io.circe.generic.semiauto._
 
 // TODO Refactor me plis
 object JsonCodecs {

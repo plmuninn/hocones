@@ -5,13 +5,15 @@ import java.io.File
 import shapeless.tag.@@
 import shapeless.tag
 
-package object io {
+package object file {
 
-  private[io] object InternalEnvironmentFileWriter {
+  private[file] object InternalEnvironmentFileWriter {
 
     trait OutputFileTag
 
     trait ParentDirectoryTag
+
+    trait InputFileTag
 
   }
 
@@ -21,8 +23,12 @@ package object io {
 
   type ParentDirectory = File @@ ParentDirectoryTag
 
+  type InputFile = File @@ InputFileTag
+
   def tagOutputFile(file: File): OutputFile = tag[OutputFileTag][File](file)
 
   def tagParentDirectory(file: File): ParentDirectory =
     tag[ParentDirectoryTag][File](file)
+
+  def tagInputFile(file: File): InputFile = tag[InputFileTag][File](file)
 }

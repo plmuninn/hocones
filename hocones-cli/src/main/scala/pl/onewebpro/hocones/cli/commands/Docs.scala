@@ -9,8 +9,8 @@ import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.docs.TableAlignment
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
 import pl.onewebpro.hocones.cli.commands.Hocones.HoconesCommand
-import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
-import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
+import pl.onewebpro.hocones.cli.file.OutputFile.OutputFile
+import pl.onewebpro.hocones.cli.file.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.md.MdGenerator
 import pl.onewebpro.hocones.md.config.Configuration.{TableConfiguration, TableAlignment => MdTableAlignment}
 import pl.onewebpro.hocones.meta.model.MetaInformation
