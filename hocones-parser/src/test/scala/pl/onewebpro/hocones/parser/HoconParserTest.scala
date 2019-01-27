@@ -148,6 +148,18 @@ class HoconParserTest extends TestSpec {
     //TODO more tests
   }
 
+  it should "return 7 results for simple.conf file as map" in {
+    import pl.onewebpro.hocones.parser.ops.HoconOps._
+
+    val config: Config = loadConfig("simple.conf")
+    val result: HoconResult = HoconParser(config).unsafeRunSync()
+
+    val expectedPaths = (1 to 7).map(i => tagPath(s"pl.onewebpro.test.simple.value_$i")).toSet
+    val resultMap = result.results.asMap
+    resultMap.size shouldBe 7
+    resultMap.keySet shouldBe expectedPaths
+  }
+
   it should "return 7 results for simple.conf file flattened" in {
     import pl.onewebpro.hocones.parser.ops.HoconOps._
 
