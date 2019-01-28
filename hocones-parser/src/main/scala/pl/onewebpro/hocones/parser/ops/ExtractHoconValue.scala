@@ -41,7 +41,6 @@ private[ops] object ExtractHoconValue {
     case HoconConcatenation(_, _, concatenatedValues) =>
       concatenatedValues.values.flatMap {
         case value: T                => Iterable(value)
-        case value: HoconResultValue => extractValues[T](value)
         case _                       => Nil
       }
     case HoconMergedValues(_, _, default, replace) =>
