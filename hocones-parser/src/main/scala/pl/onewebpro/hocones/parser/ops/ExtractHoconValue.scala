@@ -40,8 +40,8 @@ private[ops] object ExtractHoconValue {
   )(implicit tag: ClassTag[T]): Iterable[T] = values match {
     case HoconConcatenation(_, _, concatenatedValues) =>
       concatenatedValues.values.flatMap {
-        case value: T                => Iterable(value)
-        case _                       => Nil
+        case value: T => Iterable(value)
+        case _        => Nil
       }
     case HoconMergedValues(_, _, default, replace) =>
       Iterable(default, replace).flatMap {
