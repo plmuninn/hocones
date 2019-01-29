@@ -8,10 +8,10 @@ import scala.reflect.ClassTag
 private[ops] object ExtractHoconValue {
 
   private[ops] def isValue[T <: SimpleHoconValue](result: Result)(implicit tag: ClassTag[T]): Boolean = result match {
+    case _: T => true
     case ComposedConfigValue(_, composedValues) =>
       composedValues.exists(isValue[T])
-    case _: T => true
-    case _    => false
+    case _ => false
   }
 
   private[ops] def resultContainsValue[T <: SimpleHoconValue](result: Result)(implicit tag: ClassTag[T]): Boolean =

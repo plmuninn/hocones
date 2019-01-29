@@ -35,7 +35,7 @@ class ExtractHoconValueTest extends TestSpec with MockFactory {
   }
 
   it should "detect ComposedConfigValue" in new Context {
-    //ExtractHoconValue.isValue[ComposedConfigValue](composedConfigValue) shouldBe true
+    ExtractHoconValue.isValue[ComposedConfigValue](composedConfigValue) shouldBe true
     ExtractHoconValue.isValue[ComposedConfigValue](simpleValue) shouldBe false
   }
 
