@@ -35,11 +35,9 @@ object EnvironmentValue {
   private def tagEnvName(value: String): EnvName =
     tag[EnvNameTag][String](value)
 
-  //TODO test me
   private[entity] def isOptionalEnv(value: EnvValue): Boolean =
     value(2).toString == "?"
 
-  //TODO test me
   private[entity] def extractName(value: EnvValue): Option[EnvName] =
     envNameRegex
       .findAllMatchIn(value)
@@ -48,19 +46,15 @@ object EnvironmentValue {
       .headOption
       .map(tagEnvName)
 
-  //TODO test me
   private[entity] def envName(value: String): Option[EnvValue] =
     if (isEnv(value)) Some(tagEnv(value)) else None
 
-  //TODO test me
   private[entity] def containsEnv(value: String): Boolean =
     envRegex.findFirstMatchIn(value).isDefined
 
-  //TODO test me
   private[entity] def isEnv(value: String): Boolean =
     envRegex.findAllMatchIn(value).length == 1
 
-  //TODO test me
   def apply(value: String): IO[EnvironmentValue] =
     envName(value) match {
       case Some(env) =>
@@ -74,7 +68,6 @@ object EnvironmentValue {
         IO.raiseError(ParsingError(s"Value $value is not environment"))
     }
 
-  // TODO test me
   def apply(notResolvedRef: NotResolvedRef): EnvironmentValue = {
     val value = notResolvedRef.env
       .replace(notResolvedRef.nameChunks.dropRight(1).mkString(".") + ".", "")

@@ -8,10 +8,10 @@ import scala.reflect.ClassTag
 private[ops] object ExtractHoconValue {
 
   private[ops] def isValue[T <: SimpleHoconValue](result: Result)(implicit tag: ClassTag[T]): Boolean = result match {
+    case _: T => true
     case ComposedConfigValue(_, composedValues) =>
       composedValues.exists(isValue[T])
-    case _: T => true
-    case _    => false
+    case _ => false
   }
 
   private[ops] def resultContainsValue[T <: SimpleHoconValue](result: Result)(implicit tag: ClassTag[T]): Boolean =
@@ -40,9 +40,8 @@ private[ops] object ExtractHoconValue {
   )(implicit tag: ClassTag[T]): Iterable[T] = values match {
     case HoconConcatenation(_, _, concatenatedValues) =>
       concatenatedValues.values.flatMap {
-        case value: T                => Iterable(value)
-        case value: HoconResultValue => extractValues[T](value)
-        case _                       => Nil
+        case value: T => Iterable(value)
+        case _        => Nil
       }
     case HoconMergedValues(_, _, default, replace) =>
       Iterable(default, replace).flatMap {
