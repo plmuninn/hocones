@@ -112,11 +112,11 @@ val `hocones-parser` =
     )
     .dependsOn(`hocones-common`)
 
-val `hocones-meta-files` =
-  (project in file("hocones-meta-files"))
+val `hocones-meta-file` =
+  (project in file("hocones-meta-file"))
     .settings(defaultSettings)
     .settings(
-      name := "hocones-meta-files",
+      name := "hocones-meta-file",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
       addCompilerPlugin(
         ("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full)
@@ -131,7 +131,7 @@ val `hocones-environment-files` =
       name := "hocones-environment-files",
       libraryDependencies ++= (logs ++ fp ++ tests)
     )
-    .dependsOn(`hocones-parser`, `hocones-common`, `hocones-meta-files`)
+    .dependsOn(`hocones-parser`, `hocones-common`, `hocones-meta-file`)
 
 val `hocones-md-docs` =
   (project in file("hocones-md-docs"))
@@ -140,7 +140,7 @@ val `hocones-md-docs` =
       name := "hocones-md-docs",
       libraryDependencies ++= (logs ++ fp ++ markdown ++ tests)
     )
-    .dependsOn(`hocones-parser`, `hocones-meta-files`, `hocones-common`)
+    .dependsOn(`hocones-parser`, `hocones-meta-file`, `hocones-common`)
 
 val `hocones-statistics` =
   (project in file("hocones-statistics"))
@@ -163,7 +163,7 @@ val `hocones-cli` =
         case _                           => MergeStrategy.first
       }
     )
-    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta-files`, `hocones-md-docs`)
+    .dependsOn(`hocones-environment-files`, `hocones-statistics`, `hocones-meta-file`, `hocones-md-docs`)
 
 lazy val `hocones-sbt-plugin` =
   (project in file("hocones-sbt-plugin"))
@@ -178,7 +178,7 @@ lazy val `hocones-sbt-plugin` =
       `hocones-common`,
       `hocones-parser`,
       `hocones-environment-files`,
-      `hocones-meta-files`,
+      `hocones-meta-file`,
       `hocones-md-docs`
     )
 
@@ -186,7 +186,7 @@ lazy val root = (project in file("."))
   .aggregate(
     `hocones-common`,
     `hocones-parser`,
-    `hocones-meta-files`,
+    `hocones-meta-file`,
     `hocones-statistics`,
     `hocones-environment-files`,
     `hocones-md-docs`,

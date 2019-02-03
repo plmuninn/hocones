@@ -4,7 +4,7 @@ import cats.implicits._
 import cats.effect.{Resource, SyncIO}
 import io.circe.Json
 import io.circe.yaml.parser
-import pl.onewebpro.hocones.common.file.{HoconFileUtils, InputFileValidator}
+import pl.onewebpro.hocones.common.file.{tagInputFile, InputFileValidator}
 import pl.onewebpro.hocones.meta.error.MetaError
 import pl.onewebpro.hocones.meta.file.MetaFileWriter.MetaFile
 
@@ -14,7 +14,7 @@ object MetaFileReader {
 
   def read(metaFile: MetaFile): SyncIO[Json] =
     for {
-      inputFile <- SyncIO.pure(HoconFileUtils.tagInputFile(metaFile))
+      inputFile <- SyncIO.pure(tagInputFile(metaFile))
       _ <- SyncIO.fromEither(InputFileValidator.validate(inputFile).leftMap(error => MetaError(error.message)))
       text <- Resource
         .fromAutoCloseable(SyncIO(Source.fromFile(metaFile)))
