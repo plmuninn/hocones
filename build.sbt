@@ -117,6 +117,7 @@ val `hocones-parser` =
 val `hocones-meta-file` =
   (project in file("hocones-meta-file"))
     .settings(defaultSettings)
+    .enablePlugins(BuildInfoPlugin)
     .settings(
       name := "hocones-meta-file",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),
