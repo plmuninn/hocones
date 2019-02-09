@@ -15,7 +15,6 @@ object ResultTypeParser {
 
   import pl.onewebpro.hocones.parser.ops.HoconOps._
 
-  //TODO test me
   def parse(path: Path, value: ResultType, configValue: ConfigValue)(implicit cfg: Config): IO[HoconResultValue] =
     value match {
       case ResultType.LIST =>

@@ -24,13 +24,11 @@ object ComposedConfigValue {
   private def tagPattern(pattern: String): HoconPattern =
     tag[PatternTag][String](pattern)
 
-  //TODO test me
   private[simple] def isComposedValue(value: String): Boolean =
     EnvironmentValue.containsEnv(value) && EnvironmentValue.envRegex
       .replaceAllIn(value, "")
       .nonEmpty
 
-  //TODO test me
   private[simple] def extractValues(value: String): IO[List[SimpleHoconValue]] = {
     type Acc = List[IO[SimpleHoconValue]]
 
@@ -60,7 +58,6 @@ object ComposedConfigValue {
     split(value, Nil).sequence
   }
 
-  //TODO test me
   def apply(value: String): IO[ComposedConfigValue] =
     if (!isComposedValue(value))
       IO.raiseError(ParsingError(s"Value $value is not composed value"))

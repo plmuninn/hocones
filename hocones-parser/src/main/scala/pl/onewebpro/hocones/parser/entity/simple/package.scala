@@ -8,7 +8,6 @@ package object simple {
 
   trait ReferenceTypeValue extends SimpleHoconValue
 
-  //TODO test me
   object SimpleHoconValue {
 
     def apply(value: String): IO[SimpleHoconValue] =
