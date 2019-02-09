@@ -22,3 +22,7 @@ pipelines:
 #          - sbt hocones-common/test
 #          - sbt hocones-statistics/test
 #          - sbt hocones-md-docs/test
+definitions:
+  caches:
+    sbt: ~/.sbt
+    ivy2: ~/.ivy2/cache
