@@ -4,7 +4,6 @@ import io.circe._
 import io.circe.Decoder._
 import io.circe.generic.semiauto._
 
-// TODO Refactor me plis
 object JsonCodecs {
 
   private val hoconVersionK = "hocones-version"
@@ -65,7 +64,6 @@ object JsonCodecs {
   implicit val metaGenericDecoder: Decoder[MetaGenericInformation] =
     deriveDecoder[MetaGenericInformation]
 
-  // TODO change decoding or use shaplesss for it
   implicit private val metaValueDecoder: Decoder[MetaValue] =
     new Decoder[MetaValue] {
       override def apply(c: HCursor): Result[MetaValue] =

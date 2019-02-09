@@ -1,7 +1,8 @@
 package pl.onewebpro.hocones.env.model.show
 
 import cats.implicits._
-import pl.onewebpro.hocones.env.model.{DefaultValue, EnvironmentValue}
+import pl.onewebpro.hocones.common.DefaultValue.{tagDefaultValue, DefaultValue}
+import pl.onewebpro.hocones.env.model.EnvironmentValue
 import pl.onewebpro.hocones.env.model.comment.MetaInformationComments.Description
 import pl.onewebpro.hocones.env.model.comment.{FileName, IsOptional, Path}
 import pl.onewebpro.hocones.env.{model, TestSpec}
@@ -30,7 +31,7 @@ class ShowingTest extends TestSpec {
   }
 
   "showDefaultValue" should "show default value properly" in {
-    Option(model.tagDefaultValue("1234")).show shouldBe "1234"
+    Option(tagDefaultValue("1234")).show shouldBe "1234"
     Option.empty[DefaultValue].show shouldBe ""
   }
 
@@ -45,7 +46,7 @@ class ShowingTest extends TestSpec {
     EnvironmentValue(
       name = model.tagName("VALUE"),
       defaultValue = Option(
-        model.tagDefaultValue("1234")
+        tagDefaultValue("1234")
       ),
       comments = Iterable(
         IsOptional(true),

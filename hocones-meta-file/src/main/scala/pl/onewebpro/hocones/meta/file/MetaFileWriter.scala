@@ -3,7 +3,7 @@ package pl.onewebpro.hocones.meta.file
 import java.io.{File, PrintWriter}
 
 import cats.effect.{Resource, SyncIO}
-import cats.implicits._
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import io.circe.Json
 import io.circe.yaml.Printer
 import shapeless.tag
@@ -33,7 +33,11 @@ object MetaFileWriter {
     } yield metaFile
 
   private[file] def createIfNotExists(file: MetaFile): SyncIO[Unit] =
-    if (!file.exists()) SyncIO(file.createNewFile()) *> SyncIO.unit
+    if (!file.exists()) for {
+      logger <- Slf4jLogger.create[SyncIO]
+      _ <- SyncIO(file.createNewFile())
+      _ <- logger.debug(s"Meta file ${file.getAbsolutePath} created")
+    } yield ()
     else SyncIO.unit
 
   def printToFile(file: MetaFile, json: Json): SyncIO[Unit] =

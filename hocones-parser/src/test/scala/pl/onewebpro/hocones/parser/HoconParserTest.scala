@@ -1,8 +1,7 @@
-package pl.onewebpro.hoco.utils.parser
+package pl.onewebpro.hocones.parser
 
 import com.typesafe.config.Config
 import pl.onewebpro.hocones.parser.entity.simple.EnvironmentValue
-import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
 
 class HoconParserTest extends TestSpec {
 

@@ -47,22 +47,25 @@ package object model {
   object MetaInformation {
 
     def sortMetaInformation(information: MetaInformation): MetaInformation = {
-      val sortedRoots = ListMap(
-        information.roots.toSeq
-          .map {
-            case (key, values) =>
-              key -> ListMap(
-                values.toSeq
-                  .map({
-                    case (subKey, elements) => subKey -> elements.sortBy(_.name)
-                  })
-                  .sortBy(_._1): _*
-              )
-          }
-          .sortBy(_._1): _*
-      )
+      val sorted: Seq[(String, ListMap[String, Seq[MetaValue]])] = information.roots.toSeq
+        .map {
+          case (key, values) =>
+            val sortedSubSet: Seq[(String, Seq[MetaValue])] = values.toSeq
+              .map {
+                case (subKey, elements) => subKey -> elements.sortBy(_.name)
+              }
+              .sortBy {
+                case (subKey, _) => subKey
+              }
 
-      val sortedOrphans = information.orphans.sortBy(_.name)
+            key -> ListMap(sortedSubSet: _*)
+        }
+        .sortBy {
+          case (key, _) => key
+        }
+
+      val sortedRoots = ListMap(sorted: _*)
+      val sortedOrphans: Seq[MetaValue] = information.orphans.sortBy(_.name)
 
       information.copy(roots = sortedRoots, orphans = sortedOrphans)
     }

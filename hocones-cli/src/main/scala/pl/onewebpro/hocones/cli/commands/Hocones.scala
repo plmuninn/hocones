@@ -12,7 +12,7 @@ import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.docs.TableAlignment
 import pl.onewebpro.hocones.cli.arguments.environment.{RemoveDuplicates, WithComments, WithDefaults}
 import pl.onewebpro.hocones.md.config.Configuration.{TableAlignment => MTableAlignment}
-import pl.onewebpro.hocones.meta.MetaGenerator
+import pl.onewebpro.hocones.meta.MetaFile
 import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
@@ -64,7 +64,7 @@ object Hocones {
       case (command, result) =>
         for {
           _ <- putStrLn(Color.Green("Generating file with meta information"))
-          metaResult <- MetaGenerator(MetaConfiguration(input = command.input), result).toIO
+          metaResult <- MetaFile.load(MetaConfiguration(input = command.input), result).toIO
           (metaFile, metaInformation) = metaResult
           _ <- putStrLn(Color.Green("Generated meta file ") ++ metaFile.getPath)
         } yield (result, metaInformation)

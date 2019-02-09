@@ -1,6 +1,7 @@
 package pl.onewebpro.hocones.meta
 
 import cats.effect.SyncIO
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import pl.onewebpro.hocones.common.implicits
 import pl.onewebpro.hocones.meta.BuildInfo.version
 import pl.onewebpro.hocones.meta.error.MetaError
@@ -189,8 +190,9 @@ object MetaParser {
 
   private[meta] def roots(hocones: HoconResult): SyncIO[Map[String, Map[String, Seq[MetaValue]]]] =
     for {
-      hocones <- SyncIO.pure(hocones)
+      logger <- Slf4jLogger.create[SyncIO]
       rootsKeys = generateRoots(hocones)
+      _ <- logger.debug(s"Root keys: ${rootsKeys.mkString(";\n")}")
       generatedMetaValues = generateMetaValues(rootsKeys, hocones)
       filteredMetaValues = generatedMetaValues.filterNot {
         case (_, value) => value.isEmpty
@@ -199,7 +201,12 @@ object MetaParser {
 
   def generate(hocones: HoconResult): SyncIO[MetaInformation] =
     for {
+      logger <- Slf4jLogger.create[SyncIO]
       rootsResult <- roots(hocones)
+      _ <- logger.debug("Roots with results:")
+      _ <- logger.debug(pprint.tokenize(rootsResult).mkString(""))
       orphansResult = orphans(hocones)
+      _ <- logger.debug("Orphans:")
+      _ <- logger.debug(orphansResult.toString())
     } yield MetaInformation.apply(version, rootsResult, orphansResult)
 }

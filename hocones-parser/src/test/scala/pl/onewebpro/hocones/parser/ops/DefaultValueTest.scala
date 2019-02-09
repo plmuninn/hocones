@@ -1,12 +1,11 @@
-package pl.onewebpro.hocones.env.model
+package pl.onewebpro.hocones.parser.ops
 
 import com.typesafe.config.ConfigValue
 import org.scalamock.scalatest.MockFactory
-import pl.onewebpro.hocones.env.TestSpec
+import pl.onewebpro.hocones.parser.TestSpec
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity._
-import pl.onewebpro.hocones.parser.entity.simple.{NotResolvedRef, ResolvedRef, SimpleValue}
-import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue => HEnvironmentValue}
+import pl.onewebpro.hocones.parser.entity.simple.{NotResolvedRef, ResolvedRef, SimpleValue, EnvironmentValue => HEnvironmentValue}
 
 class DefaultValueTest extends TestSpec with MockFactory {
 
@@ -35,7 +34,6 @@ class DefaultValueTest extends TestSpec with MockFactory {
 
     DefaultValue.extractDefaultValue(resolvedRef).isDefined shouldBe true
     DefaultValue.extractDefaultValue(resolvedRef).get shouldBe "1234"
-
     DefaultValue.extractDefaultValue(hoconResolvedReference).isDefined shouldBe true
     DefaultValue.extractDefaultValue(hoconResolvedReference).get shouldBe "1234"
   }

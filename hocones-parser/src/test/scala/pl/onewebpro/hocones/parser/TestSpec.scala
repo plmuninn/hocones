@@ -1,4 +1,4 @@
-package pl.onewebpro.hoco.utils.parser
+package pl.onewebpro.hocones.parser
 
 import java.io.File
 
