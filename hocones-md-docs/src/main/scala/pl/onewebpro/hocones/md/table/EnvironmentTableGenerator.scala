@@ -1,6 +1,7 @@
 package pl.onewebpro.hocones.md.table
 
 import cats.effect.SyncIO
+import pl.muninn.scalamdtag.tags.Markdown
 import pl.onewebpro.hocones.common.DefaultValue.DefaultValue
 import pl.onewebpro.hocones.common.implicits.Path
 import pl.onewebpro.hocones.meta.document.model.Documentation
@@ -57,7 +58,7 @@ object EnvironmentTableGenerator {
         }
     }
 
-  def generateTable(values: Seq[EnvironmentTableElement]): String = {
+  def generateTable(values: Seq[EnvironmentTableElement]): Markdown = {
     import pl.muninn.scalamdtag._
 
     markdown(
@@ -68,14 +69,14 @@ object EnvironmentTableGenerator {
           case Some(tupled) => tupled
         }
       )
-    ).md
+    )
   }
 
   def generate(
     result: HoconResult,
     meta: MetaInformation,
     documentation: Documentation
-  ): SyncIO[String] =
+  ): SyncIO[Markdown] =
     SyncIO(result.results.extractWithPath[EnvironmentValue])
       .map { values =>
         values.flatMap {

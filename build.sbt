@@ -85,7 +85,7 @@ val fp = Seq(
 )
 
 val markdown = Seq(
-  "pl.muninn" %% "scala-md-tag" % "0.2"
+  "pl.muninn" %% "scala-md-tag" % "0.2.1"
 )
 
 val scalaTestVersion = "3.0.5"
@@ -118,6 +118,10 @@ val `hocones-meta-file` =
   (project in file("hocones-meta-file"))
     .settings(defaultSettings)
     .enablePlugins(BuildInfoPlugin)
+    .settings(
+      buildInfoKeys := Seq[BuildInfoKey](name, version),
+      buildInfoPackage := "pl.onewebpro.hocones.meta"
+    )
     .settings(
       name := "hocones-meta-file",
       libraryDependencies ++= (logs ++ fp ++ circe ++ tests),

@@ -31,14 +31,16 @@ package object model {
       }
   }
 
-  sealed trait Document[T <: HoconResultValue] {
+  trait Document[T <: HoconResultValue] {
     def path: Path
 
     def metaInformation: MetaValue
 
     def value: T
 
-    def name: String = path.name
+    def name: String = metaInformation.name
+
+    def description: Option[String] = metaInformation.description
 
     def packageName: String = path.packageName
 
@@ -174,6 +176,11 @@ package object model {
   case class ResolvedReferenceDocument(path: Path, metaInformation: MetaValue, value: HoconResolvedReference)
       extends Document[HoconResolvedReference] {
     val details: Map[String, String] = generateDetails(metaInformation)
+
+    val defaultValue: Option[DefaultValue] = value.value match {
+      case merged: HoconMergedValues => merged.extractDefaultValue
+      case _                         => None
+    }
   }
 
   case class ValueDocument(path: Path, metaInformation: MetaValue, value: HoconValue) extends Document[HoconValue] {

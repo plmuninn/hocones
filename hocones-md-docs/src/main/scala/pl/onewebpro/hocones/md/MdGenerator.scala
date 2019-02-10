@@ -4,6 +4,8 @@ import cats.effect.SyncIO
 import cats.implicits._
 import pl.onewebpro.hocones.common.file._
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableConfiguration}
+import pl.onewebpro.hocones.md.document.MarkdownDocumentation
+import pl.onewebpro.hocones.md.document.renderer.DocumentRenderer
 import pl.onewebpro.hocones.md.file.DocumentationWriter
 import pl.onewebpro.hocones.md.table.EnvironmentTableGenerator
 import pl.onewebpro.hocones.meta.document.model.Documentation
@@ -30,7 +32,8 @@ object MdGenerator {
 
       writer = new DocumentationWriter(outputFile)
 
-      text <- EnvironmentTableGenerator.generate(result, meta, documentation)
+      table <- EnvironmentTableGenerator.generate(result, meta, documentation)
+      text = table.md
       _ <- writer.write(text)
     } yield ()
 
@@ -46,7 +49,8 @@ object MdGenerator {
       )
 
       writer = new DocumentationWriter(outputFile)
-      text <- MarkdownDocumentation.fromDocumentation(documentation)
+      markdownDocumentation <- MarkdownDocumentation.fromDocumentation(documentation)(DocumentRenderer.renderer)
+      text = markdownDocumentation.md
       _ <- writer.write(text)
     } yield ()
 
