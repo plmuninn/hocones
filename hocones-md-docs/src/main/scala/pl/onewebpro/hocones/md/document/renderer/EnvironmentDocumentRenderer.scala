@@ -9,7 +9,7 @@ object EnvironmentDocumentRenderer {
 
   lazy val renderer: DocumentToMarkdown[EnvironmentDocument] = { document =>
     frag(
-      frag(b("Environment name:"), document.environmentName),br,
+      frag(b("Environment name:"), document.environmentName) + br,
       frag(b("Is optional:"), document.isOptional.toString)
     )
   }

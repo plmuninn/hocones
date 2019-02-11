@@ -9,8 +9,7 @@ object ValueDocumentRenderer extends CommonRenderingOps {
   lazy val renderer: DocumentToMarkdown[ValueDocument] = { document =>
     template(document) {
       frag(
-        frag(b("Value is quoted:"), document.quoted.toString),
-        br,
+        frag(b("Value is quoted:"), document.quoted.toString) + br,
         frag(b("Type of value:"), document.valueType)
       )
     }

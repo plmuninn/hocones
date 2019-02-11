@@ -10,8 +10,7 @@ object ReferenceValueDocumentRenderer extends CommonRenderingOps {
   lazy val renderer: DocumentToMarkdown[ReferenceValueDocument] = { document =>
     template(document) {
       frag(
-        frag(b("Reference to:"), document.value.result.name),
-        br,
+        frag(b("Reference to:"), document.value.result.name) + br,
         frag(b("Is optional:"), document.value.result.isOptional.toString)
       )
     }

@@ -2,12 +2,10 @@ package pl.onewebpro.hocones.md.document.renderer
 
 import pl.muninn.scalamdtag.tags.Markdown
 import pl.onewebpro.hocones.meta.document.model.Document
+import pl.muninn.scalamdtag._
+import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef}
 
 trait CommonRenderingOps {
-
-  import pl.muninn.scalamdtag._
-
-  private val empty = text("")
 
   protected def title(document: Document[_]): Markdown = h2(document.path)
 
@@ -43,16 +41,62 @@ trait CommonRenderingOps {
   protected def template(document: Document[_])(body: Markdown): Markdown =
     p(
       title(document),
-      name(document),
-      br,
-      typeName(document),
-      br,
-      from(document).map(value => frag(value, br)).getOrElse(empty),
-      description(document).map(value => frag(value, br)).getOrElse(empty),
-      body,
-      br,
-      packageName(document),
-      br,
-      details(document).map(value => frag(value, br)).getOrElse(empty)
+      name(document) + br,
+      typeName(document) + br,
+      from(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty),
+      description(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty),
+      body + br,
+      packageName(document) + br,
+      details(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty)
     )
+}
+
+object CommonRenderingOps {
+
+  val empty: Markdown = text("")
+
+  def environmentTable(values: Iterable[EnvironmentValue]): Option[Markdown] =
+    if (values.isEmpty) None
+    else
+      Some {
+        frag(
+          b("Environment values:"),
+          table(
+            ("Name", "Is optional"),
+            values.map { environmentValue =>
+              (environmentValue.name, environmentValue.isOptional.toString)
+            }
+          )
+        )
+      }
+
+  def references(values: Iterable[ResolvedRef]): Option[Markdown] =
+    if (values.isEmpty) None
+    else
+      Some {
+        frag(
+          b("Reference values:"),
+          table(
+            ("Reference to", "Is optional"),
+            values.map { resolvedRef =>
+              (resolvedRef.reference.name, resolvedRef.reference.isOptional.toString)
+            }
+          )
+        )
+      }
+
+  def unresolvedReferences(values: Iterable[NotResolvedRef]): Option[Markdown] =
+    if (values.isEmpty) None
+    else
+      Some {
+        frag(
+          b("Not resolved reference values:"),
+          table(
+            ("Reference to", "Is optional"),
+            values.map { reference =>
+              (reference.name, reference.isOptional.toString)
+            }
+          )
+        )
+      }
 }

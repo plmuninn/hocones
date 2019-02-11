@@ -6,6 +6,7 @@ import pl.onewebpro.hocones.meta.document.model.DocumentType.DocumentType
 import pl.onewebpro.hocones.meta.model.MetaValue
 import pl.onewebpro.hocones.parser.`type`.SimpleValueType
 import pl.onewebpro.hocones.parser.entity._
+import pl.onewebpro.hocones.parser.entity.simple.ComposedConfigValue.HoconPattern
 import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef}
 
 package object model {
@@ -101,6 +102,8 @@ package object model {
 
     import pl.onewebpro.hocones.parser.ops.HoconOps._
 
+    val size: Int = value.values.size
+
     val environments: Iterable[EnvironmentValue] = value.values.extract[EnvironmentValue]
 
     val references: Iterable[ResolvedRef] = value.values.extract[ResolvedRef]
@@ -115,6 +118,8 @@ package object model {
       with DocumentEnvironments
       with DocumentReferences
       with DocumentUnresolvedReferences {
+
+    val pattern: HoconPattern = value.value.pattern
 
     val environments: Iterable[EnvironmentValue] =
       value.value.values.collect {
@@ -158,6 +163,8 @@ package object model {
       with DocumentUnresolvedReferences {
 
     import pl.onewebpro.hocones.parser.ops.HoconOps._
+
+    val size: Int = value.values.size
 
     val environments: Iterable[EnvironmentValue] = value.values.extract[EnvironmentValue]
 
