@@ -16,7 +16,7 @@ object HoconResultTypeRenderer {
         frag(b("Size:"), value.size.toString, br).pure[Option],
         CommonRenderingOps
           .environmentTable(value.environments)
-          .map(_ + br),
+          .map(md => if (value.references.nonEmpty) md + br else md),
         CommonRenderingOps
           .references(value.references)
           .map(md => if (value.environments.nonEmpty) md + br else md),

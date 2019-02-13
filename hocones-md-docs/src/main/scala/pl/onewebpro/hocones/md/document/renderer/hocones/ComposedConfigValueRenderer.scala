@@ -16,7 +16,7 @@ object ComposedConfigValueRenderer {
         frag(b("Pattern:"), concatenation.pattern, br).pure[Option],
         CommonRenderingOps
           .environmentTable(concatenation.environments)
-          .map(_ + br),
+          .map(md => if (concatenation.references.nonEmpty) md + br else md),
         CommonRenderingOps
           .references(concatenation.references)
           .map(md => if (concatenation.environments.nonEmpty) md + br else md),
