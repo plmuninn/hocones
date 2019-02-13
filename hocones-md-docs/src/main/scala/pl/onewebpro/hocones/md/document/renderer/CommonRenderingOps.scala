@@ -1,30 +1,30 @@
 package pl.onewebpro.hocones.md.document.renderer
 
+import pl.muninn.scalamdtag._
 import pl.muninn.scalamdtag.tags.Markdown
 import pl.onewebpro.hocones.meta.document.model.Document
-import pl.muninn.scalamdtag._
 import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue, NotResolvedRef, ResolvedRef}
 
 trait CommonRenderingOps {
 
-  protected def title(document: Document[_]): Markdown = h2(document.path)
+  protected def title(document: Document): Markdown = h2(document.path)
 
-  protected def name(document: Document[_]): Markdown =
+  protected def name(document: Document): Markdown =
     frag(b("Name:"), document.name)
 
-  protected def description(document: Document[_]): Option[Markdown] =
-    document.description.map(value => p(b("Description:"), value))
+  protected def description(document: Document): Option[Markdown] =
+    document.description.map(value => frag(b("Description:"), value))
 
-  protected def packageName(document: Document[_]): Markdown =
+  protected def packageName(document: Document): Markdown =
     frag(b("Package:"), document.packageName)
 
-  protected def from(document: Document[_]): Option[Markdown] =
-    document.from.map(from => p(b("From file:"), from))
+  protected def from(document: Document): Option[Markdown] =
+    document.from.map(from => frag(b("From file:"), from))
 
-  protected def typeName(document: Document[_]): Markdown =
+  protected def typeName(document: Document): Markdown =
     frag(b("Type of configuration:"), document.typeName.toString)
 
-  protected def details(document: Document[_]): Option[Markdown] =
+  protected def details(document: Document): Option[Markdown] =
     if (document.details.isEmpty) None
     else
       Some {
@@ -38,16 +38,16 @@ trait CommonRenderingOps {
         )
       }
 
-  protected def template(document: Document[_])(body: Markdown): Markdown =
+  protected def template(document: Document)(body: Markdown): Markdown =
     p(
       title(document),
       name(document) + br,
-      typeName(document) + br,
-      from(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty),
-      description(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty),
+      typeName(document),
+      from(document).map(br + _ + br).getOrElse(CommonRenderingOps.empty),
+      description(document).map(br + _ + br).getOrElse(CommonRenderingOps.empty),
       body + br,
       packageName(document) + br,
-      details(document).map(value => frag(value, br)).getOrElse(CommonRenderingOps.empty)
+      details(document).getOrElse(CommonRenderingOps.empty)
     )
 }
 

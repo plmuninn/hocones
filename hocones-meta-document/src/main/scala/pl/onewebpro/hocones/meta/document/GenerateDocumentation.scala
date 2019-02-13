@@ -17,7 +17,7 @@ object GenerateDocumentation {
       }
       .flatMap(generateDocumentation(meta))
 
-  private[document] def mapToDocument(metaInformation: MetaInformation)(result: HoconResultValue): SyncIO[Document[_]] =
+  private[document] def mapToDocument(metaInformation: MetaInformation)(result: HoconResultValue): SyncIO[Document] =
     metaInformation.findByPathAndName(result.path) match {
       case Some(meta) =>
         result match {
@@ -44,7 +44,7 @@ object GenerateDocumentation {
 
   private[document] def generateDocumentation(
     metaInformation: MetaInformation
-  )(documents: List[Document[_]]): SyncIO[Documentation] =
+  )(documents: List[Document]): SyncIO[Documentation] =
     for {
       orphans <- SyncIO(documents.filter(_.path.isOrphan))
       roots <- SyncIO(

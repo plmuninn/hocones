@@ -5,7 +5,7 @@ import cats.implicits._
 import pl.onewebpro.hocones.common.file._
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableConfiguration}
 import pl.onewebpro.hocones.md.document.MarkdownDocumentation
-import pl.onewebpro.hocones.md.document.renderer.DocumentRenderer
+import pl.onewebpro.hocones.md.document.renderer.document.DocumentRenderer
 import pl.onewebpro.hocones.md.file.DocumentationWriter
 import pl.onewebpro.hocones.md.table.EnvironmentTableGenerator
 import pl.onewebpro.hocones.meta.document.model.Documentation
