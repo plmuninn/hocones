@@ -20,9 +20,7 @@ object ComposedConfigValueRenderer {
         CommonRenderingOps
           .references(concatenation.references)
           .map(md => if (concatenation.environments.nonEmpty) md + br else md),
-        CommonRenderingOps
-          .unresolvedReferences(concatenation.unresolvedReferences)
-          .map(md => if (concatenation.environments.nonEmpty || concatenation.references.nonEmpty) md + br else md),
+        CommonRenderingOps.unresolvedReferences(concatenation.unresolvedReferences),
       ).flatten
     )
   }

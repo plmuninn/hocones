@@ -21,8 +21,7 @@ object HoconResultTypeRenderer {
           .references(value.references)
           .map(md => if (value.environments.nonEmpty) md + br else md),
         CommonRenderingOps
-          .unresolvedReferences(value.unresolvedReferences)
-          .map(md => if (value.environments.nonEmpty || value.references.nonEmpty) md + br else md),
+          .unresolvedReferences(value.unresolvedReferences),
       ).flatten
     )
   }
