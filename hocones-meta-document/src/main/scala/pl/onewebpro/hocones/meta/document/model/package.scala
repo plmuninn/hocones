@@ -17,7 +17,7 @@ package object model {
     val ObjectDocument: DocumentType = Value("Object")
     val ReferenceValueDocument: DocumentType = Value("Unresolved reference")
     val ResolvedReferenceDocument: DocumentType = Value("Reference")
-    val ValueDocument: DocumentType = Value("Array")
+    val ValueDocument: DocumentType = Value("Basic value type")
   }
 
   case class Documentation(roots: Map[String, Seq[Document]], orphans: Seq[Document]) {

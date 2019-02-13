@@ -6,6 +6,6 @@ object SimpleValueRenderer {
   import pl.muninn.scalamdtag._
 
   lazy val renderer: ToMarkdown[SimpleValue] = { value =>
-    frag(b("Value"), value.value)
+    frag(b("Value:"), value.value)
   }
 }
