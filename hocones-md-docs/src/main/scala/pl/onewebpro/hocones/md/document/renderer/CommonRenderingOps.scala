@@ -28,7 +28,7 @@ trait CommonRenderingOps {
     if (document.details.isEmpty) None
     else
       Some {
-        p(
+        frag(
           b("Details:"),
           ul(
             document.details.map {
