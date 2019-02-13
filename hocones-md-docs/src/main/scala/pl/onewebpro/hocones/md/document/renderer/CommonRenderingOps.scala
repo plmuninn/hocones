@@ -38,17 +38,28 @@ trait CommonRenderingOps {
         )
       }
 
-  protected def template(document: Document)(body: Markdown): Markdown =
+  protected def template(document: Document)(body: Markdown): Markdown = {
+    val titleMarkdown: Markdown = title(document)
+    val nameMarkdown: Markdown = name(document) + br
+    val typeMarkdown: Markdown = typeName(document)
+
+    val fromFileMarkdownMaybe: Option[Markdown] = from(document).map(_ + br)
+    val descriptionMarkdownMaybe: Option[Markdown] = description(document).map(_ + br)
+    val bodyMarkdown: Markdown = body + br
+    val packageMarkdown: Markdown = packageName(document) + br
+    val detailsMarkdown: Option[Markdown] = details(document)
+
     p(
-      title(document),
-      name(document) + br,
-      typeName(document),
-      from(document).map(br + _ + br).getOrElse(CommonRenderingOps.empty),
-      description(document).map(br + _ + br).getOrElse(CommonRenderingOps.empty),
-      body + br,
-      packageName(document) + br,
-      details(document).getOrElse(CommonRenderingOps.empty)
+      titleMarkdown,
+      nameMarkdown,
+      fromFileMarkdownMaybe.orElse(descriptionMarkdownMaybe).map(_ => typeMarkdown + br).getOrElse(typeMarkdown),
+      fromFileMarkdownMaybe.getOrElse(CommonRenderingOps.empty),
+      descriptionMarkdownMaybe.getOrElse(CommonRenderingOps.empty),
+      bodyMarkdown,
+      packageMarkdown,
+      detailsMarkdown.getOrElse(CommonRenderingOps.empty)
     )
+  }
 }
 
 object CommonRenderingOps {
