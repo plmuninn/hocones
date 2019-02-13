@@ -1,5 +1,6 @@
 package pl.onewebpro.hocones.md.document.renderer
 
+import cats.implicits._
 import pl.muninn.scalamdtag._
 import pl.muninn.scalamdtag.tags.Markdown
 import pl.onewebpro.hocones.meta.document.model.Document
@@ -47,24 +48,28 @@ trait CommonRenderingOps {
     val descriptionMarkdownMaybe: Option[Markdown] = description(document).map(_ + br)
     val bodyMarkdown: Markdown = body + br
     val packageMarkdown: Markdown = packageName(document) + br
-    val detailsMarkdown: Option[Markdown] = details(document)
+    val detailsMaybeMarkdown: Option[Markdown] = details(document)
 
     p(
-      titleMarkdown,
-      nameMarkdown,
-      fromFileMarkdownMaybe.orElse(descriptionMarkdownMaybe).map(_ => typeMarkdown + br).getOrElse(typeMarkdown),
-      fromFileMarkdownMaybe.getOrElse(CommonRenderingOps.empty),
-      descriptionMarkdownMaybe.getOrElse(CommonRenderingOps.empty),
-      bodyMarkdown,
-      packageMarkdown,
-      detailsMarkdown.getOrElse(CommonRenderingOps.empty)
+      List(
+        titleMarkdown.pure[Option],
+        nameMarkdown.pure[Option],
+        fromFileMarkdownMaybe
+          .orElse(descriptionMarkdownMaybe)
+          .map(_ => typeMarkdown + br)
+          .getOrElse(typeMarkdown)
+          .pure[Option],
+        fromFileMarkdownMaybe,
+        descriptionMarkdownMaybe,
+        bodyMarkdown.pure[Option],
+        packageMarkdown.pure[Option],
+        detailsMaybeMarkdown,
+      ).flatten
     )
   }
 }
 
 object CommonRenderingOps {
-
-  val empty: Markdown = text("")
 
   def environmentTable(values: Iterable[EnvironmentValue]): Option[Markdown] =
     if (values.isEmpty) None

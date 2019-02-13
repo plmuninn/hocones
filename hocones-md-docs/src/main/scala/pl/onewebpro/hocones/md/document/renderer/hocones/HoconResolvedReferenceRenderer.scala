@@ -1,7 +1,8 @@
 package pl.onewebpro.hocones.md.document.renderer.hocones
+
+import cats.implicits._
 import pl.muninn.scalamdtag.tags.Markdown
 import pl.onewebpro.hocones.md.document.ToMarkdown
-import pl.onewebpro.hocones.md.document.renderer.CommonRenderingOps
 import pl.onewebpro.hocones.parser.entity.HoconResolvedReference
 
 object HoconResolvedReferenceRenderer {
@@ -16,8 +17,10 @@ object HoconResolvedReferenceRenderer {
       value.referenceValue.map(default => frag(b("Reference value:"), default))
 
     frag(
-      defaultValueMarkdown.map(_ => referenceValueMarkdown + br).getOrElse(referenceValueMarkdown),
-      defaultValueMarkdown.getOrElse(CommonRenderingOps.empty)
+      List(
+        defaultValueMarkdown.map(_ => referenceValueMarkdown + br).getOrElse(referenceValueMarkdown).pure[Option],
+        defaultValueMarkdown
+      ).flatten
     )
   }
 }
