@@ -1,6 +1,6 @@
 package pl.onewebpro.hocones.parser.ops
 
-import pl.onewebpro.hocones.common.DefaultValue.{DefaultValue, tagDefaultValue}
+import pl.onewebpro.hocones.common.DefaultValue.{tagDefaultValue, DefaultValue}
 import pl.onewebpro.hocones.parser.entity._
 import pl.onewebpro.hocones.parser.entity.simple.{ResolvedRef, SimpleValue}
 

@@ -15,8 +15,8 @@ object ResultRenderer {
     case value: HoconResolvedReference => HoconResolvedReferenceRenderer.renderer.toMd(value)
     case value: HoconReferenceValue    => HoconReferenceValueRenderer.renderer.toMd(value)
 
-    case value: NotResolvedRef         => NotResolvedRefRenderer.renderer.toMd(value)
-    case value: ResolvedRef            => ResolvedRefRenderer.renderer.toMd(value)
+    case value: NotResolvedRef => NotResolvedRefRenderer.renderer.toMd(value)
+    case value: ResolvedRef    => ResolvedRefRenderer.renderer.toMd(value)
 
     case value: HoconEnvironmentValue => HoconEnvironmentValueRenderer.renderer.toMd(value)
     case value: EnvironmentValue      => EnvironmentValueRenderer.renderer.toMd(value)
