@@ -18,7 +18,7 @@ pipelines:
           - sbt hocones-cli/test
           - sbt hocones-parser/test
           - sbt hocones-environment-files/test
-          - sbt hocones-meta/test
+          - sbt hocones-meta-file/test
 #          - sbt hocones-common/test
 #          - sbt hocones-statistics/test
 #          - sbt hocones-md-docs/test
