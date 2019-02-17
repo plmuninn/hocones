@@ -2,18 +2,18 @@ package pl.onewebpro.hocones.env
 
 import cats.effect.SyncIO
 import cats.implicits._
-import pl.onewebpro.hocones.common.io._
+import pl.onewebpro.hocones.common.file._
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.env.model.ModelGenerator
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
-import _root_.io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 
 object EnvironmentFileGenerator {
 
   type Command = (EnvironmentConfiguration, HoconResult, MetaInformation)
 
-  import pl.onewebpro.hocones.env.io._
+  import pl.onewebpro.hocones.env.file._
 
   val tagFiles: EnvironmentConfiguration => SyncIO[(OutputFile, ParentDirectory)] = { config =>
     for {

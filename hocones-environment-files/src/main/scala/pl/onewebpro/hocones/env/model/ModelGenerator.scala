@@ -1,12 +1,13 @@
 package pl.onewebpro.hocones.env.model
 
+import pl.onewebpro.hocones.common.DefaultValue.DefaultValue
 import pl.onewebpro.hocones.common.implicits.{Path => HPath}
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.env.model.comment.CommentsGenerator
 import pl.onewebpro.hocones.meta.model._
 import pl.onewebpro.hocones.parser.HoconResult
 import pl.onewebpro.hocones.parser.entity.simple.{EnvironmentValue => HoconEnvironmentValue}
-import pl.onewebpro.hocones.parser.ops.ExtractedValue
+import pl.onewebpro.hocones.parser.ops.{DefaultValue, ExtractedValue}
 
 object ModelGenerator {
 

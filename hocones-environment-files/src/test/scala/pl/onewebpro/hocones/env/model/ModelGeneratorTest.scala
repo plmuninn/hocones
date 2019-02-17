@@ -1,4 +1,6 @@
 package pl.onewebpro.hocones.env.model
+
+import pl.onewebpro.hocones.common.DefaultValue.tagDefaultValue
 import pl.onewebpro.hocones.env.TestSpec
 import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import pl.onewebpro.hocones.meta.model.MetaInformation

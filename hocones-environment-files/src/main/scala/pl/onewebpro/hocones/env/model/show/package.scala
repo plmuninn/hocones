@@ -2,6 +2,7 @@ package pl.onewebpro.hocones.env.model
 
 import cats.implicits._
 import cats.Show
+import pl.onewebpro.hocones.common.DefaultValue.DefaultValue
 import pl.onewebpro.hocones.env.model.comment.MetaInformationComments._
 import pl.onewebpro.hocones.env.model.comment._
 

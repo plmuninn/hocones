@@ -7,10 +7,11 @@ import com.monovore.decline.Opts
 import fansi.Color
 import pl.onewebpro.hocones.cli.arguments.InputFile.InputFile
 import pl.onewebpro.hocones.cli.arguments.{InputFile, OutputFile}
-import pl.onewebpro.hocones.cli.io.OutputFile.OutputFile
-import pl.onewebpro.hocones.cli.io.{OutputFile => IOOutputFile}
+import pl.onewebpro.hocones.cli.file.OutputFile.OutputFile
+import pl.onewebpro.hocones.cli.file.{OutputFile => IOOutputFile}
 import pl.onewebpro.hocones.md.MdGenerator
 import pl.onewebpro.hocones.md.config.Configuration.DocumentConfiguration
+import pl.onewebpro.hocones.meta.document.GenerateDocumentation
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
 
@@ -49,8 +50,9 @@ object EnvironmentDocs {
       for {
         documentConfiguration <- IO[DocumentConfiguration](environmentCommand)
         _ <- putStrLn(Color.Green("Generating documentation about environments"))
+        documentation <- GenerateDocumentation.generate(hocon, meta).toIO
         _ <- MdGenerator
-          .generateDocument(hocon, meta, documentConfiguration)
+          .generateDocument(hocon, documentation, documentConfiguration)
           .toIO
         _ <- putStrLn(
           Color

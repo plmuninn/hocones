@@ -5,7 +5,7 @@ import java.nio.file.Path
 
 import cats.data.{Validated, ValidatedNel}
 import com.monovore.decline.Opts
-import pl.onewebpro.hocones.cli.io.OutputFile.{tagOutputFile, OutputFile}
+import pl.onewebpro.hocones.cli.file.OutputFile.{tagOutputFile, OutputFile}
 
 object OutputFile {
 
