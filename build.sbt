@@ -182,6 +182,7 @@ val `hocones-cli` =
         case _                           => MergeStrategy.first
       }
     )
+    .enablePlugins(GraalVMNativeImagePlugin)
     .dependsOn(
       `hocones-environment-files`,
       `hocones-statistics`,
@@ -197,7 +198,9 @@ lazy val `hocones-sbt-plugin` =
       name := "hocones-sbt-plugin",
       libraryDependencies ++= (hocon ++ logs ++ fp),
       sbtPlugin := true,
-      sbtVersion := "1.2.3"
+      sbtVersion := "1.2.3",
+      libraryDependencies += "org.scala-sbt" %% "scripted-plugin" % sbtVersion.value,
+      scriptedBufferLog := false
     )
     .dependsOn(
       `hocones-common`,
