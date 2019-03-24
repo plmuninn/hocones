@@ -57,7 +57,7 @@ package object codecs {
   implicit val hoconValueToMetaValue: Codec[(Name, HoconValue), MetaValue] = {
     case (name, value) =>
       value.valueType match {
-        case SimpleValueType.UNQUOTED_STRING | SimpleValueType.QUOTED_STRING =>
+        case SimpleValueType.UNQUOTED_STRING | SimpleValueType.QUOTED_STRING | SimpleValueType.STRING =>
           MetaString(name = name, description = None, pattern = None, `min-length` = None, `max-length` = None)
         case SimpleValueType.INT | SimpleValueType.DOUBLE | SimpleValueType.LONG =>
           MetaNumber(name = name, description = None, `max-value` = None, `min-value` = None)
