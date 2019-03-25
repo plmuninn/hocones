@@ -7,7 +7,7 @@ import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, Tabl
 import pl.onewebpro.hocones.md.document.MarkdownDocumentation
 import pl.onewebpro.hocones.md.document.renderer.document.DocumentRenderer
 import pl.onewebpro.hocones.md.file.DocumentationWriter
-import pl.onewebpro.hocones.md.table.EnvironmentTableGenerator
+import pl.onewebpro.hocones.md.table.{EnvironmentTableElement, EnvironmentTableGenerator}
 import pl.onewebpro.hocones.meta.document.model.Documentation
 import pl.onewebpro.hocones.meta.model.MetaInformation
 import pl.onewebpro.hocones.parser.HoconResult
@@ -31,10 +31,15 @@ object MdGenerator {
       )
 
       writer = new DocumentationWriter(outputFile)
-
-      table <- EnvironmentTableGenerator.generate(result, meta, documentation)
-      text = table.md
-      _ <- writer.write(text)
+      values <- EnvironmentTableElement.generate(result, meta, documentation)
+      _ <- if (values.nonEmpty) {
+        for {
+          _ <- SyncIO.unit
+          table = EnvironmentTableGenerator.generateTable(values)
+          text = table.md
+          _ <- writer.write(text)
+        } yield ()
+      } else SyncIO.unit
     } yield ()
 
   def generateDocument(result: HoconResult, documentation: Documentation, config: DocumentConfiguration): SyncIO[Unit] =

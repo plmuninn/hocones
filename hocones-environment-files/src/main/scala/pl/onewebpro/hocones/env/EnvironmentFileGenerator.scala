@@ -49,7 +49,7 @@ object EnvironmentFileGenerator {
         _ <- logger.debug("Values generated:\n" + values.mkString(";\n"))
 
         _ <- logger.debug("Writing values to file")
-        _ <- writer.write(values)
+        _ <- if (values.nonEmpty) writer.write(values) else logger.debug("Ignoring - empty list")
       } yield ()
   }
 
