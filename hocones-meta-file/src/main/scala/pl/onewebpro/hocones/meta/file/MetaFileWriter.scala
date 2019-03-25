@@ -11,7 +11,7 @@ import shapeless.tag.@@
 
 object MetaFileWriter {
 
-  def fileName(file: File): String = file.getAbsolutePath + ".hmeta"
+  def fileName(file: File): String = file.getAbsolutePath + ".hmeta.yaml"
 
   private[MetaFileWriter] object MetaFileWriterInternal {
     type MetaFileTag

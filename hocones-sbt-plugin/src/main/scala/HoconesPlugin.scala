@@ -41,7 +41,8 @@ object HoconesPlugin extends AutoPlugin {
   lazy val popularIgnoredPaths = Set(
     "akka",
     "spark",
-    "slick"
+    "slick",
+    "monix"
   )
 
   override val trigger: PluginTrigger = noTrigger
@@ -53,11 +54,11 @@ object HoconesPlugin extends AutoPlugin {
   import autoImport._
 
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
+    unmanagedClasspath in Compile ++= (unmanagedResources in Compile).value,
     forPath := None,
     ignoredPaths := popularIgnoredPaths,
     configFileToLoad := None,
     pathForSave := None,
-    includeConfigsFromDependencies := true,
     createEnvironmentFile := true,
     environmentFileWithComments := true,
     environmentFileWithDefaults := true,
@@ -69,19 +70,8 @@ object HoconesPlugin extends AutoPlugin {
     compile in Compile := (compile in Compile).dependsOn(hoconesTask).value
   )
 
-  private lazy val internalClassLoaderTask = Def.task {
-    ClasspathUtilities.toLoader(Attributed.data((Compile / unmanagedClasspath).value))
-  }
-
-  private lazy val dependencyClassLoaderTask = Def.task {
+  private lazy val classLoaderTask = Def.task {
     ClasspathUtilities.toLoader(Attributed.data((Compile / dependencyClasspath).value))
-  }
-
-  private lazy val classLoaderTask = Def.taskDyn {
-    includeConfigsFromDependencies.flatMap {
-      case true  => dependencyClassLoaderTask.taskValue
-      case false => internalClassLoaderTask.taskValue
-    }
   }
 
   private lazy val loadedConfigTask = Def.taskDyn {
@@ -89,8 +79,8 @@ object HoconesPlugin extends AutoPlugin {
 
     configFileToLoad
       .map({
-        case Some(file) => ConfigFactory.parseFile(file)
-        case None       => ConfigFactory.load(classLoader)
+        case Some(file) => ConfigFactory.parseResourcesAnySyntax(classLoader, file.getName)
+        case None       => ConfigFactory.parseResourcesAnySyntax(classLoader, "application")
       })
   }
 
@@ -103,18 +93,24 @@ object HoconesPlugin extends AutoPlugin {
   }
 
   private lazy val inputFileNameTask = Def.taskDyn {
-    configFileToLoad.map(_.getOrElse(new File("application.conf")))
+    configFileToLoad.map(_.getOrElse(new File("application.conf"))).map(_.getName)
   }
 
   lazy val inputPathTask = Def.taskDyn {
+    val log = streams.value.log
     val fileToLoad = configFileToLoad.value
-    val pathName = inputFileNameTask.value.getName
-    val classLoader = classLoaderTask.value
+    val pathName = inputFileNameTask.value
+    val path = (resourceDirectory in Compile).value / "hocones"
 
     Def.task {
+      if (!path.exists()) {
+        log.info(s"Creating ${path.getAbsolutePath} dir")
+        path.mkdirs()
+      }
+
       fileToLoad match {
         case Some(pathToSave) => Paths.get(pathToSave + s"/$pathName")
-        case None             => Paths.get(classLoader.getResource(pathName).getPath)
+        case None             => Paths.get(path.getPath + s"/$pathName")
       }
     }
   }
@@ -136,6 +132,7 @@ object HoconesPlugin extends AutoPlugin {
   }
 
   private lazy val hoconesTask = Def.taskDyn[Unit] {
+    val log = streams.value.log
     val inputPath = inputPathTask.value
     val loadedConfig = configTask.value
 
@@ -153,12 +150,12 @@ object HoconesPlugin extends AutoPlugin {
       Paths.get(inputPath.toFile.getPath + ext)
 
     Def.task {
-      println(loadedConfig.render())
-
-
       val loadWithMeta: IO[(HoconResult, model.MetaInformation)] =
         for {
+          _ <- IO.unit
+          _ = log.info("Parsing configuration")
           result <- HoconParser(loadedConfig.toConfig)
+          _ = log.info("Loading metadata for configuration")
           metaFileWithMeta <- MetaFile.load(MetaConfiguration(input = inputPath.toFile), result).toIO
           (_, meta) = metaFileWithMeta
         } yield (result, meta)
@@ -172,6 +169,7 @@ object HoconesPlugin extends AutoPlugin {
             environmentFileWithDefaultsSetting,
             environmentWithoutDuplicatesSetting
           )
+          _ = log.info("Generating environment file for configuration")
           _ <- EnvironmentFileGenerator.run(config, hocon, meta).toIO
         } yield ()
         else IO.unit
@@ -181,6 +179,7 @@ object HoconesPlugin extends AutoPlugin {
           _ <- IO.unit
           tableConfig = TableConfiguration(getOutputPath(".env.md"), tableAlignmentTaskSetting)
           documentation <- GenerateDocumentation.generate(hocon, meta).toIO
+          _ = log.info("Generating environment table for configuration")
           _ <- MdGenerator
             .generateTable(hocon, meta, documentation, tableConfig)
             .toIO
@@ -190,8 +189,9 @@ object HoconesPlugin extends AutoPlugin {
       val docs: (HoconResult, MetaInformation) => IO[Unit] = (hocon: HoconResult, meta: MetaInformation) =>
         if (createDocumentationFileSetting) for {
           _ <- IO.unit
-          documentConfiguration = DocumentConfiguration(getOutputPath(".env.md"))
+          documentConfiguration = DocumentConfiguration(getOutputPath(".md"))
           documentation <- GenerateDocumentation.generate(hocon, meta).toIO
+          _ = log.info("Generating documentation for configuration")
           _ <- MdGenerator
             .generateDocument(hocon, documentation, documentConfiguration)
             .toIO
@@ -205,6 +205,7 @@ object HoconesPlugin extends AutoPlugin {
           _ <- environmentFile(hocon, meta)
           _ <- environmentDocs(hocon, meta)
           _ <- docs(hocon, meta)
+          _ = log.success("Hocones documentation generated")
         } yield ()).unsafeRunSync()
       } catch {
         case error: Throwable =>
