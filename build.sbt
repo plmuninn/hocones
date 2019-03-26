@@ -85,7 +85,7 @@ val fp = Seq(
 )
 
 val markdown = Seq(
-  "pl.muninn" %% "scala-md-tag" % "0.2.1"
+  "pl.muninn" %% "scala-md-tag" % "0.2.2"
 )
 
 val scalaTestVersion = "3.0.5"

@@ -1,4 +1,4 @@
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ConfigFactory, ConfigRenderOptions}
 import sbt.plugins.JvmPlugin
 import sbt._
 import Keys._
@@ -10,7 +10,7 @@ import java.nio.file.Paths
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
 import pl.onewebpro.hocones.md.MdGenerator
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableAlignment, TableConfiguration}
-import pl.onewebpro.hocones.meta.{model, MetaFile}
+import pl.onewebpro.hocones.meta.{MetaFile, model}
 import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
 import pl.onewebpro.hocones.meta.document.GenerateDocumentation
 import pl.onewebpro.hocones.meta.model.MetaInformation
@@ -154,6 +154,7 @@ object HoconesPlugin extends AutoPlugin {
         for {
           _ <- IO.unit
           _ = log.info("Parsing configuration")
+          _ = log.debug(loadedConfig.render(ConfigRenderOptions.concise().setFormatted(true)))
           result <- HoconParser(loadedConfig.toConfig)
           _ = log.info("Loading metadata for configuration")
           metaFileWithMeta <- MetaFile.load(MetaConfiguration(input = inputPath.toFile), result).toIO
