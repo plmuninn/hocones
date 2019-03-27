@@ -179,7 +179,6 @@ val `hocones-cli` =
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
       assemblyMergeStrategy in assembly := {
         case PathList("META-INF", _ @_*) => MergeStrategy.discard
-        case "logback.xml" => MergeStrategy.first
         case other: Any => MergeStrategy.defaultMergeStrategy(other)
       }
     )
