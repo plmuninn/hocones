@@ -199,20 +199,14 @@ object HoconesPlugin extends AutoPlugin {
         } yield ()
         else IO.unit
 
-      try {
-        (for {
-          hoconWithMeta <- loadWithMeta
-          (hocon, meta) = hoconWithMeta
-          _ <- environmentFile(hocon, meta)
-          _ <- environmentDocs(hocon, meta)
-          _ <- docs(hocon, meta)
-          _ = log.success("Hocones documentation generated")
-        } yield ()).unsafeRunSync()
-      } catch {
-        case error: Throwable =>
-          println(error.getMessage)
-          throw error
-      }
+      (for {
+        hoconWithMeta <- loadWithMeta
+        (hocon, meta) = hoconWithMeta
+        _ <- environmentFile(hocon, meta)
+        _ <- environmentDocs(hocon, meta)
+        _ <- docs(hocon, meta)
+        _ = log.success("Hocones documentation generated")
+      } yield ()).unsafeRunSync()
     }
   }
 
