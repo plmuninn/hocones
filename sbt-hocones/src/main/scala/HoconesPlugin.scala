@@ -10,7 +10,7 @@ import java.nio.file.Paths
 import pl.onewebpro.hocones.env.EnvironmentFileGenerator
 import pl.onewebpro.hocones.md.MdGenerator
 import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableAlignment, TableConfiguration}
-import pl.onewebpro.hocones.meta.{MetaFile, model}
+import pl.onewebpro.hocones.meta.{model, MetaFile}
 import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
 import pl.onewebpro.hocones.meta.document.GenerateDocumentation
 import pl.onewebpro.hocones.meta.model.MetaInformation
@@ -19,7 +19,7 @@ import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
 object HoconesPlugin extends AutoPlugin {
 
   // List of ignored paths - system paths
-  lazy val ignoredSystemPaths = Set(
+  lazy val ignoredSystemPaths = Seq(
     "gopherProxySet",
     "ftp",
     "os",
@@ -38,7 +38,7 @@ object HoconesPlugin extends AutoPlugin {
     "awt",
   )
 
-  lazy val popularIgnoredPaths = Set(
+  lazy val popularIgnoredPaths = Seq(
     "akka",
     "spark",
     "slick",
@@ -55,10 +55,10 @@ object HoconesPlugin extends AutoPlugin {
 
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     unmanagedClasspath in Compile ++= (unmanagedResources in Compile).value,
-    forPath := None,
+    loadConfigPath := None,
     ignoredPaths := popularIgnoredPaths,
-    configFileToLoad := None,
-    pathForSave := None,
+    configFileToLoad := (resourceDirectory in Compile).value / "application",
+    pathForSave := (resourceDirectory in Compile).value / "hocones",
     createEnvironmentFile := true,
     environmentFileWithComments := true,
     environmentFileWithDefaults := true,
@@ -75,43 +75,51 @@ object HoconesPlugin extends AutoPlugin {
   }
 
   private lazy val loadedConfigTask = Def.taskDyn {
+    val log = streams.value.log
     val classLoader = classLoaderTask.value
+    val fileToLoad = configFileToLoad.value
+    val defaultResourcesToLoad = (resourceDirectory in Compile).value
 
-    configFileToLoad
-      .map({
-        case Some(file) => ConfigFactory.parseResourcesAnySyntax(classLoader, file.getName)
-        case None       => ConfigFactory.parseResourcesAnySyntax(classLoader, "application")
-      })
-  }
+    Def.task {
+      log.info(s"Loading configuration file ${fileToLoad.getAbsolutePath}")
 
-  private lazy val configTask = Def.taskDyn {
-    loadedConfigTask.map { config =>
-      (ignoredSystemPaths ++ ignoredPaths.value).foldLeft(config.root) {
-        case (cfg, path) => cfg.withoutKey(path)
+      if (fileToLoad.getParentFile.getPath == defaultResourcesToLoad.getPath) {
+        ConfigFactory.parseResourcesAnySyntax(classLoader, fileToLoad.getName)
+      } else {
+        ConfigFactory.parseFileAnySyntax(fileToLoad)
       }
     }
   }
 
-  private lazy val inputFileNameTask = Def.taskDyn {
-    configFileToLoad.map(_.getOrElse(new File("application.conf"))).map(_.getName)
+  private lazy val configTask = Def.taskDyn {
+    val pathToLoad = loadConfigPath.value
+
+    loadedConfigTask
+      .map { config =>
+        (ignoredSystemPaths ++ ignoredPaths.value).foldLeft(config.root) {
+          case (cfg, path) => cfg.withoutKey(path)
+        }
+      }
+      .map { config =>
+        pathToLoad.map(path => config.withOnlyKey(path)).getOrElse(config)
+      }
   }
 
   lazy val inputPathTask = Def.taskDyn {
     val log = streams.value.log
     val fileToLoad = configFileToLoad.value
-    val pathName = inputFileNameTask.value
-    val path = (resourceDirectory in Compile).value / "hocones"
+    val pathName = fileToLoad.getName
+    val path = pathForSave.value
 
     Def.task {
+      log.info(s"Configuration will be saved in ${path.getAbsolutePath}")
+
       if (!path.exists()) {
         log.info(s"Creating ${path.getAbsolutePath} dir")
         path.mkdirs()
       }
 
-      fileToLoad match {
-        case Some(pathToSave) => Paths.get(pathToSave + s"/$pathName")
-        case None             => Paths.get(path.getPath + s"/$pathName")
-      }
+      Paths.get(path.getPath + s"/$pathName")
     }
   }
 

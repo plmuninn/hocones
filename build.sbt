@@ -192,11 +192,11 @@ val `hocones-cli` =
       `hocones-md-docs`
     )
 
-lazy val `hocones-sbt-plugin` =
-  (project in file("hocones-sbt-plugin"))
+lazy val `sbt-hocones` =
+  (project in file("sbt-hocones"))
     .settings(defaultSettings)
     .settings(
-      name := "hocones-sbt-plugin",
+      name := "sbt-hocones",
       libraryDependencies ++= (hocon ++ logs ++ fp),
       sbtPlugin := true,
       sbtVersion := "1.2.3",
