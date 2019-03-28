@@ -57,7 +57,7 @@ object HoconesPlugin extends AutoPlugin {
     unmanagedClasspath in Compile ++= (unmanagedResources in Compile).value,
     loadConfigPath := None,
     ignoredPaths := popularIgnoredPaths,
-    configFileToLoad := (resourceDirectory in Compile).value / "application",
+    configFile := (resourceDirectory in Compile).value / "application",
     pathForSave := (resourceDirectory in Compile).value / "hocones",
     createEnvironmentFile := true,
     environmentFileWithComments := true,
@@ -77,7 +77,7 @@ object HoconesPlugin extends AutoPlugin {
   private lazy val loadedConfigTask = Def.taskDyn {
     val log = streams.value.log
     val classLoader = classLoaderTask.value
-    val fileToLoad = configFileToLoad.value
+    val fileToLoad = configFile.value
     val defaultResourcesToLoad = (resourceDirectory in Compile).value
 
     Def.task {
@@ -107,7 +107,7 @@ object HoconesPlugin extends AutoPlugin {
 
   lazy val inputPathTask = Def.taskDyn {
     val log = streams.value.log
-    val fileToLoad = configFileToLoad.value
+    val fileToLoad = configFile.value
     val pathName = fileToLoad.getName
     val path = pathForSave.value
 

@@ -4,7 +4,7 @@ trait HoconesKeys {
   lazy val hocones = taskKey[Unit]("Re-run hocones")
   lazy val loadConfigPath = settingKey[Option[String]]("What path from config should be loaded")
   lazy val ignoredPaths = settingKey[Seq[String]]("What paths should be ignored")
-  lazy val configFileToLoad = settingKey[File]("Which config file should be loaded - default is application.conf")
+  lazy val configFile = settingKey[File]("Which config file should be loaded - default is application.conf")
   lazy val pathForSave = settingKey[File]("Where config file should be saved")
   lazy val createEnvironmentFile = settingKey[Boolean]("Should environment file be created - default true")
   lazy val environmentFileWithComments = settingKey[Boolean]("Should environment file contain comments - default true")
