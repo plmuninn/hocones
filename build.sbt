@@ -179,7 +179,7 @@ val `hocones-cli` =
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
       assemblyMergeStrategy in assembly := {
         case PathList("META-INF", _ @_*) => MergeStrategy.discard
-        case other: Any => MergeStrategy.defaultMergeStrategy(other)
+        case other: Any                  => MergeStrategy.defaultMergeStrategy(other)
       }
     )
     .enablePlugins(GraalVMNativeImagePlugin)
@@ -212,6 +212,14 @@ lazy val `sbt-hocones` =
     )
 
 lazy val root = (project in file("."))
+  .enablePlugins(MicrositesPlugin)
+  .settings(
+    mdocVariables := Map(
+      "VERSION" -> version.value
+    ),
+    micrositeName := "Hocones",
+    micrositeCompilingDocsTool := WithMdoc
+  )
   .aggregate(
     `hocones-common`,
     `hocones-parser`,
