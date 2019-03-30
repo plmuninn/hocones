@@ -5,6 +5,7 @@ object SimpleValueType extends Enumeration {
 
   val UNQUOTED_STRING = Value("com.typesafe.config.impl.ConfigString.Unquoted")
   val QUOTED_STRING = Value("com.typesafe.config.impl.ConfigString.Quoted")
+  val STRING = Value("com.typesafe.config.impl.ConfigString")
   val BOOLEAN = Value("com.typesafe.config.impl.ConfigBoolean")
   val DOUBLE = Value("com.typesafe.config.impl.ConfigDouble")
   val INT = Value("com.typesafe.config.impl.ConfigInt")

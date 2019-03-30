@@ -85,7 +85,7 @@ val fp = Seq(
 )
 
 val markdown = Seq(
-  "pl.muninn" %% "scala-md-tag" % "0.2.1"
+  "pl.muninn" %% "scala-md-tag" % "0.2.2"
 )
 
 val scalaTestVersion = "3.0.5"
@@ -179,7 +179,7 @@ val `hocones-cli` =
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
       assemblyMergeStrategy in assembly := {
         case PathList("META-INF", _ @_*) => MergeStrategy.discard
-        case _                           => MergeStrategy.first
+        case other: Any => MergeStrategy.defaultMergeStrategy(other)
       }
     )
     .enablePlugins(GraalVMNativeImagePlugin)
@@ -191,11 +191,11 @@ val `hocones-cli` =
       `hocones-md-docs`
     )
 
-lazy val `hocones-sbt-plugin` =
-  (project in file("hocones-sbt-plugin"))
+lazy val `sbt-hocones` =
+  (project in file("sbt-hocones"))
     .settings(defaultSettings)
     .settings(
-      name := "hocones-sbt-plugin",
+      name := "sbt-hocones",
       libraryDependencies ++= (hocon ++ logs ++ fp),
       sbtPlugin := true,
       sbtVersion := "1.2.3",

@@ -12,6 +12,7 @@ object HoconValuesOps {
     val mdName: String = value match {
       case SimpleValueType.UNQUOTED_STRING => "text"
       case SimpleValueType.QUOTED_STRING   => "text"
+      case SimpleValueType.STRING          => "text"
       case SimpleValueType.BOOLEAN         => "boolean"
       case SimpleValueType.DOUBLE          => "double"
       case SimpleValueType.INT             => "integer"
