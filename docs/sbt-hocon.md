@@ -1,29 +1,11 @@
-# Hocones
+# Sbt plugin
 
-Toolset for hocon format configuration. 
+Hocones sbt plugin will run and create documentation for your project in compilation time. 
+It will use project class loader - thanks of that all project configurations will be loaded. 
 
-It allow to create documentation, env files from hocon configuration using cli or sbt-plugin. 
+## Installation
 
-For more information go to [documentation pages](https://plmuninn.github.io/hocones/).
-
-
-## Sbt plugin
-
-To use it locally - you need to:
-
-* publish hocones
-
-```bash
-sbt publishLocal
-```
- 
-* publish plugin
-
-```bash
-sbt sbt-hocones/publishLocal
-```
-
-Then in project, you need to add in `project/plugins.sbt`:
+Add in project, you need to add in `project/plugins.sbt`:
 
 ```sbtshell
 addSbtPlugin("pl.muninn" % "sbt-hocones" % "0.1")

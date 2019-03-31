@@ -218,7 +218,12 @@ lazy val root = (project in file("."))
       "VERSION" -> version.value
     ),
     micrositeName := "Hocones",
-    micrositeCompilingDocsTool := WithMdoc
+    micrositeDescription := "Hocon configuration toolset and documentation library",
+    micrositeAuthor := "Maciej Romański Muninn Software",
+    micrositeGithubOwner := "plmuninn",
+    micrositeGithubRepo := "hocones",
+    micrositePushSiteWith := GHPagesPlugin,
+    micrositeCompilingDocsTool := WithMdoc,
   )
   .aggregate(
     `hocones-common`,
