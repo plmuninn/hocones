@@ -39,6 +39,7 @@ object EnvironmentTableElement {
         }.toList
       }
       .map(removeDuplicates)
+      .map(orderElements)
 
   def generateTableElement(
     meta: MetaInformation,
@@ -70,6 +71,9 @@ object EnvironmentTableElement {
       path = path
     )
   }
+
+  def orderElements(elements: Seq[EnvironmentTableElement]): Seq[EnvironmentTableElement] =
+    elements.sortBy(_.environmentVariable)
 
   def removeDuplicates(values: Seq[EnvironmentTableElement]): Seq[EnvironmentTableElement] =
     values.foldLeft(Vector.empty[EnvironmentTableElement]) {

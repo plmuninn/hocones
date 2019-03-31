@@ -51,11 +51,10 @@ object ValueTypeParser {
   private[parser] def parseAsValue(path: Path, value: String): IO[ConfigValue] =
     (for {
       parsed <- OptionT.liftF(IO {
-        ConfigFactory.parseString(s"""
-             | $path : $value
-       """.stripMargin)
+        ConfigFactory.parseString(s"""$path = $value""")
       })
-      value <- OptionT(IO(parsed.entrySet().asScala.find(_.getKey == path).map(_.getValue)))
+      // We need to replace " because sometimes indexes are prefixed by it
+      value <- OptionT(IO(parsed.entrySet().asScala.find(_.getKey.replace("\"", "") == path).map(_.getValue)))
     } yield value).value.flatMap {
       case Some(result) => IO.pure(result)
       case None =>
