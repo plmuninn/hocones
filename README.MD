@@ -1,5 +1,11 @@
 # Hocones
 
+Toolset for hocon format configuration
+
+[_] Documentation
+
+## Graal-vm build
+
 How to build using graal-vm native-image:
 
 * Download and install [graal-vm](https://www.graalvm.org/docs/getting-started/)
@@ -25,7 +31,7 @@ sbt sbt-hocones/publishLocal
 Then in project, you need to add in `project/plugins.sbt`:
 
 ```sbtshell
-addSbtPlugin("pl.onewebpro" % "sbt-hocones" % "0.1")
+addSbtPlugin("pl.muninn" % "sbt-hocones" % "0.1")
 ```
 
 And in `build.sbt` enable it

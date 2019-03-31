@@ -30,7 +30,7 @@ resolvers ++= Seq(
 val defaultSettings = Seq(
   version := "0.1",
   scalaVersion := "2.12.6",
-  organization := "pl.onewebpro",
+  organization := "pl.muninn",
   scalacOptions := compilerOptions
 )
 
@@ -120,7 +120,7 @@ val `hocones-meta-file` =
     .enablePlugins(BuildInfoPlugin)
     .settings(
       buildInfoKeys := Seq[BuildInfoKey](name, version),
-      buildInfoPackage := "pl.onewebpro.hocones.meta"
+      buildInfoPackage := "pl.muninn.hocones.meta"
     )
     .settings(
       name := "hocones-meta-file",
@@ -175,7 +175,7 @@ val `hocones-cli` =
     .settings(defaultSettings)
     .settings(
       name := "hocones-cli",
-      mainClass in assembly := Some("pl.onewebpro.hocones.cli.Main"),
+      mainClass in assembly := Some("pl.muninn.hocones.cli.Main"),
       libraryDependencies ++= (cli ++ hocon ++ logs ++ fp ++ tests),
       assemblyMergeStrategy in assembly := {
         case PathList("META-INF", _ @_*) => MergeStrategy.discard

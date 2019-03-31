@@ -4,17 +4,17 @@ import sbt._
 import Keys._
 import sbt.internal.inc.classpath.ClasspathUtilities
 import cats.effect.IO
-import pl.onewebpro.hocones.env.config.Configuration.EnvironmentConfiguration
 import java.nio.file.Paths
 
-import pl.onewebpro.hocones.env.EnvironmentFileGenerator
-import pl.onewebpro.hocones.md.MdGenerator
-import pl.onewebpro.hocones.md.config.Configuration.{DocumentConfiguration, TableAlignment, TableConfiguration}
-import pl.onewebpro.hocones.meta.{model, MetaFile}
-import pl.onewebpro.hocones.meta.config.Configuration.MetaConfiguration
-import pl.onewebpro.hocones.meta.document.GenerateDocumentation
-import pl.onewebpro.hocones.meta.model.MetaInformation
-import pl.onewebpro.hocones.parser.{HoconParser, HoconResult}
+import pl.muninn.hocones.env.config.Configuration.EnvironmentConfiguration
+import pl.muninn.hocones.env.EnvironmentFileGenerator
+import pl.muninn.hocones.md.MdGenerator
+import pl.muninn.hocones.md.config.Configuration.{DocumentConfiguration, TableAlignment, TableConfiguration}
+import pl.muninn.hocones.meta.{model, MetaFile}
+import pl.muninn.hocones.meta.config.Configuration.MetaConfiguration
+import pl.muninn.hocones.meta.document.GenerateDocumentation
+import pl.muninn.hocones.meta.model.MetaInformation
+import pl.muninn.hocones.parser.{HoconParser, HoconResult}
 
 object HoconesPlugin extends AutoPlugin {
 
