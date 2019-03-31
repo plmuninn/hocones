@@ -3,7 +3,6 @@ layout: home
 title:  "Home"
 section: "home"
 technologies:
- - first: ["Scala", "sbt-microsites plugin is completely written in Scala"]
- - second: ["SBT", "sbt-microsites plugin uses SBT and other sbt plugins to generate microsites easily"]
- - third: ["Jekyll", "Jekyll allows for the transformation of plain text into static websites and blogs."]
+ - first: ["Scala", "hocones is completely written in Scala"]
+ - second: ["SBT", "hocones uses SBT and other sbt plugins to generate microsites easily"]
 ---
