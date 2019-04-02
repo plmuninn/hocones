@@ -20,9 +20,9 @@ To do it:
 
 To generate full documentation - like in sbt application just run `./hocones-cli <path-to-configuration-file>`
 
-But you can also run single steps of application:
+But you can also run single commands of application:
 
-### Generate [environment file](https://docs.docker.com/compose/env-file/)
+### Generating [environment file](https://docs.docker.com/compose/env-file/)
 
 Usage:
 
@@ -39,7 +39,7 @@ Examples:
 * `./hocones-cli env-file --output ./my-project-environments.env --comments --defaults --remove-duplicates my-project/src/main/resources/application.conf`
 * `./hocones-cli env-file -o ./my-project-environments.env -c -d -r my-project/src/main/resources/application.conf`
 
-### Generate [markdown](https://en.wikipedia.org/wiki/Markdown) file with environment files 
+### Generating [markdown](https://en.wikipedia.org/wiki/Markdown) file with environment files 
 
 Usage:
 
@@ -55,7 +55,7 @@ Examples:
 * `./hocones-cli env-file --output ./env.md --alignment center my-project/src/main/resources/application.conf`
 * `./hocones-cli env-file -o ./env.md -a center my-project/src/main/resources/application.conf`
 
-### Generate [markdown](https://en.wikipedia.org/wiki/Markdown) file with documentation for whole configuration
+### Generating [markdown](https://en.wikipedia.org/wiki/Markdown) file with documentation for whole configuration
 
 Usage:
 
