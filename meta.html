@@ -1,0 +1,72 @@
+<html><head><title>Hocones: Meta file</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Maciej Romański Muninn Software" /><meta name="description" content="Hocon configuration toolset and documentation library" /><meta name="og:image" content="/hocones/img/poster.png" /><meta name="image" property="og:image" content="/hocones/img/poster.png" /><meta name="og:title" content="Hocones: Meta file" /><meta name="title" property="og:title" content="Hocones: Meta file" /><meta name="og:site_name" content="Hocones" /><meta name="og:url" content="https://plmuninn.github.io/hocones/" /><meta name="og:type" content="website" /><meta name="og:description" content="Hocon configuration toolset and documentation library" /><link rel="icon" type="image/png" href="/hocones/img/favicon.png" /><meta name="twitter:title" content="Hocones: Meta file" /><meta name="twitter:image" content="https://plmuninn.github.io/hocones/img/poster.png" /><meta name="twitter:description" content="Hocon configuration toolset and documentation library" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/hocones/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/hocones/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/hocones/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/hocones/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/hocones/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/hocones/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/hocones/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/hocones/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/hocones/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/hocones/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/hocones/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/hocones/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/hocones/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/hocones/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/hocones/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/hocones/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/hocones/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/hocones/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/hocones/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/hocones/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/hocones/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/hocones/css/style.css" /><link rel="stylesheet" href="/hocones/css/palette.css" /><link rel="stylesheet" href="/hocones/css/codemirror.css" /></head><body><header id="site-header"><div class="navbar-wrapper navbar-inverse"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/hocones/" class="brand"><div class="icon-wrapper"><span>Hocones</span></div></a></div><nav class="text-right"><ul class=""><li><a href="https://github.com/plmuninn/hocones"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li></ul></nav></div></div><div class="jumbotron" style="background-image:url('/hocones/img/jumbotron_pattern.png')"></div><div><ul class="horizontalNav">     <li><a class="" href="/hocones/">Home</a></li>  <li><a class=" active " href="/hocones/meta.html">Meta file</a></li>  <li><a class="" href="/hocones/cli.html">Cli Application</a></li>  <li><a class="" href="/hocones/sbt-hocon.html">Sbt plugin</a></li> </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h2 id="what-is-meta-file">What is meta file?</h2>
+
+<p>Meta file is simple representation of concatenated Hocon configuration that allows add some extra meta information for configuration key.</p>
+
+<h2 id="how-is-structured">How is structured?</h2>
+
+<p>File is itself <a href="https://en.wikipedia.org/wiki/YAML">yaml</a> grouped to three sections:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">hocones-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0.1'</span>
+<span class="na">roots</span><span class="pi">:</span>
+  <span class="na">root_path</span><span class="pi">:</span>
+    <span class="s">(path - root_path)</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">meta-information</span><span class="pi">:</span>
+<span class="na">orphans</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">meta-information</span><span class="pi">:</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">hocones-version</code> is for migration</li>
+  <li><code class="highlighter-rouge">roots</code> contains objects and values grouped with long paths</li>
+  <li><code class="highlighter-rouge">orphans</code> contains objects and values with super (single segment) or none paths</li>
+</ul>
+
+<p>Is structured like that to help finding looked values.</p>
+
+<h2 id="what-are-possible-meta-information-to-set">What are possible meta information to set?</h2>
+
+<p>Every value contains:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">name</code> - from config file</li>
+  <li><code class="highlighter-rouge">description</code> - you can give some comment about this value</li>
+</ul>
+
+<p>Then values are treated differently depending of type:</p>
+
+<ul>
+  <li>String literals:
+    <ul>
+      <li><code class="highlighter-rouge">pattern</code> - string value</li>
+      <li><code class="highlighter-rouge">min-length</code> - number value</li>
+      <li><code class="highlighter-rouge">max-length</code> - number value</li>
+    </ul>
+  </li>
+  <li>Numbers:
+    <ul>
+      <li><code class="highlighter-rouge">max-value</code> - number value</li>
+      <li><code class="highlighter-rouge">min-value</code> - number value</li>
+    </ul>
+  </li>
+  <li>Lists:
+    <ul>
+      <li><code class="highlighter-rouge">can-be-empty</code> - boolean value</li>
+      <li><code class="highlighter-rouge">element-type</code> - description of list elements</li>
+    </ul>
+  </li>
+  <li>Object:
+    <ul>
+      <li><code class="highlighter-rouge">element-type</code> - description of object children</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="why-we-need-it">Why we need it?</h2>
+
+<p>This file is used during generation of documentation</p>
+</div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Hocones is designed and developed by <a href="" target="_blank">Maciej Romański Muninn Software</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/plmuninn/hocones"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6"><p>Website built with <a href="https://47deg.github.io/sbt-microsites/" target="_blank">Sbt-microsites</a> - © 2016 <a href="https://www.47deg.com/" target="_blank">47 Degrees</a></p></div></div></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/hocones/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlighting();
+              </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'plmuninn/hocones'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script></body></html>
