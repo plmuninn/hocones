@@ -1,3 +1,4 @@
+import microsites._
 import sbt.Keys.scalaVersion
 
 name := "hocones"
@@ -218,7 +219,23 @@ lazy val root = (project in file("."))
       "VERSION" -> version.value
     ),
     micrositeName := "Hocones",
-    micrositeCompilingDocsTool := WithMdoc
+    micrositeDescription := "Hocon configuration toolset and documentation library",
+    micrositeUrl := "https://plmuninn.github.io",
+    micrositeBaseUrl := "/hocones",
+    micrositeHomepage := "https://plmuninn.github.io/hocones/",
+    micrositeAuthor := "Maciej Romański Muninn Software",
+    micrositeGithubOwner := "plmuninn",
+    micrositeGithubRepo := "hocones",
+    micrositeHighlightTheme := "atom-one-light",
+    micrositePushSiteWith := GHPagesPlugin,
+    micrositeCompilingDocsTool := WithMdoc,
+    micrositeExtraMdFiles := Map(
+      file("README.md") -> ExtraMdFileConfig(
+        "index.md",
+        "home",
+        Map("title" -> "Home", "section" -> "home", "position" -> "0")
+      )
+    )
   )
   .aggregate(
     `hocones-common`,

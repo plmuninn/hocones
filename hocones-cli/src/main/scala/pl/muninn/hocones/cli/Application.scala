@@ -4,10 +4,10 @@ import cats.data.Kleisli
 import cats.effect.Console.io.putStrLn
 import cats.effect.IO
 import fansi.Color
-import pl.muninn.hocones.cli.commands.Docs.DocsCommand
-import pl.muninn.hocones.cli.commands.Environment.EnvironmentCommand
 import pl.muninn.hocones.cli.commands.EnvironmentDocs.EnvironmentDocsCommand
-import pl.muninn.hocones.cli.commands.{CliCommand, Docs, Environment, EnvironmentDocs, Hocones, Statistics}
+import pl.muninn.hocones.cli.commands.Environment.EnvironmentCommand
+import pl.muninn.hocones.cli.commands.Docs.DocsCommand
+import pl.muninn.hocones.cli.commands.{CliCommand, EnvironmentDocs, Environment, Docs, Hocones, Statistics}
 
 object Application {
 
@@ -55,11 +55,11 @@ object Application {
         environmentCommand <- IO(EnvironmentCommand.fromCommand(cmd))
         _ <- Environment.environmentCommand.run((hocon, meta, environmentCommand))
 
-        environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
-        _ <- EnvironmentDocs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))
-
         docsCommand <- IO(DocsCommand.fromCommand(cmd))
         _ <- Docs.docsCommand.run((hocon, meta, docsCommand))
+
+        environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
+        _ <- EnvironmentDocs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))
 
         _ <- putStrLn(Color.Green("Done. Bye bye!"))
       } yield ()
