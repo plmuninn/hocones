@@ -12,13 +12,13 @@ It will use project class loader - thanks of that all project configurations wil
 
 ## Installation
 
-Add in project, you need to add in `project/plugins.sbt`:
+Add in `project/plugins.sbt`:
 
 ```sbtshell
 addSbtPlugin("pl.muninn" % "sbt-hocones" % "0.1")
 ```
 
-And in `build.sbt` enable it
+And in `build.sbt` to enable it:
 
 ```sbtshell
 lazy val root = (project in file("."))
@@ -27,14 +27,16 @@ lazy val root = (project in file("."))
 
 And this is it. Plugin will run during compilation.
 
-If you want to run it without compilation just run command `sbt hocones`
+If you want to run it without compilation just run command:
+ 
+`sbt hocones`
 
 ### Sbt plugin configurations
 
 * `hocones` - name of command to run
-* `configFile` - you can set path in config that should be used during generation of documentation - other paths will be ignored
+* `loadConfigPath` - you can set path in config that should be used during generation of documentation - other paths will be ignored
 * `ignoredPaths` - list of paths to ignore (like akka, monix etc.) - few popular paths are ignored by default
-* `configFileToLoad` - which configuration file should be loaded - default is application.conf
+* `configFile` - which configuration file should be loaded - default is application.conf
 * `pathForSave` - where documentation should be saved - default is `{module}/src/main/resources/hocones`
 * `createEnvironmentFile` - should env file be created - default true
 * `environmentFileWithComments` - should environment file contain comments - default true

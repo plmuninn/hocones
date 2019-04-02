@@ -3,10 +3,6 @@ layout: home
 title:  "Home"
 section: "home"
 position: 1
-technologies:
- - first: ["Scala", "hocones is completely written in Scala"]
- - second: []
- - third: ["SBT", "hocones uses SBT and other sbt plugins to generate microsites easily"]
 ---
 
 [![Build Status](https://travis-ci.com/plmuninn/hocones.svg?branch=master)](https://travis-ci.com/plmuninn/hocones)

@@ -1,7 +1,7 @@
 package pl.muninn.hocones.cli.commands
 
 import pl.muninn.hocones.cli.CliSpec
-import pl.muninn.hocones.cli.commands.EnvironmentDocs.EnvironmentDocsCommand
+import pl.muninn.hocones.cli.commands.Docs.EnvironmentDocsCommand
 
 class EnvironmentDocsTest extends CliSpec {
 
@@ -10,7 +10,7 @@ class EnvironmentDocsTest extends CliSpec {
     "{}"
   ) {
     withTestFile("./env-docs-test-output-file", "") {
-      testOpts(EnvironmentDocs.cmd, "env-docs -o ./env-docs-test-output-file ./env-docs-test-file") { result =>
+      testOpts(Docs.cmd, "env-docs -o ./env-docs-test-output-file ./env-docs-test-file") { result =>
         result.isRight shouldBe true
 
         result.right.get.input.getPath shouldBe "./env-docs-test-file"
@@ -28,7 +28,7 @@ class EnvironmentDocsTest extends CliSpec {
     "./env-docs-test-file",
     "{}"
   ) {
-    testOpts(EnvironmentDocs.cmd, "env-docs ./env-docs-test-file") { result =>
+    testOpts(Docs.cmd, "env-docs ./env-docs-test-file") { result =>
       result.isRight shouldBe true
 
       result.right.get.input.getPath shouldBe "./env-docs-test-file"

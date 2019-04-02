@@ -1,7 +1,7 @@
 package pl.muninn.hocones.cli.commands
 
 import pl.muninn.hocones.cli.CliSpec
-import pl.muninn.hocones.cli.commands.Docs.DocsCommand
+import pl.muninn.hocones.cli.commands.EnvironmentDocs.DocsCommand
 import pl.muninn.hocones.md.config.Configuration.{TableAlignment => MdTableAlignment}
 
 class DocsTest extends CliSpec {
@@ -9,7 +9,7 @@ class DocsTest extends CliSpec {
   "Docs.cmd" should "return proper command for output file and alignment arguments" in withTestFile("./docs-test-file",
                                                                                                     "{}") {
     withTestFile("./docs-test-output-file", "") {
-      testOpts(Docs.cmd, "docs -o ./docs-test-output-file -a right ./docs-test-file") { result =>
+      testOpts(EnvironmentDocs.cmd, "docs -o ./docs-test-output-file -a right ./docs-test-file") { result =>
         result.isRight shouldBe true
 
         result.right.get.input.getPath shouldBe "./docs-test-file"
@@ -25,7 +25,7 @@ class DocsTest extends CliSpec {
   }
 
   "Docs.cmd" should "return proper command for default arguments" in withTestFile("./docs-test-file", "{}") {
-    testOpts(Docs.cmd, "docs ./docs-test-file") { result =>
+    testOpts(EnvironmentDocs.cmd, "docs ./docs-test-file") { result =>
       result.isRight shouldBe true
 
       result.right.get.input.getPath shouldBe "./docs-test-file"

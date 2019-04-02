@@ -3,9 +3,9 @@ package pl.muninn.hocones.cli
 import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp, SyncIO}
 import cats.implicits._
-import pl.muninn.hocones.cli.commands.Docs.DocsCommand
+import pl.muninn.hocones.cli.commands.EnvironmentDocs.DocsCommand
 import pl.muninn.hocones.cli.commands.Environment.EnvironmentCommand
-import pl.muninn.hocones.cli.commands.EnvironmentDocs.EnvironmentDocsCommand
+import pl.muninn.hocones.cli.commands.Docs.EnvironmentDocsCommand
 import pl.muninn.hocones.cli.commands.{CliCommand, Hocones}
 import pl.muninn.hocones.cli.commands.Statistics.StatisticsCommand
 
