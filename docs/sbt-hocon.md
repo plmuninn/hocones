@@ -1,3 +1,10 @@
+---
+layout: page
+title:  "Sbt plugin"
+section: "Sbt plugin"
+position: 4
+---
+
 # Sbt plugin
 
 Hocones sbt plugin will run and create documentation for your project in compilation time. 

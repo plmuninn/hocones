@@ -235,16 +235,6 @@ lazy val root = (project in file("."))
         "home",
         Map("title" -> "Home", "section" -> "home", "position" -> "0")
       )
-    ),
-    micrositePalette := Map(
-      "brand-primary" -> "#E05236",
-      "brand-secondary" -> "#3F3242",
-      "brand-tertiary" -> "#2D232F",
-      "gray-dark" -> "#453E46",
-      "gray" -> "#837F84",
-      "gray-light" -> "#E3E2E3",
-      "gray-lighter" -> "#F4F3F4",
-      "white-color" -> "#FFFFFF"
     )
   )
   .aggregate(
