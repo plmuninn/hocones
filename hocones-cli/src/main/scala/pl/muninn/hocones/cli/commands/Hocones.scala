@@ -41,8 +41,8 @@ object Hocones {
   private val commandF: Opts[CliCommand] =
     Statistics.cmd
       .orElse(Environment.cmd)
-      .orElse(Docs.cmd)
       .orElse(EnvironmentDocs.cmd)
+      .orElse(Docs.cmd)
       .orElse(hoconesOpts)
 
   val cmd: Command[CliCommand] =

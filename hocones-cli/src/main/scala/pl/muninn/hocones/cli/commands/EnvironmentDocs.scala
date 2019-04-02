@@ -50,7 +50,7 @@ object EnvironmentDocs {
     )
   }
 
-  val docsCommand: Kleisli[IO, (HoconResult, MetaInformation, EnvironmentDocsCommand), Unit] = Kleisli {
+  val environmentDocsCommand: Kleisli[IO, (HoconResult, MetaInformation, EnvironmentDocsCommand), Unit] = Kleisli {
     case (hocon, meta, command) =>
       for {
         tableConfiguration <- IO[TableConfiguration](command)

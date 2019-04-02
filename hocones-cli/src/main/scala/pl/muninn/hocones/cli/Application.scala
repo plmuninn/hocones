@@ -30,14 +30,14 @@ object Application {
     Kleisli.ask[IO, EnvironmentDocsCommand].flatMap { cmd =>
       Hocones.parseAndLoadMetaInformation
         .map(result => result :+ cmd)
-        .andThen(Docs.environmentDocsCommand)
+        .andThen(EnvironmentDocs.environmentDocsCommand)
     }
 
   val runDocsCommand: Kleisli[IO, DocsCommand, Unit] =
     Kleisli.ask[IO, DocsCommand].flatMap { cmd =>
       Hocones.parseAndLoadMetaInformation
         .map(result => result :+ cmd)
-        .andThen(EnvironmentDocs.docsCommand)
+        .andThen(Docs.docsCommand)
     }
 
   val runFull: Kleisli[IO, CliCommand, Unit] =
@@ -55,11 +55,11 @@ object Application {
         environmentCommand <- IO(EnvironmentCommand.fromCommand(cmd))
         _ <- Environment.environmentCommand.run((hocon, meta, environmentCommand))
 
-        environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
-        _ <- Docs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))
-
         docsCommand <- IO(DocsCommand.fromCommand(cmd))
-        _ <- EnvironmentDocs.docsCommand.run((hocon, meta, docsCommand))
+        _ <- Docs.docsCommand.run((hocon, meta, docsCommand))
+
+        environmentDocsCommand <- IO(EnvironmentDocsCommand.fromCommand(cmd))
+        _ <- EnvironmentDocs.environmentDocsCommand.run((hocon, meta, environmentDocsCommand))
 
         _ <- putStrLn(Color.Green("Done. Bye bye!"))
       } yield ()

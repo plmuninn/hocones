@@ -1,7 +1,8 @@
 package pl.muninn.hocones.cli.commands
 
 import pl.muninn.hocones.cli.CliSpec
-import pl.muninn.hocones.cli.commands.Docs.EnvironmentDocsCommand
+import pl.muninn.hocones.cli.commands.EnvironmentDocs.EnvironmentDocsCommand
+import pl.muninn.hocones.md.config.Configuration.{TableAlignment => MdTableAlignment}
 
 class EnvironmentDocsTest extends CliSpec {
 
@@ -10,12 +11,13 @@ class EnvironmentDocsTest extends CliSpec {
     "{}"
   ) {
     withTestFile("./env-docs-test-output-file", "") {
-      testOpts(Docs.cmd, "env-docs -o ./env-docs-test-output-file ./env-docs-test-file") { result =>
+      testOpts(EnvironmentDocs.cmd, "env-docs -o ./env-docs-test-output-file -a right ./env-docs-test-file") { result =>
         result.isRight shouldBe true
 
         result.right.get.input.getPath shouldBe "./env-docs-test-file"
         result.right.get match {
           case cmd: EnvironmentDocsCommand =>
+            cmd.alignment shouldBe MdTableAlignment.Right
             cmd.output.isDefined shouldBe true
             cmd.output.get.getPath shouldBe "./env-docs-test-output-file"
           case _ => fail("Wrong type of returned command.")
@@ -28,12 +30,13 @@ class EnvironmentDocsTest extends CliSpec {
     "./env-docs-test-file",
     "{}"
   ) {
-    testOpts(Docs.cmd, "env-docs ./env-docs-test-file") { result =>
+    testOpts(EnvironmentDocs.cmd, "env-docs ./env-docs-test-file") { result =>
       result.isRight shouldBe true
 
       result.right.get.input.getPath shouldBe "./env-docs-test-file"
       result.right.get match {
         case cmd: EnvironmentDocsCommand =>
+          cmd.alignment shouldBe MdTableAlignment.Left
           cmd.output.isEmpty shouldBe true
         case _ => fail("Wrong type of returned command.")
       }
