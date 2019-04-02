@@ -26,7 +26,7 @@ But you can also run single steps of application:
 
 Usage:
 
-`./hocones-cli env-file <path-to-configuration-file> --output <path-where-to-save-environment-file>`
+`./hocones-cli env-file --output <path-where-to-save-environment-file> <path-to-configuration-file>`
 
 Options:
 * `-o` or `--output` define output file
@@ -34,38 +34,41 @@ Options:
 * `-d` or `--defaults` should default values be used in generation of environment file
 * `-r` or `--remove-duplicates` should environment file be cleared from duplicates of keys
 
-Example:
+Examples:
 
-`./hocones-cli env-file my-project/src/main/resources/application.conf --output ./my-project-environments.env -c -r -d`
+* `./hocones-cli env-file --output ./my-project-environments.env --comments --defaults --remove-duplicates my-project/src/main/resources/application.conf`
+* `./hocones-cli env-file -o ./my-project-environments.env -c -d -r my-project/src/main/resources/application.conf`
 
 ### Generate [markdown](https://en.wikipedia.org/wiki/Markdown) file with environment files 
 
 Usage:
 
-`./hocones-cli env-docs <path-to-configuration-file>`
+`./hocones-cli env-docs --output <path-where-to-save-environment-file> <path-to-configuration-file>`
 
 Options:
 
 * `-o` or `--output` define output file
 * `--a <alignment>` or `--alignment <alignment>` alignment of values in markdown table (left, right, center)
 
-Example:
+Examples:
 
-`./hocones-cli env-file my-project/src/main/resources/application.conf --output ./env.md`
+* `./hocones-cli env-file --output ./env.md --alignment center my-project/src/main/resources/application.conf`
+* `./hocones-cli env-file -o ./env.md -a center my-project/src/main/resources/application.conf`
 
 ### Generate [markdown](https://en.wikipedia.org/wiki/Markdown) file with documentation for whole configuration
 
 Usage:
 
-`./hocones-cli docs <path-to-configuration-file>`
+`./hocones-cli docs --output <path-where-to-save-environment-file> <path-to-configuration-file>`
 
 Options:
 
 * `-o` or `--output` define output file
 
-Example:
+Examples:
 
-`./hocones-cli docs my-project/src/main/resources/application.conf --output ./docs.md`
+* `./hocones-cli docs --output ./docs.md my-project/src/main/resources/application.conf`
+* `./hocones-cli docs -o ./docs.md my-project/src/main/resources/application.conf`
 
 ### Statistics
 
