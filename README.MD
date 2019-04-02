@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/plmuninn/hocones.svg?branch=master)](https://travis-ci.com/plmuninn/hocones)
  
- # What is hocones?
+ # What is [hocones](https://plmuninn.github.io/hocones)?
  
  Is CLI application and sbt-plugin for managing [hocon](https://github.com/lightbend/config) format configuration in business environment.
  
