@@ -1,5 +1,81 @@
-<html><head><title>Hocones: Cli</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Maciej Romański Muninn Software" /><meta name="description" content="Hocon configuration toolset and documentation library" /><meta name="og:image" content="/hocones/img/poster.png" /><meta name="image" property="og:image" content="/hocones/img/poster.png" /><meta name="og:title" content="Hocones: Cli" /><meta name="title" property="og:title" content="Hocones: Cli" /><meta name="og:site_name" content="Hocones" /><meta name="og:url" content="https://plmuninn.github.io/hocones/" /><meta name="og:type" content="website" /><meta name="og:description" content="Hocon configuration toolset and documentation library" /><link rel="icon" type="image/png" href="/hocones/img/favicon.png" /><meta name="twitter:title" content="Hocones: Cli" /><meta name="twitter:image" content="https://plmuninn.github.io/hocones/img/poster.png" /><meta name="twitter:description" content="Hocon configuration toolset and documentation library" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/hocones/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/hocones/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/hocones/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/hocones/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/hocones/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/hocones/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/hocones/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/hocones/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/hocones/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/hocones/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/hocones/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/hocones/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/hocones/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/hocones/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/hocones/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/hocones/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/hocones/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/hocones/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/hocones/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/hocones/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/hocones/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/hocones/css/style.css" /><link rel="stylesheet" href="/hocones/css/palette.css" /><link rel="stylesheet" href="/hocones/css/codemirror.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/hocones/" class="brand"><div class="brand-wrapper"><span>Hocones</span></div></a></li><li><a href="/hocones/cli.html" class=" active ">Cli</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/plmuninn/hocones"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/plmuninn/hocones"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Hocones Hocon configuration toolset and documentation library');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Hocones Hocon configuration toolset and documentation library');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="plmuninn" data-github-repo="hocones"><div class="content-wrapper"><section>
-</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/hocones/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+<html><head><title>Hocones: Cli Application</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Maciej Romański Muninn Software" /><meta name="description" content="Hocon configuration toolset and documentation library" /><meta name="og:image" content="/hocones/img/poster.png" /><meta name="image" property="og:image" content="/hocones/img/poster.png" /><meta name="og:title" content="Hocones: Cli Application" /><meta name="title" property="og:title" content="Hocones: Cli Application" /><meta name="og:site_name" content="Hocones" /><meta name="og:url" content="https://plmuninn.github.io/hocones/" /><meta name="og:type" content="website" /><meta name="og:description" content="Hocon configuration toolset and documentation library" /><link rel="icon" type="image/png" href="/hocones/img/favicon.png" /><meta name="twitter:title" content="Hocones: Cli Application" /><meta name="twitter:image" content="https://plmuninn.github.io/hocones/img/poster.png" /><meta name="twitter:description" content="Hocon configuration toolset and documentation library" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/hocones/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/hocones/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/hocones/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/hocones/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/hocones/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/hocones/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/hocones/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/hocones/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/hocones/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/hocones/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/hocones/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/hocones/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/hocones/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/hocones/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/hocones/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/hocones/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/hocones/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/hocones/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/hocones/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/hocones/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/hocones/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/hocones/css/style.css" /><link rel="stylesheet" href="/hocones/css/palette.css" /><link rel="stylesheet" href="/hocones/css/codemirror.css" /></head><body><header id="site-header"><div class="navbar-wrapper navbar-inverse"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/hocones/" class="brand"><div class="icon-wrapper"><span>Hocones</span></div></a></div><nav class="text-right"><ul class=""><li><a href="https://github.com/plmuninn/hocones"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li></ul></nav></div></div><div class="jumbotron" style="background-image:url('/hocones/img/jumbotron_pattern.png')"></div><div><ul class="horizontalNav">     <li><a class="" href="/hocones/">Home</a></li>  <li><a class="" href="/hocones/meta.html">Meta file</a></li>  <li><a class=" active " href="/hocones/cli.html">Cli Application</a></li>  <li><a class="" href="/hocones/sbt-hocon.html">Sbt plugin</a></li> </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h1 id="build-cli-application">Build Cli application</h1>
+
+<p>Best way to use cli application is to build it using <a href="https://www.graalvm.org/docs/getting-started/">graal-vm</a>.</p>
+
+<p>To do it:</p>
+
+<ul>
+  <li>Download and install <a href="https://www.graalvm.org/docs/getting-started/">graal-vm</a></li>
+  <li>Run in console <code class="highlighter-rouge">sbt "hocones-cli/graalvm-native-image:packageBin"</code></li>
+  <li>You can find binary in <code class="highlighter-rouge">hocones-cli/target/graalvm-native-image</code></li>
+  <li>And have fun :)</li>
+</ul>
+
+<h2 id="how-to-use-cli">How to use cli</h2>
+
+<p>To generate full documentation - like in sbt application just run <code class="highlighter-rouge">./hocones-cli &lt;path-to-configuration-file&gt;</code></p>
+
+<p>But you can also run single steps of application:</p>
+
+<h3 id="generate-environment-file">Generate <a href="https://docs.docker.com/compose/env-file/">environment file</a></h3>
+
+<p>Usage:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli env-file &lt;path-to-configuration-file&gt; --output &lt;path-where-to-save-environment-file&gt;</code></p>
+
+<p>Options:</p>
+<ul>
+  <li><code class="highlighter-rouge">-o</code> or <code class="highlighter-rouge">--output</code> define output file</li>
+  <li><code class="highlighter-rouge">-c</code> or <code class="highlighter-rouge">--comments</code> enable printing comments in environment file. Comments contain information like path from configuration, default value, path to file, description from meta file etc.</li>
+  <li><code class="highlighter-rouge">-d</code> or <code class="highlighter-rouge">--defaults</code> should default values be used in generation of environment file</li>
+  <li><code class="highlighter-rouge">-r</code> or <code class="highlighter-rouge">--remove-duplicates</code> should environment file be cleared from duplicates of keys</li>
+</ul>
+
+<p>Example:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli env-file my-project/src/main/resources/application.conf --output ./my-project-environments.env -c -r -d</code></p>
+
+<h3 id="generate-markdown-file-with-environment-files">Generate <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> file with environment files</h3>
+
+<p>Usage:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli env-docs &lt;path-to-configuration-file&gt;</code></p>
+
+<p>Options:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-o</code> or <code class="highlighter-rouge">--output</code> define output file</li>
+  <li><code class="highlighter-rouge">--a &lt;alignment&gt;</code> or <code class="highlighter-rouge">--alignment &lt;alignment&gt;</code> alignment of values in markdown table (left, right, center)</li>
+</ul>
+
+<p>Example:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli env-file my-project/src/main/resources/application.conf --output ./env.md</code></p>
+
+<h3 id="generate-markdown-file-with-documentation-for-whole-configuration">Generate <a href="https://en.wikipedia.org/wiki/Markdown">markdown</a> file with documentation for whole configuration</h3>
+
+<p>Usage:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli docs &lt;path-to-configuration-file&gt;</code></p>
+
+<p>Options:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-o</code> or <code class="highlighter-rouge">--output</code> define output file</li>
+</ul>
+
+<p>Example:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli docs my-project/src/main/resources/application.conf --output ./docs.md</code></p>
+
+<h3 id="statistics">Statistics</h3>
+
+<p>Usage:</p>
+
+<p><code class="highlighter-rouge">./hocones-cli statistics &lt;path-to-configuration-file&gt;</code></p>
+
+<p>Display statistics about configuration. Number of environment variables, references etc.</p>
+</div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Hocones is designed and developed by <a href="" target="_blank">Maciej Romański Muninn Software</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/plmuninn/hocones"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6"><p>Website built with <a href="https://47deg.github.io/sbt-microsites/" target="_blank">Sbt-microsites</a> - © 2016 <a href="https://www.47deg.com/" target="_blank">47 Degrees</a></p></div></div></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/hocones/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
 hljs.initHighlighting();
               </script><script>((window.gitter = {}).chat = {}).options = {
-room: 'plmuninn/hocones'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/hocones/js/main.js"></script></body></html>
+room: 'plmuninn/hocones'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script></body></html>
