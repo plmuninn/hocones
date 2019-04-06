@@ -219,6 +219,7 @@ lazy val `sbt-hocones` =
         )
       ),
       publishMavenStyle := true,
+      releaseIgnoreUntrackedFiles := true,
       publishArtifact in Test := false,
       publishTo := Some(if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging),
       //   Following 2 lines need to get around https://github.com/sbt/sbt/issues/4275
