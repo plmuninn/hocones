@@ -192,6 +192,9 @@ val `hocones-cli` =
       `hocones-md-docs`
     )
 
+val username = "plmuninn"
+val repo = "hocones"
+
 lazy val `sbt-hocones` =
   (project in file("sbt-hocones"))
     .settings(defaultSettings)
@@ -201,7 +204,27 @@ lazy val `sbt-hocones` =
       sbtPlugin := true,
       sbtVersion := "1.2.3",
       libraryDependencies += "org.scala-sbt" %% "scripted-plugin" % sbtVersion.value,
-      scriptedBufferLog := false
+      scriptedBufferLog := false,
+      homepage := Some(url(s"https://github.com/$username/$repo")),
+      licenses += "MIT" -> url(s"https://github.com/$username/$repo/blob/master/LICENSE"),
+      scmInfo := Some(ScmInfo(url(s"https://github.com/$username/$repo"), s"git@github.com:$username/$repo.git")),
+      apiURL := Some(url(s"https://$username.github.io/$repo/latest/api/")),
+      releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+      developers := List(
+        Developer(
+          id = username,
+          name = "Maciej Romanski",
+          email = "maciej.loki.romanski@gmail.com",
+          url = new URL(s"http://github.com/$username")
+        )
+      ),
+      publishMavenStyle := true,
+      publishArtifact in Test := false,
+      publishTo := Some(if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging),
+      //   Following 2 lines need to get around https://github.com/sbt/sbt/issues/4275
+      publishConfiguration := publishConfiguration.value.withOverwrite(true),
+      publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
+      updateOptions := updateOptions.value.withGigahorse(false)
     )
     .dependsOn(
       `hocones-common`,
